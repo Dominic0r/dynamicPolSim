@@ -163,7 +163,7 @@ public class Main // Don't tell mom I use java
             if(score == 0) return;
             double weightedIdeologySum = 0;
             ideoGroup maxGroup = null;
-            int maxnum=0;
+            int maxnum=-1;
             for(Map.Entry<ideoGroup,Integer> entry : demographics.entrySet()){
                 ideoGroup gro = entry.getKey();
                 int votesGot = entry.getValue();
@@ -219,6 +219,10 @@ public class Main // Don't tell mom I use java
         
         public void addSize(int toAdd){
             size+=toAdd;
+        }
+        
+        public void resetList(){
+            members.clear();
         }
         
         public boolean invitation(Party other){
@@ -317,7 +321,7 @@ public class Main // Don't tell mom I use java
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 65;
+        int tresh = 85;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -431,17 +435,24 @@ public class Main // Don't tell mom I use java
     public static void electLeadParty() {
     int rounds = 1;
     List<Party> candidates = new ArrayList<>(allParties);
-    
+    List<Coalition> coalitions = new ArrayList<>();
+    for(Party par: allParties){
+        coalitions.add(new Coalition(par));
+    }
     Party winningParty = null;
     boolean hasGotMajority = false;
-
+    boolean cointossed = false;
     while (!hasGotMajority && candidates.size() > 0) {
         Map<Party, Integer> voteCount = new HashMap<>();
         for (Party candidate : candidates) {
             voteCount.put(candidate, 0);
         }
-
+        for(Coalition coa : coalitions){
+            coa.resetList();
+        }
+        
         for (Party votingParty : allParties) {
+            cointossed = false;
             Party bestCandidate = null;
             int minDiff = Integer.MAX_VALUE;
             List<Party> tiedCandidates = new ArrayList<>();
@@ -459,15 +470,24 @@ public class Main // Don't tell mom I use java
             }
 
             if (tiedCandidates.size() > 1) {
-                bestCandidate = tiedCandidates.get(ra.nextInt(tiedCandidates.size()));
+                    bestCandidate = tiedCandidates.get(ra.nextInt(tiedCandidates.size()));
+                    if(tiedCandidates.size()==2){
+                    cointossed = true;
+                    }
+                
             } else {
                 bestCandidate = tiedCandidates.get(0);
             }
 
             int currentVotes = voteCount.getOrDefault(bestCandidate, 0);
             voteCount.put(bestCandidate, currentVotes + votingParty.getPercent());
+            for(Coalition coa: coalitions){
+                if(coa.getLeader() == bestCandidate &&!cointossed ){
+                    coa.addParty(votingParty); 
+                }
+            }
         }
-
+        
         winningParty = null;
         int maxVotes = -1;
         for (Map.Entry<Party, Integer> entry : voteCount.entrySet()) {
@@ -477,16 +497,16 @@ public class Main // Don't tell mom I use java
             }
         }
 
-        System.out.println("--- Election Round " + rounds + " ---");
+        /*System.out.println("--- Election Round " + rounds + " ---");
         for (Party cand : candidates) {
             System.out.print(cand.getName() + ": " + voteCount.get(cand) + "% || ");
         }
-        System.out.println("\n");
+        System.out.println("\n");*/
 
         // Check for 50%+ Majority (of the 100 seats)
         if (maxVotes > 50) { 
             hasGotMajority = true;
-        } else if (candidates.size() > 1) {
+        } else if (candidates.size() > 2) {
             // Elimination Phase: Remove the party with the least support
             rounds++;
             int minVotes = Collections.min(voteCount.values());
@@ -508,6 +528,10 @@ public class Main // Don't tell mom I use java
                 Party p = it.next();
                 if(voteCount.get(p) == 0 && p != winningParty) it.remove();
             }
+        }else if(candidates.size()==2){
+            Party toRemove = candidates.get(ra.nextInt(candidates.size()));
+            candidates.remove(toRemove);
+            hasGotMajority = true;
         } else {
             // Only one candidate left, they win by default
             hasGotMajority = true;
@@ -517,6 +541,8 @@ public class Main // Don't tell mom I use java
     // Assign the winner to your rulingCoalition logic
     if (winningParty != null) {
         System.out.println("GOVERNMENT FORMED BY: " + winningParty.getName());
+        System.out.println("Ruling Coalition: ");
+        
         
         if(rulingCoalition!=null){
             if(winningParty != rulingCoalition.getLeader()){
@@ -524,7 +550,26 @@ public class Main // Don't tell mom I use java
             }
         }
         startyear = year;
-        rulingCoalition = new Coalition(winningParty);
+        for(Coalition coa : coalitions){
+            if(coa.getLeader()==winningParty){
+                rulingCoalition=coa;
+            }
+        }
+        
+        for(Party par: rulingCoalition.getMemberList()){
+            if(par.getPercent()>0){
+            System.out.print(getDynamicColor(par.getIdeology())+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
+            
+            if(par == rulingCoalition.getLeader()){
+                System.out.println(" - Leader");
+            }else if(par.proximityWith(rulingCoalition.getLeader())< 75){
+                System.out.println(" - Tolerating");
+            }else{
+                System.out.println();
+            }
+            }
+            
+        }
         winningParty.incrementRecognition();
         winningParty.addFatigue();
         for(Party par: allParties){
@@ -645,7 +690,7 @@ public static void events(){
             case 4:
                 double totalRecog = 0;
 for(Party p : allParties) totalRecog += p.getRecognition();
-if(totalRecog > 0.1){
+if(totalRecog > 0.5){
                 System.out.println("Populist Wave!");
                 for(Party par : allParties) {
        
@@ -655,6 +700,12 @@ if(totalRecog > 0.1){
             
             par.setRecog(0.5); 
         }
+        if(par.getPercent()> 20){
+            par.setRecog(par.getRecognition()-2);
+        }else if(par.getPercent()>10){
+            par.setRecog(par.getRecognition()-1);
+        }
+        
     }
    
     for(Party member : rulingCoalition.getMemberList()) {
@@ -663,6 +714,10 @@ if(totalRecog > 0.1){
                 gro.updateSatisfaction(-20);
             }
         }
+    }
+    
+    for(ideoGroup gro: allGroups){
+        gro.updateSatisfaction(-20);
     }
         }
                 break;
