@@ -163,7 +163,7 @@ public class Main // Don't tell mom I use java
             if(score == 0) return;
             double weightedIdeologySum = 0;
             ideoGroup maxGroup = null;
-            int maxnum=-1;
+            int maxnum=-100000;
             for(Map.Entry<ideoGroup,Integer> entry : demographics.entrySet()){
                 ideoGroup gro = entry.getKey();
                 int votesGot = entry.getValue();
@@ -504,6 +504,7 @@ public class Main // Don't tell mom I use java
         System.out.println("\n");*/
 
         // Check for 50%+ Majority (of the 100 seats)
+        List<Integer> candvals = new ArrayList<>(voteCount.values());
         if (maxVotes > 50) { 
             hasGotMajority = true;
         } else if (candidates.size() > 2) {
@@ -529,9 +530,30 @@ public class Main // Don't tell mom I use java
                 if(voteCount.get(p) == 0 && p != winningParty) it.remove();
             }
         }else if(candidates.size()==2){
-            Party toRemove = candidates.get(ra.nextInt(candidates.size()));
+            if(candvals.get(0)==candvals.get(1)){
+                Party toRemove = candidates.get(ra.nextInt(candidates.size()));
+                candidates.remove(toRemove);
+                hasGotMajority = true;
+            }else{
+                 // Elimination Phase: Remove the party with the least support
+            rounds++;
+            int minVotes = Collections.min(voteCount.values());
+            List<Party> lowestCandidates = new ArrayList<>();
+            
+            for (Map.Entry<Party, Integer> entry : voteCount.entrySet()) {
+                if (entry.getValue() == minVotes) {
+                    lowestCandidates.add(entry.getKey());
+                }
+            }
+            
+            // Remove one of the lowest-performing parties
+            Party toRemove = lowestCandidates.get(ra.nextInt(lowestCandidates.size()));
             candidates.remove(toRemove);
-            hasGotMajority = true;
+            
+            // Cleanup: remove any other parties that got 0 votes to speed up the loop
+            Iterator<Party> it = candidates.iterator();
+            }
+            
         } else {
             // Only one candidate left, they win by default
             hasGotMajority = true;
