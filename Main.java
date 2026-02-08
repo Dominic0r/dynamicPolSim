@@ -303,10 +303,62 @@ public class Main // Don't tell mom I use java
         //allParties.add(new Party("Democratic Party", 65, true));
         //allParties.add(new Party("Republican Party", 45, true));
         //allParties.add(new Party("Nationalist Party",15,true));
-        allParties.add(new Party("National Unity Party", 15, true)); // Reactionary
+        //allParties.add(new Party("National Unity Party", 15, true)); // Reactionary
         //allParties.add(new Party("Moderate Conservative Party", 45, true));     // Republican
-    allParties.add(new Party("Republican Party", 50, true));     // Republican
-    allParties.add(new Party("Left Republican Party", 85, true)); // Revolutionary
+    //allParties.add(new Party("Republican Party", 50, true));     // Republican
+   // allParties.add(new Party("Left Republican Party", 85, true)); // Revolutionary
+    
+    int diceroll = (ra.nextInt(12))/3;
+    if(diceroll == 4){
+        allParties.add(new Party("National Unity Party", 15, true));
+    }else if(diceroll == 3){
+        allParties.add(new Party("National Unity Party", 15, true));
+        allParties.add(new Party("Traditional Conservative Party", 20, true));
+    }else if(diceroll == 2){
+        allParties.add(new Party("National Unity Party", 15, true));
+        allParties.add(new Party("Traditional Conservative Party", 20, true));
+        allParties.add(new Party("Moderate National Party", 25, true));
+    }else{
+        allParties.add(new Party("National Unity Party", 15, true));
+        allParties.add(new Party("Traditional Conservative Party", 20, true));
+        allParties.add(new Party("Moderate National Party", 25, true));
+        allParties.add(new Party("Right Republican Party", 30, true));
+    }
+    diceroll = (ra.nextInt(12))/3;
+    if(diceroll == 4){
+        allParties.add(new Party("Republican Party", 50, true));  
+    }else if(diceroll == 3){
+        allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("Democratic Conservative Party", 45, true));  
+    }else if(diceroll == 2){
+       allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("Democratic Peoples Party", 45, true));  
+        allParties.add(new Party("Liberal Republican Alliance", 55, true));  
+    }else{
+        allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("Democratic Peoples Party", 45, true));  
+        allParties.add(new Party("Liberal Republican Alliance", 55, true));  
+        allParties.add(new Party("New Social Party", 55, true));  
+    }
+    
+    diceroll = (ra.nextInt(12))/3;
+    if(diceroll == 4){
+        allParties.add(new Party("Left Republican Party", 85, true));
+    }else if(diceroll == 3){
+        allParties.add(new Party("Left Republican Party", 85, true));
+        allParties.add(new Party("Workers Democratic Party", 75, true));
+    }else if(diceroll == 2){
+       allParties.add(new Party("Left Republican Party", 85, true));
+        allParties.add(new Party("Workers Democratic Party", 75, true));
+        allParties.add(new Party("Reformist Republican Party", 65, true));
+    }else{
+        allParties.add(new Party("Left Republican Party", 85, true));
+        allParties.add(new Party("Workers Democratic Party", 75, true));
+        allParties.add(new Party("Reformist Republican Party", 65, true));
+        allParties.add(new Party("Alliance of Progress", 60, true));
+    }
+    
+    
     }
     
     public static void updateGroupSize(){
