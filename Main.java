@@ -237,6 +237,10 @@ public class Main // Don't tell mom I use java
             members.add(toAdd);
         }
         
+        public boolean containsParty(Party par){
+            return members.contains(par);
+        }
+        
         public List<Party> getMemberList(){
             return members;
         }
@@ -309,6 +313,7 @@ public class Main // Don't tell mom I use java
    // allParties.add(new Party("Left Republican Party", 85, true)); // Revolutionary
     
     int diceroll = (ra.nextInt(12))/3;
+    // roll far right unity
     if(diceroll == 4){
         allParties.add(new Party("National Unity Party", 15, true));
     }else if(diceroll == 3){
@@ -326,36 +331,33 @@ public class Main // Don't tell mom I use java
     }
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("Center Republican Party", 50, true));  
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party", 50, true));  
-        allParties.add(new Party("Democratic Conservative Party", 45, true));  
+        allParties.add(new Party("Center Republican Party", 50, true));  
+        allParties.add(new Party("Moderate Republican Party", 45, true));  
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party", 50, true));  
-        allParties.add(new Party("Democratic Peoples Party", 45, true));  
-        allParties.add(new Party("Liberal Republican Alliance", 55, true));  
+       allParties.add(new Party("Center Republican Party", 50, true));  
+        allParties.add(new Party("Moderate Republican Party", 45, true));  
+        allParties.add(new Party("Liberal Republican Party", 55, true));  
     }else{
-        allParties.add(new Party("Republican Party", 50, true));  
-        allParties.add(new Party("Democratic Peoples Party", 45, true));  
-        allParties.add(new Party("Liberal Republican Alliance", 55, true));  
-        allParties.add(new Party("New Social Party", 55, true));  
+        allParties.add(new Party("Center Republican Party", 50, true));  
+        allParties.add(new Party("Moderate Republican Party", 45, true));  
+        allParties.add(new Party("Liberal Republican Party", 55, true));  
+        allParties.add(new Party("Conservative Republican Party", 40, true));  
     }
-    
+    // Left-wing opposition unity
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
         allParties.add(new Party("Left Republican Party", 85, true));
     }else if(diceroll == 3){
         allParties.add(new Party("Left Republican Party", 85, true));
-        allParties.add(new Party("Workers Democratic Party", 75, true));
     }else if(diceroll == 2){
        allParties.add(new Party("Left Republican Party", 85, true));
         allParties.add(new Party("Workers Democratic Party", 75, true));
-        allParties.add(new Party("Reformist Republican Party", 65, true));
     }else{
         allParties.add(new Party("Left Republican Party", 85, true));
         allParties.add(new Party("Workers Democratic Party", 75, true));
         allParties.add(new Party("Reformist Republican Party", 65, true));
-        allParties.add(new Party("Alliance of Progress", 60, true));
     }
     
     
@@ -484,7 +486,7 @@ public class Main // Don't tell mom I use java
     public static int startyear;
     public static int year = 1852;
     
-    public static void electLeadParty() {
+    /*public static void electLeadParty() {
     int rounds = 1;
     List<Party> candidates = new ArrayList<>(allParties);
     List<Coalition> coalitions = new ArrayList<>();
@@ -553,8 +555,9 @@ public class Main // Don't tell mom I use java
         for (Party cand : candidates) {
             System.out.print(cand.getName() + ": " + voteCount.get(cand) + "% || ");
         }
-        System.out.println("\n");*/
+        System.out.println("\n");
 
+    
         // Check for 50%+ Majority (of the 100 seats)
         List<Integer> candvals = new ArrayList<>(voteCount.values());
         if (maxVotes > 50) { 
@@ -652,7 +655,51 @@ public class Main // Don't tell mom I use java
             }
         }
     }
-}
+}*/
+    
+    public static void electLeadParty(){
+        Party winner = allParties.stream()
+            .max(Comparator.comparingInt(Party::getPercent))
+            .get();
+        
+        Coalition gov = new Coalition(winner);
+        int totalSeats = winner.getPercent();
+        if(totalSeats>50){
+            rulingCoalition = gov;
+        }else{
+            List<Party> potentialPartners = new ArrayList<>(allParties);
+            potentialPartners.remove(winner);
+            potentialPartners.sort(Comparator.comparingInt(p -> 
+            Math.abs(p.getIdeology() - winner.getIdeology())
+        ));
+        for(Party par: potentialPartners){
+            if(totalSeats>50) break;
+            gov.addParty(par);
+            totalSeats+=par.getPercent();
+            
+            
+        }
+        rulingCoalition = gov;
+            
+        }
+        int totGovSeats = 0;
+                for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
+                System.out.println("Total Seats: "+ totGovSeats+"%");
+        for(Party par: rulingCoalition.getMemberList()){
+            if(par.getPercent()>0){
+                
+                
+            System.out.print(getDynamicColor(par.getIdeology())+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
+            
+            if(par == rulingCoalition.getLeader()){
+                System.out.println(" - Leader");
+            }else{
+                System.out.println();
+            }
+            }
+            
+        }
+    }
     
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
@@ -901,7 +948,7 @@ public static void radicalizeVoters() {
     // CENTER: Yellow/Gold/Orange spectrum
     else if (ideo < 45) colorCode = 214; // Orange-Yellow (Liberal/Center-Right)
     else if (ideo < 55) colorCode = 226; // Bright Yellow (Pure Centrist)
-    else if (ideo < 65) colorCode = 190; // Lime/Yellow-Green (Center-Left/Green)
+    else if (ideo < 65) colorCode = 203; // Light Red (Center-Left/Green)
     
     // LEFT-WING: Red/Crimson spectrum
     //else if (ideo < 80) colorCode = 203; // Light Red (Social Democrat)
@@ -911,6 +958,8 @@ public static void radicalizeVoters() {
     return "\u001B[38;5;" + colorCode + "m";
 }
 public static final String RESET = "\u001B[0m";
+public static final String RESETBG = "\u001B[0m";
+public static final String MEMBERBG = "\u001B[47m";
     
     public static void visualizeParliament() {
     Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
@@ -921,7 +970,11 @@ public static final String RESET = "\u001B[0m";
     for (Party par : allParties) {
         String color = getDynamicColor(par.getIdeology());
         for (int i = 0; i < par.getPercent(); i++) {
-            allSeats.add(color + "o" + RESET);
+            if(rulingCoalition.containsParty(par)){
+                allSeats.add(color + "o" + RESET);
+            }else{
+                allSeats.add(color + "-" + RESET);
+            }
         }
     }
 
