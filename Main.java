@@ -317,47 +317,47 @@ public class Main // Don't tell mom I use java
     if(diceroll == 4){
         allParties.add(new Party("National Unity Party", 15, true));
     }else if(diceroll == 3){
-        allParties.add(new Party("National Unity Party", 15, true));
-        allParties.add(new Party("Traditional Conservative Party", 20, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true));
+        allParties.add(new Party("National Unity Party - Left", 20, true));
     }else if(diceroll == 2){
-        allParties.add(new Party("National Unity Party", 15, true));
-        allParties.add(new Party("Traditional Conservative Party", 20, true));
-        allParties.add(new Party("Moderate National Party", 25, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true));
+        allParties.add(new Party("National Unity Party - Center", 20, true));
+        allParties.add(new Party("National Unity Party - Left", 25, true));
     }else{
-        allParties.add(new Party("National Unity Party", 15, true));
-        allParties.add(new Party("Traditional Conservative Party", 20, true));
-        allParties.add(new Party("Moderate National Party", 25, true));
-        allParties.add(new Party("Right Republican Party", 30, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true));
+        allParties.add(new Party("National Unity Party - Center", 20, true));
+        allParties.add(new Party("National Unity Party - Left", 25, true));
+        allParties.add(new Party("Republican Party - Right", 30, true));
     }
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Center Republican Party", 50, true));  
+        allParties.add(new Party("Republican Party", 50, true));  
     }else if(diceroll == 3){
-        allParties.add(new Party("Center Republican Party", 50, true));  
-        allParties.add(new Party("Moderate Republican Party", 45, true));  
+        allParties.add(new Party("Republican Party - Center", 50, true));  
+        allParties.add(new Party("Republican Party - Moderate", 48, true));  
     }else if(diceroll == 2){
-       allParties.add(new Party("Center Republican Party", 50, true));  
-        allParties.add(new Party("Moderate Republican Party", 45, true));  
-        allParties.add(new Party("Liberal Republican Party", 55, true));  
+       allParties.add(new Party("Republican Party - Center", 50, true));  
+        allParties.add(new Party("Republican Party - Moderate", 48, true));  
+        allParties.add(new Party("Republican Party - Liberal", 52, true));  
     }else{
-        allParties.add(new Party("Center Republican Party", 50, true));  
-        allParties.add(new Party("Moderate Republican Party", 45, true));  
-        allParties.add(new Party("Liberal Republican Party", 55, true));  
-        allParties.add(new Party("Conservative Republican Party", 40, true));  
+        allParties.add(new Party("Republican Party - Center", 50, true));  
+        allParties.add(new Party("Republican Party - Moderate", 48, true));  
+        allParties.add(new Party("Republican Party - Liberal", 52, true));  
+        allParties.add(new Party("Republican Party - Conservative", 40, true));  
     }
     // Left-wing opposition unity
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Left Republican Party", 85, true));
+        allParties.add(new Party("Republican Party - Left", 85, true));
     }else if(diceroll == 3){
-        allParties.add(new Party("Left Republican Party", 85, true));
+        allParties.add(new Party("Republican Party - Left", 85, true));
     }else if(diceroll == 2){
-       allParties.add(new Party("Left Republican Party", 85, true));
+       allParties.add(new Party("Republican Party - Left", 85, true));
         allParties.add(new Party("Workers Democratic Party", 75, true));
     }else{
-        allParties.add(new Party("Left Republican Party", 85, true));
-        allParties.add(new Party("Workers Democratic Party", 75, true));
-        allParties.add(new Party("Reformist Republican Party", 65, true));
+        allParties.add(new Party("Republican Party - Left", 85, true));
+        allParties.add(new Party("Workers Democratic Party - Left", 75, true));
+        allParties.add(new Party("Workers Democratic Party - Right", 65, true));
     }
     
     
@@ -696,9 +696,18 @@ public class Main // Don't tell mom I use java
             }else{
                 System.out.println();
             }
+            
+            par.incrementRecognition();
             }
             
         }
+        for(Party par: allParties){
+            if(!rulingCoalition.containsParty(par)){
+                par.decreaseFatigue();
+            }
+        }
+        
+        
     }
     
     public static void checkForNewParties() {
