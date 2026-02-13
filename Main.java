@@ -331,33 +331,33 @@ public class Main // Don't tell mom I use java
     }
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("National Republican Party", 50, true));  
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party - Center", 50, true));  
-        allParties.add(new Party("Republican Party - Moderate", 48, true));  
+        allParties.add(new Party("Republican Party", 50, true));  
+        allParties.add(new Party("National Party", 48, true));  
     }else if(diceroll == 2){
        allParties.add(new Party("Republican Party - Center", 50, true));  
-        allParties.add(new Party("Republican Party - Moderate", 48, true));  
+        allParties.add(new Party("National Party", 48, true));  
         allParties.add(new Party("Republican Party - Liberal", 52, true));  
     }else{
         allParties.add(new Party("Republican Party - Center", 50, true));  
-        allParties.add(new Party("Republican Party - Moderate", 48, true));  
+        allParties.add(new Party("National Party - Moderate", 48, true));  
         allParties.add(new Party("Republican Party - Liberal", 52, true));  
-        allParties.add(new Party("Republican Party - Conservative", 40, true));  
+        allParties.add(new Party("National Party - Right", 40, true));  
     }
     // Left-wing opposition unity
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Republican Party - Left", 85, true));
+        allParties.add(new Party("Republican Party - Left", 65, true));
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party - Left", 85, true));
+        allParties.add(new Party("Republican Party - Left", 65, true));
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party - Left", 85, true));
+       allParties.add(new Party("Republican Party - Left", 65, true));
         allParties.add(new Party("Workers Democratic Party", 75, true));
     }else{
-        allParties.add(new Party("Republican Party - Left", 85, true));
-        allParties.add(new Party("Workers Democratic Party - Left", 75, true));
-        allParties.add(new Party("Workers Democratic Party - Right", 65, true));
+        allParties.add(new Party("Republican Party - Left", 65, true));
+        allParties.add(new Party("Workers Democratic Party - Left", 85, true));
+        allParties.add(new Party("Workers Democratic Party - Right", 70, true));
     }
     
     
@@ -841,7 +841,7 @@ if(totalRecog > 0.5){
     for(Party member : rulingCoalition.getMemberList()) {
         for(ideoGroup gro : allGroups) {
             if(gro.proximityWith(member) > 70) {
-                gro.updateSatisfaction(-20);
+                gro.updateSatisfaction(-10);
             }
         }
     }
