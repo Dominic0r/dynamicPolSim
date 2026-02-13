@@ -405,7 +405,11 @@ public class Main // Don't tell mom I use java
                         }
                     }
                     toAdd += (int) toAdd* par.getRecognition();
-                    toAdd-=(int) toAdd*par.getFatigue();
+                    if(toAdd>0){
+                        toAdd-=(int) toAdd*par.getFatigue();
+                    }else{
+                        toAdd+=(int) toAdd*par.getFatigue();
+                    }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
@@ -780,7 +784,7 @@ public static void events(){
     boolean eventHappened = false;
     if(ra.nextInt(10)<5){
        
-        switch(ra.nextInt(5)){
+        switch(ra.nextInt(6)){
             case 0:
                 System.out.println("Economic Crisis!");
             for(ideoGroup gro : allGroups){
@@ -850,6 +854,20 @@ if(totalRecog > 0.5){
         gro.updateSatisfaction(-20);
     }
         }
+                break;
+                case 5:
+                    Party targetpar = allParties.get(ra.nextInt(allParties.size()));
+                    System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
+                    for(int i=0; i<targetpar.getPercent()/5;i++){
+                        targetpar.addFatigue();
+                    }
+                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/5));
+                    
+                    for(ideoGroup gro : allGroups){
+                        if(gro.proximityWith(targetpar)>85){
+                            gro.updateSatisfaction(-10);
+                        }
+                    }
                 break;
             
         }
