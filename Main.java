@@ -83,6 +83,10 @@ public class Main // Don't tell mom I use java
         public int getPopularity(){return popularity;}
         public int getPercent(){return percent;}
         
+        public String ideoDisplay(){
+            return RESET+" ("+getDynamicColor(this.ideology)+")";
+        }
+        
         public double getFatigue(){
             return fatigue;
         }
@@ -699,7 +703,7 @@ public class Main // Don't tell mom I use java
             if(par.getPercent()>0){
                 
                 
-            System.out.print(par.getColor()+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
+            System.out.print(par.getColor()+"o"+ RESET+ " - "+ par.getName() + par.ideoDisplay()+ " ["+par.getPercent()+"%]");
             
             if(par == rulingCoalition.getLeader()){
                 System.out.println(" - Leader");
@@ -779,7 +783,7 @@ public static String assignColor(int ideo){
 public static String detIdeo(Party par){
     int ideo = par.getIdeology()/20;
     switch(ideo){
-        case 0: return "Right-Wing";
+        case 0: return  "Right-Wing";
             
         case 1: return "Center-Right";
             
@@ -1002,22 +1006,22 @@ public static void radicalizeVoters() {
     
     public static String getDynamicColor(int ideo) {
     int colorCode;
-    
+    String ideoname;
     // RIGHT-WING: Blue/Navy spectrum
-    if (ideo < 20) colorCode = 18;       // Navy Blue (Reactionary/Far-Right)
-    else if (ideo < 35) colorCode = 27;  // Royal Blue (Conservative)
+    if (ideo < 20){ colorCode = 18; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
+    }else if (ideo < 35){ colorCode = 27; ideoname= "Right-Wing";  // Royal Blue (Conservative)
     
     // CENTER: Yellow/Gold/Orange spectrum
-    else if (ideo < 45) colorCode = 214; // Orange-Yellow (Liberal/Center-Right)
-    else if (ideo < 55) colorCode = 226; // Bright Yellow (Pure Centrist)
-    else if (ideo < 65) colorCode = 203; // Light Red (Center-Left/Green)
+    }else if (ideo < 45){ colorCode = 214; ideoname = "Center-Right"; // Orange-Yellow (Liberal/Center-Right)
+    }else if (ideo < 55){ colorCode = 226; ideoname = "Centrist"; // Bright Yellow (Pure Centrist)
+    }else if (ideo < 65){ colorCode = 203; ideoname = "Center-Left";// Light Red (Center-Left/Green)
     
     // LEFT-WING: Red/Crimson spectrum
     //else if (ideo < 80) colorCode = 203; // Light Red (Social Democrat)
-    else if (ideo < 80) colorCode = 196; // Pure Red (Socialist)
-    else colorCode = 88;                // Dark Crimson (Communist/Far-Left)
-
-    return "\u001B[38;5;" + colorCode + "m";
+    }else if (ideo < 80){ colorCode = 196; ideoname = "Left-Wing"; // Pure Red (Socialist)
+    }else{ colorCode = 88; ideoname = "Far-Left";                // Dark Crimson (Communist/Far-Left)
+    }
+    return "\u001B[38;5;" + colorCode + "m" + ""+ ideoname +RESET;
 }
 public static final String RESET = "\u001B[0m";
 public static final String RESETBG = "\u001B[0m";
