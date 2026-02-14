@@ -697,6 +697,7 @@ public class Main // Don't tell mom I use java
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
+                    tresh += Math.abs(par.getIdeology()-50)/2;
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
