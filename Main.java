@@ -56,19 +56,25 @@ public class Main // Don't tell mom I use java
         Map<ideoGroup, Integer> demographics = new HashMap<>();
         double recognition = 0;// how established a party is
         int failcount = 0;
+        String color;
         
         double fatigue = 0;
         
-        public Party(String name, int ideology, boolean isActive){
+        public Party(String name, int ideology, boolean isActive, String color){
             this.name = name;
             this.ideology = ideology;
             this.isActive = isActive;
+            this.color = color;
             failcount = 0;
         }
         
         public void incrementFail(){failcount++;}
         public int getFailCount(){return failcount;}
         public void resetFail(){failcount=0;}
+        
+        public String getColor(){
+            return color;
+        }
         
         public String getName(){return name;}
         public int getIdeology(){return ideology;}
@@ -315,49 +321,49 @@ public class Main // Don't tell mom I use java
     int diceroll = (ra.nextInt(12))/3;
     // roll far right unity
     if(diceroll == 4){
-        allParties.add(new Party("National Unity Party", 15, true));
+        allParties.add(new Party("National Unity Party", 15, true, assignColor(15)));
     }else if(diceroll == 3){
-        allParties.add(new Party("National Unity Party - Right", 15, true));
-        allParties.add(new Party("National Unity Party - Left", 20, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
+        allParties.add(new Party("National Unity Party - Left", 20, true, assignColor(20)));
     }else if(diceroll == 2){
-        allParties.add(new Party("National Unity Party - Right", 15, true));
-        allParties.add(new Party("National Unity Party - Center", 20, true));
-        allParties.add(new Party("National Unity Party - Left", 25, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
+        allParties.add(new Party("National Unity Party - Center", 20, true, assignColor(20)));
+        allParties.add(new Party("National Unity Party - Left", 25, true, assignColor(25)));
     }else{
-        allParties.add(new Party("National Unity Party - Right", 15, true));
-        allParties.add(new Party("National Unity Party - Center", 20, true));
-        allParties.add(new Party("National Unity Party - Left", 25, true));
-        allParties.add(new Party("Republican Party - Right", 30, true));
+        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
+        allParties.add(new Party("National Unity Party - Center", 20, true, assignColor(20)));
+        allParties.add(new Party("National Unity Party - Left", 25, true, assignColor(25)));
+        allParties.add(new Party("Republican Party - Right", 30, true, assignColor(30)));
     }
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("National Republican Party", 50, true));  
+        allParties.add(new Party("National Republican Party", 50, true, assignColor(50)));  
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party", 50, true));  
-        allParties.add(new Party("National Party", 48, true));  
+        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party - Center", 50, true));  
-        allParties.add(new Party("National Party", 48, true));  
-        allParties.add(new Party("Republican Party - Liberal", 52, true));  
+       allParties.add(new Party("Republican Party - Center", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
+        allParties.add(new Party("Republican Party - Liberal", 52, true, assignColor(52)));  
     }else{
-        allParties.add(new Party("Republican Party - Center", 50, true));  
-        allParties.add(new Party("National Party - Moderate", 48, true));  
-        allParties.add(new Party("Republican Party - Liberal", 52, true));  
-        allParties.add(new Party("National Party - Right", 40, true));  
+        allParties.add(new Party("Republican Party - Center", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party - Moderate", 48, true, assignColor(48)));  
+        allParties.add(new Party("Republican Party - Liberal", 52, true, assignColor(52)));  
+        allParties.add(new Party("National Party - Right", 40, true, assignColor(40)));  
     }
     // Left-wing opposition unity
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Republican Party - Left", 65, true));
+        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party - Left", 65, true));
+        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party - Left", 65, true));
-        allParties.add(new Party("Workers Democratic Party", 75, true));
+       allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
+        allParties.add(new Party("Workers Democratic Party", 75, true, assignColor(75)));
     }else{
-        allParties.add(new Party("Republican Party - Left", 65, true));
-        allParties.add(new Party("Workers Democratic Party - Left", 85, true));
-        allParties.add(new Party("Workers Democratic Party - Right", 70, true));
+        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
+        allParties.add(new Party("Workers Democratic Party - Left", 85, true, assignColor(85)));
+        allParties.add(new Party("Workers Democratic Party - Right", 70, true, assignColor(70)));
     }
     
     
@@ -693,7 +699,7 @@ public class Main // Don't tell mom I use java
             if(par.getPercent()>0){
                 
                 
-            System.out.print(getDynamicColor(par.getIdeology())+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
+            System.out.print(par.getColor()+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
             
             if(par == rulingCoalition.getLeader()){
                 System.out.println(" - Leader");
@@ -731,7 +737,7 @@ public class Main // Don't tell mom I use java
             
             if (!alreadyRepresented&& !gro.hasGroupSplintered()) {
                 String newName = gro.getSplinterName();
-                allParties.add(new Party(newName, gro.getIdeology(), true));
+                allParties.add(new Party(newName, gro.getIdeology(), true, assignColor(gro.getIdeology())));
                 System.out.println("!!! NEW PARTY FORMED: " + newName + " !!!");
                 gro.toggleSplinter();
                 
@@ -739,6 +745,35 @@ public class Main // Don't tell mom I use java
             }
         }
     }
+}
+
+public static String assignColor(int ideo){
+    int baseColor;
+    int range;
+
+    // 1. Define Brackets
+    if (ideo < 20) {      // Far-Right (Blues/Purples)
+        baseColor = 17;   // Deep Blue
+        range = 4;        // Use colors 17, 18, 19, 20
+    } else if (ideo < 35) { // Conservative (Standard Blues)
+        baseColor = 26;   
+        range = 6;        
+    } else if (ideo < 55) { // Center (Yellows/Oranges)
+        baseColor = 220;  
+        range = 6;
+    } else if (ideo < 80) { // Socialist (Reds/Pinks)
+        baseColor = 160;  
+        range = 7;
+    } else {                // Far-Left (Dark Reds)
+        baseColor = 88;   
+        range = 3;
+    }
+
+    // 2. Apply the Offset
+    // Use modulo (%) so the offset never exceeds the range
+    int uniqueColor = baseColor + (ideo % range);
+
+    return "\u001B[38;5;" + uniqueColor + "m";
 }
 
 public static String detIdeo(Party par){
@@ -988,7 +1023,7 @@ public static final String RESET = "\u001B[0m";
 public static final String RESETBG = "\u001B[0m";
 public static final String MEMBERBG = "\u001B[47m";
     
-    public static void visualizeParliament() {
+    public static void visualizeParliamentOld() {
     Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
 
     System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
@@ -1018,6 +1053,42 @@ public static final String MEMBERBG = "\u001B[47m";
     for (Party par : allParties) {
         if (par.getPercent() > 0) {
             System.out.print(getDynamicColor(par.getIdeology()) + "o " + RESET 
+                + par.getName() + " [" + par.getPercent() + "%]  ");
+        }
+    }
+    System.out.println("\n");
+}
+
+public static void visualizeParliament() {
+    Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
+
+    System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
+    
+    List<String> allSeats = new ArrayList<>();
+    for (Party par : allParties) {
+        String color = par.getColor();
+        for (int i = 0; i < par.getPercent(); i++) {
+            if(rulingCoalition.containsParty(par)){
+                allSeats.add(color + "o" + RESET);
+            }else{
+                allSeats.add(color + "-" + RESET);
+            }
+        }
+    }
+
+    
+    while (allSeats.size() < 100) allSeats.add("·");
+
+    for (int i = 0; i < 100; i++) {
+        System.out.print(allSeats.get(i) + " ");
+        if ((i + 1) % 10 == 0) System.out.println(); 
+    }
+
+    System.out.println("-------------------------------------");
+    
+    for (Party par : allParties) {
+        if (par.getPercent() > 0) {
+            System.out.print(par.getColor() + "o " + RESET 
                 + par.getName() + " [" + par.getPercent() + "%]  ");
         }
     }
@@ -1065,7 +1136,7 @@ public static void seeDominant(){
     System.out.print("Largest Party on the Right: ");
     
     if(maxpar != null){
-        System.out.println(getDynamicColor(maxpar.getIdeology())+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
     }else{
         System.out.println("None");
     }
@@ -1083,7 +1154,7 @@ public static void seeDominant(){
     
     System.out.print("Largest Party on the Center: ");
     if(maxpar != null){
-        System.out.println(getDynamicColor(maxpar.getIdeology())+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
     }else{
         System.out.println("None");
     }
@@ -1101,7 +1172,7 @@ public static void seeDominant(){
     
     System.out.print("Largest Party on the Left: ");
     if(maxpar != null){
-        System.out.println(getDynamicColor(maxpar.getIdeology())+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
     }else{
         System.out.println("None");
     }
