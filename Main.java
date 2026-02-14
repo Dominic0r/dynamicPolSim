@@ -769,7 +769,7 @@ public static String assignColor(int ideo){
 
     // 2. Add "Jitter" based on Party ID to ensure uniqueness
     // We use a hash-like multiplier so IDs 1 and 2 look very different
-    int variance = (partyId * 12345) % 50; // Shift color by up to 50 units
+    int variance = (partyId * 12345) % ra.nextInt(100); // Shift color by up to 50 units
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
