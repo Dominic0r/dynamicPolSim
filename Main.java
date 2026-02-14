@@ -672,30 +672,47 @@ public class Main // Don't tell mom I use java
 }*/
     
     public static void electLeadParty(){
-        Party winner = allParties.stream()
-            .max(Comparator.comparingInt(Party::getPercent))
-            .get();
         
-        Coalition gov = new Coalition(winner);
-        int totalSeats = winner.getPercent();
-        if(totalSeats>50){
-            rulingCoalition = gov;
-        }else{
-            List<Party> potentialPartners = new ArrayList<>(allParties);
-            potentialPartners.remove(winner);
-            potentialPartners.sort(Comparator.comparingInt(p -> 
-            Math.abs(p.getIdeology() - winner.getIdeology())
-        ));
-        for(Party par: potentialPartners){
-            if(totalSeats>50) break;
-            gov.addParty(par);
-            totalSeats+=par.getPercent();
+        int tries = 0;
+        boolean got50 = false;
+        List<Party> potLeaders = new ArrayList<>(allParties);
+        potLeaders.sort(Comparator.comparingInt(p -> 
+                100-p.getPercent()
+                ));
+        for(int i=0; i<potLeaders.size();i++){
             
+        Party winner = potLeaders.get(tries);
+        
+            Coalition gov = new Coalition(winner);
+            int totalSeats = winner.getPercent();
+            if(totalSeats>50){
+                got50 = true;
+                rulingCoalition = gov;
+            }else{
+                List<Party> potentialPartners = new ArrayList<>(allParties);
+                potentialPartners.remove(winner);
+                potentialPartners.sort(Comparator.comparingInt(p -> 
+                Math.abs(p.getIdeology() - winner.getIdeology())
+                ));
+                for(Party par: potentialPartners){
+                    if(totalSeats>50){ got50 = true; break;}
+                    int tresh = 50;
+                    if(winner.proximityWith(par)>tresh){
+                        gov.addParty(par);
+                        totalSeats+=par.getPercent();
+                        
+                    }
+                    
+                    
+                }
+                rulingCoalition = gov;
+             
+            }
+            if(got50) break;
+            tries++;
             
         }
-        rulingCoalition = gov;
-            
-        }
+        
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
                 System.out.println("Total Seats: "+ totGovSeats+"%");
@@ -767,7 +784,7 @@ public static String assignColor(int ideo){
         r = 200; g = 0; b = 0;
     }
 
-    int variance = (partyId * 12345) % ra.nextInt(100); 
+    int variance = (partyId * 12345) % (ra.nextInt(100)+1); 
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
