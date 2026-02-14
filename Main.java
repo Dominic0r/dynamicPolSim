@@ -696,7 +696,7 @@ public class Main // Don't tell mom I use java
                 ));
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
-                    int tresh = 50;
+                    int tresh = 50+(par.getPercent()/2);
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
@@ -1154,7 +1154,7 @@ public static void seeDominant(){
     System.out.print("Largest Party on the Right: ");
     
     if(maxpar != null){
-        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName() + RESET+ maxpar.ideoDisplay());
     }else{
         System.out.println("None");
     }
@@ -1172,7 +1172,7 @@ public static void seeDominant(){
     
     System.out.print("Largest Party on the Center: ");
     if(maxpar != null){
-        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET+ maxpar.ideoDisplay());
     }else{
         System.out.println("None");
     }
@@ -1190,7 +1190,7 @@ public static void seeDominant(){
     
     System.out.print("Largest Party on the Left: ");
     if(maxpar != null){
-        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET);
+        System.out.println(maxpar.getColor()+ maxpar.getName()+RESET+ maxpar.ideoDisplay());
     }else{
         System.out.println("None");
     }
