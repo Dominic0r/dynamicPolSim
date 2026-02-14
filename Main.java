@@ -754,28 +754,25 @@ public class Main // Don't tell mom I use java
 public static String assignColor(int ideo){
     int r = 0, g = 0, b = 0;
     int partyId = ra.nextInt(100);
-    // 1. Determine Base Ideological RGB
-    if (ideo < 25) {        // Reactionary/Far-Right (Deep Navy)
+    
+    if (ideo < 25) {        
         r = 20; g = 20; b = 150;
-    } else if (ideo < 40) { // Conservative (Royal Blue)
+    } else if (ideo < 40) { 
         r = 50; g = 100; b = 255;
-    } else if (ideo < 55) { // Centrist (Yellow/Gold)
+    } else if (ideo < 55) { 
         r = 255; g = 215; b = 0;
-    } else if (ideo < 75) { // Social Democrat/Green (Reddish-Orange or Green)
+    } else if (ideo < 75) { 
         r = 255; g = 90; b = 50; 
-    } else {                // Socialist/Communist (Deep Red)
+    } else {                
         r = 200; g = 0; b = 0;
     }
 
-    // 2. Add "Jitter" based on Party ID to ensure uniqueness
-    // We use a hash-like multiplier so IDs 1 and 2 look very different
-    int variance = (partyId * 12345) % ra.nextInt(100); // Shift color by up to 50 units
+    int variance = (partyId * 12345) % ra.nextInt(100); 
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
     b = Math.max(0, Math.min(255, b + (partyId % 3 == 2 ? variance : -variance)));
 
-    // 3. Return TrueColor ANSI Sequence: \u001B[38;2;R;G;Bm
     return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
 
 }
