@@ -752,32 +752,32 @@ public class Main // Don't tell mom I use java
 }
 
 public static String assignColor(int ideo){
-    int baseColor;
-    int range;
-
-    // 1. Define Brackets
-    if (ideo < 20) {      // Far-Right (Blues/Purples)
-        baseColor = 17;   // Deep Blue
-        range = 4;        // Use colors 17, 18, 19, 20
-    } else if (ideo < 35) { // Conservative (Standard Blues)
-        baseColor = 26;   
-        range = 6;        
-    } else if (ideo < 55) { // Center (Yellows/Oranges)
-        baseColor = 220;  
-        range = 6;
-    } else if (ideo < 80) { // Socialist (Reds/Pinks)
-        baseColor = 160;  
-        range = 7;
-    } else {                // Far-Left (Dark Reds)
-        baseColor = 88;   
-        range = 3;
+    int r = 0, g = 0, b = 0;
+    int partyId = ra.nextInt(100);
+    // 1. Determine Base Ideological RGB
+    if (ideo < 25) {        // Reactionary/Far-Right (Deep Navy)
+        r = 20; g = 20; b = 150;
+    } else if (ideo < 40) { // Conservative (Royal Blue)
+        r = 50; g = 100; b = 255;
+    } else if (ideo < 55) { // Centrist (Yellow/Gold)
+        r = 255; g = 215; b = 0;
+    } else if (ideo < 75) { // Social Democrat/Green (Reddish-Orange or Green)
+        r = 255; g = 90; b = 50; 
+    } else {                // Socialist/Communist (Deep Red)
+        r = 200; g = 0; b = 0;
     }
 
-    // 2. Apply the Offset
-    // Use modulo (%) so the offset never exceeds the range
-    int uniqueColor = baseColor + (ideo % range);
+    // 2. Add "Jitter" based on Party ID to ensure uniqueness
+    // We use a hash-like multiplier so IDs 1 and 2 look very different
+    int variance = (partyId * 12345) % 50; // Shift color by up to 50 units
+    
+    r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
+    g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
+    b = Math.max(0, Math.min(255, b + (partyId % 3 == 2 ? variance : -variance)));
 
-    return "\u001B[38;5;" + uniqueColor + "m";
+    // 3. Return TrueColor ANSI Sequence: \u001B[38;2;R;G;Bm
+    return String.format("\u001B[38;2;%d;%d;%dm", r, g, b);
+
 }
 
 public static String detIdeo(Party par){
@@ -897,10 +897,10 @@ if(totalRecog > 0.5){
                 case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
-                    for(int i=0; i<targetpar.getPercent()/5;i++){
+                    for(int i=0; i<targetpar.getPercent()/10;i++){
                         targetpar.addFatigue();
                     }
-                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/5));
+                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/10));
                     
                     for(ideoGroup gro : allGroups){
                         if(gro.proximityWith(targetpar)>85){
