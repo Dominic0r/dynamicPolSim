@@ -679,6 +679,13 @@ public class Main // Don't tell mom I use java
         potLeaders.sort(Comparator.comparingInt(p -> 
                 100-p.getPercent()
                 ));
+                
+            int partiesInParliament = 0;
+            for(Party par: allParties){
+                if(par.getPercent()>0){
+                    partiesInParliament++;
+                }
+            }
         for(int i=0; i<potLeaders.size();i++){
             
         Party winner = potLeaders.get(tries);
@@ -698,10 +705,10 @@ public class Main // Don't tell mom I use java
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
-                    tresh += Math.abs(par.getIdeology()-50)/2;
+                    tresh += Math.abs(par.getIdeology()-50)/5;
                     tresh += down*3;
-                    if(allParties.size()<5){
-                        tresh -= 5* (5-allParties.size());
+                    if(partiesInParliament<5){
+                        tresh -= 5* (5-partiesInParliament);
                     }
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
