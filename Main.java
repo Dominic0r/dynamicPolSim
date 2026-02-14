@@ -694,16 +694,21 @@ public class Main // Don't tell mom I use java
                 potentialPartners.sort(Comparator.comparingInt(p -> 
                 Math.abs(p.getIdeology() - winner.getIdeology())
                 ));
+                int down = 0;
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/2;
+                    tresh += down*3;
+                    if(allParties.size()<5){
+                        tresh -= 5* (5-allParties.size());
+                    }
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
                         
                     }
-                    
+                    down++;
                     
                 }
                 rulingCoalition = gov;
