@@ -475,7 +475,7 @@ public class Main // Don't tell mom I use java
                     maxpar = par;
                 }
             }
-            if (totalVotes <= 0) return;
+            //if (totalVotes <= 0) return;
             maxpar.setPercent(maxpar.getPercent()+1); 
         }
         
@@ -896,7 +896,7 @@ if(totalRecog > 0.5){
                 System.out.println("Populist Wave!");
                 for(Party par : allParties) {
        
-        if (par.getRecognition() > 0) {
+        if (par.getRecognition() > 0.1) {
             par.setRecog(par.getRecognition() * -1.5); 
         } else {
             
@@ -920,8 +920,10 @@ if(totalRecog > 0.5){
         gro.updateSatisfaction(-20);
     }
         }
-                break;
-                case 5:
+        
+            break;
+            
+            case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
                     for(int i=0; i<targetpar.getPercent()/10;i++){
@@ -931,10 +933,11 @@ if(totalRecog > 0.5){
                     
                     for(ideoGroup gro : allGroups){
                         if(gro.proximityWith(targetpar)>85){
-                            gro.updateSatisfaction(-10);
+                            gro.updateSatisfaction(-50);
                         }
                     }
-                break;
+            break;
+            default:
             
         }
     }
