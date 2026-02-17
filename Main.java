@@ -461,8 +461,26 @@ public class Main // Don't tell mom I use java
             
         }*/
         
+        
+        
+        
+        //seat distribution
+        for(int i=0; i<50;i++){ // simulation of first past the post
+            int maxnum =0;
+            Party maxpar = null;
+            for(Party par: allParties){
+                int curscore = par.getScore()/ (ra.nextInt(4)+1);
+                if(curscore > maxnum){
+                    maxnum = curscore;
+                    maxpar = par;
+                }
+            }
+            if (totalVotes <= 0) return;
+            maxpar.setPercent(maxpar.getPercent()+1); 
+        }
+        
         //dhondt
-        for(int i=0; i<100;i++){
+        for(int i=0; i<50;i++){
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: allParties){
@@ -477,22 +495,6 @@ public class Main // Don't tell mom I use java
             maxpar.setPercent(maxpar.getPercent()+1);
             }
         }
-        
-        
-        //seat distribution
-        /*for(int i=0; i<100;i++){ // simulation of first past the post
-            int maxnum =0;
-            Party maxpar = null;
-            for(Party par: allParties){
-                int curscore = par.getScore()/ (ra.nextInt(4)+1);
-                if(curscore > maxnum){
-                    maxnum = curscore;
-                    maxpar = par;
-                }
-            }
-            if (totalVotes <= 0) return;
-            maxpar.setPercent(maxpar.getPercent()+1); //nullpoiintererror here
-        }*/
         
         
     }
@@ -901,8 +903,6 @@ if(totalRecog > 0.5){
             par.setRecog(0.5); 
         }
         if(par.getPercent()> 20){
-            par.setRecog(par.getRecognition()-2);
-        }else if(par.getPercent()>10){
             par.setRecog(par.getRecognition()-1);
         }
         
