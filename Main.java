@@ -391,8 +391,10 @@ public class Main // Don't tell mom I use java
     }
     
     public static void updateGroupSize(){
+        int changeby = 0;
         for(ideoGroup gro: allGroups){
-            gro.updateSize(ra.nextInt(10));
+            changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:10;
+            gro.updateSize(ra.nextInt(changeby));
         }
     }
     
@@ -896,17 +898,18 @@ public static void events(){
                 System.out.println("Economic Crisis!");
             for(ideoGroup gro : allGroups){
                 if(gro.getIdeology()> 80 || gro.getIdeology()< 20){
-                    gro.updateSize(ra.nextInt((gro.getSize()/2)+1));
+                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
                     approvalRatingChange -= ra.nextInt(5);
                     gro.updateSatisfaction(-1*ra.nextInt(25));
                 }
+                radicalizeVoters();
             }
                 break;
             case 1:
                 System.out.println("Economic Boom!");
             for(ideoGroup gro : allGroups){
                 if(gro.getIdeology()< 80 || gro.getIdeology()> 20){
-                    gro.updateSize(ra.nextInt((gro.getSize()/2)+1));
+                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
                     approvalRatingChange += ra.nextInt(5);
                 }
                 moderateVoters();
@@ -916,7 +919,7 @@ public static void events(){
                 System.out.println("Labor Strikes!");
             for(ideoGroup gro : allGroups){
                 if(gro.getIdeology()> 60){
-                    gro.updateSize(ra.nextInt((gro.getSize()/2)+1));
+                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
                 }
             }
                 break;
@@ -924,7 +927,7 @@ public static void events(){
                 System.out.println("Immigration Crisis!");
             for(ideoGroup gro : allGroups){
                 if(gro.getIdeology()< 40){
-                    gro.updateSize(ra.nextInt((gro.getSize()/2)+1));
+                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
                 }
             }
                 break;
@@ -956,7 +959,7 @@ if(totalRecog > 0.5){
     }
     
     for(ideoGroup gro: allGroups){
-        gro.updateSatisfaction(-20);
+        gro.updateSatisfaction(-2);
     }
         }
         
