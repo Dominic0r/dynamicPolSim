@@ -57,6 +57,7 @@ public class Main // Don't tell mom I use java
         double recognition = 0;// how established a party is
         int failcount = 0;
         String color;
+        int delegates = 0;
         
         double fatigue = 0;
         
@@ -82,6 +83,22 @@ public class Main // Don't tell mom I use java
         public int getScore(){return score;}
         public int getPopularity(){return popularity;}
         public int getPercent(){return percent;}
+        
+        public int getDelegates(){
+            return delegates;
+        }
+        
+        public void resetDel(){
+            delegates = 0;
+        }
+        
+        public void addNoOfDels(int toAdd){
+            delegates+=toAdd;
+        }
+        
+        public void addDelegates(){
+            delegates++;
+        }
         
         public String ideoDisplay(){
             return RESET+" ("+getDynamicColor(this.ideology)+")";
@@ -502,177 +519,199 @@ public class Main // Don't tell mom I use java
     public static int startyear;
     public static int year = 1852;
     
-    /*public static void electLeadParty() {
-    int rounds = 1;
-    List<Party> candidates = new ArrayList<>(allParties);
-    List<Coalition> coalitions = new ArrayList<>();
-    for(Party par: allParties){
-        coalitions.add(new Coalition(par));
-    }
-    Party winningParty = null;
-    boolean hasGotMajority = false;
-    boolean cointossed = false;
-    while (!hasGotMajority && candidates.size() > 0) {
-        Map<Party, Integer> voteCount = new HashMap<>();
-        for (Party candidate : candidates) {
-            voteCount.put(candidate, 0);
-        }
-        for(Coalition coa : coalitions){
-            coa.resetList();
-        }
-        
-        for (Party votingParty : allParties) {
-            cointossed = false;
-            Party bestCandidate = null;
-            int minDiff = Integer.MAX_VALUE;
-            List<Party> tiedCandidates = new ArrayList<>();
-
-            for (Party candidate : candidates) {
-                int diff = Math.abs(votingParty.getIdeology() - candidate.getIdeology());
-                
-                if (diff < minDiff) {
-                    minDiff = diff;
-                    tiedCandidates.clear();
-                    tiedCandidates.add(candidate);
-                } else if (diff == minDiff) {
-                    tiedCandidates.add(candidate);
-                }
-            }
-
-            if (tiedCandidates.size() > 1) {
-                    bestCandidate = tiedCandidates.get(ra.nextInt(tiedCandidates.size()));
-                    if(tiedCandidates.size()==2){
-                    cointossed = true;
-                    }
-                
-            } else {
-                bestCandidate = tiedCandidates.get(0);
-            }
-
-            int currentVotes = voteCount.getOrDefault(bestCandidate, 0);
-            voteCount.put(bestCandidate, currentVotes + votingParty.getPercent());
-            for(Coalition coa: coalitions){
-                if(coa.getLeader() == bestCandidate &&!cointossed ){
-                    coa.addParty(votingParty); 
-                }
-            }
-        }
-        
-        winningParty = null;
-        int maxVotes = -1;
-        for (Map.Entry<Party, Integer> entry : voteCount.entrySet()) {
-            if (entry.getValue() > maxVotes) {
-                maxVotes = entry.getValue();
-                winningParty = entry.getKey();
-            }
-        }
-
-        /*System.out.println("--- Election Round " + rounds + " ---");
-        for (Party cand : candidates) {
-            System.out.print(cand.getName() + ": " + voteCount.get(cand) + "% || ");
-        }
-        System.out.println("\n");
-
-    
-        // Check for 50%+ Majority (of the 100 seats)
-        List<Integer> candvals = new ArrayList<>(voteCount.values());
-        if (maxVotes > 50) { 
-            hasGotMajority = true;
-        } else if (candidates.size() > 2) {
-            // Elimination Phase: Remove the party with the least support
-            rounds++;
-            int minVotes = Collections.min(voteCount.values());
-            List<Party> lowestCandidates = new ArrayList<>();
-            
-            for (Map.Entry<Party, Integer> entry : voteCount.entrySet()) {
-                if (entry.getValue() == minVotes) {
-                    lowestCandidates.add(entry.getKey());
-                }
-            }
-            
-            // Remove one of the lowest-performing parties
-            Party toRemove = lowestCandidates.get(ra.nextInt(lowestCandidates.size()));
-            candidates.remove(toRemove);
-            
-            // Cleanup: remove any other parties that got 0 votes to speed up the loop
-            Iterator<Party> it = candidates.iterator();
-            while(it.hasNext()){
-                Party p = it.next();
-                if(voteCount.get(p) == 0 && p != winningParty) it.remove();
-            }
-        }else if(candidates.size()==2){
-            if(candvals.get(0)==candvals.get(1)){
-                Party toRemove = candidates.get(ra.nextInt(candidates.size()));
-                candidates.remove(toRemove);
-                hasGotMajority = true;
-            }else{
-                 // Elimination Phase: Remove the party with the least support
-            rounds++;
-            int minVotes = Collections.min(voteCount.values());
-            List<Party> lowestCandidates = new ArrayList<>();
-            
-            for (Map.Entry<Party, Integer> entry : voteCount.entrySet()) {
-                if (entry.getValue() == minVotes) {
-                    lowestCandidates.add(entry.getKey());
-                }
-            }
-            
-            // Remove one of the lowest-performing parties
-            Party toRemove = lowestCandidates.get(ra.nextInt(lowestCandidates.size()));
-            candidates.remove(toRemove);
-            
-            // Cleanup: remove any other parties that got 0 votes to speed up the loop
-            Iterator<Party> it = candidates.iterator();
-            }
-            
-        } else {
-            // Only one candidate left, they win by default
-            hasGotMajority = true;
-        }
-    }
-
-    // Assign the winner to your rulingCoalition logic
-    if (winningParty != null) {
-        System.out.println("GOVERNMENT FORMED BY: " + winningParty.getName());
-        System.out.println("Ruling Coalition: ");
-        
-        
-        if(rulingCoalition!=null){
-            if(winningParty != rulingCoalition.getLeader()){
-                leaderArchive.add(new Archive(rulingCoalition.getLeader().getName(), startyear, year));
-            }
-        }
-        startyear = year;
-        for(Coalition coa : coalitions){
-            if(coa.getLeader()==winningParty){
-                rulingCoalition=coa;
-            }
-        }
-        
-        for(Party par: rulingCoalition.getMemberList()){
-            if(par.getPercent()>0){
-            System.out.print(getDynamicColor(par.getIdeology())+"o"+ RESET+ " - "+ par.getName()+ " ["+par.getPercent()+"%]");
-            
-            if(par == rulingCoalition.getLeader()){
-                System.out.println(" - Leader");
-            }else if(par.proximityWith(rulingCoalition.getLeader())< 75){
-                System.out.println(" - Tolerating");
-            }else{
-                System.out.println();
-            }
-            }
-            
-        }
-        winningParty.incrementRecognition();
-        winningParty.addFatigue();
+    public static void electPresident(){
+        List<Party> candidates = new ArrayList<>();
+        int tresh = 30;
         for(Party par: allParties){
-            if(par !=winningParty){
-                par.decreaseFatigue();
+            int points = par.getPercent();
+            if(rulingCoalition!=null){
+                if(rulingCoalition.getMemberList().contains(par)){
+                    if(rulingCoalition.getLeader()!= par){
+                        points/=2;
+                    }else{
+                        points*=2;
+                    }
+                }
+                
+                
+            }
+            
+            points+= ra.nextInt(50);
+            points += points*par.getRecognition();
+            points -= points*par.getFatigue();
+            
+            if(points>= tresh){
+                candidates.add(par);
             }
         }
+        
+        int winvotes = 0;
+        Party winner = null;
+        
+        for(Party par: candidates){
+            par.resetScore();
+        }
+        Map<ideoGroup, Integer> acceptables = new HashMap<>();
+        tresh = 85;
+        for(ideoGroup gro: allGroups){
+            for(Party par: candidates){
+                if(gro.proximityWith(par)> tresh){
+                    if(!acceptables.containsKey(gro)){
+                        acceptables.put(gro, par.getPercent()+1);
+                    }else{
+                        acceptables.put(gro, acceptables.get(gro)+(par.getPercent()+1));
+                    }
+                }
+            }
+        }
+        
+        for(ideoGroup gro: allGroups){
+            boolean hasvoted = false;
+            int maxProximity = 0;
+            
+            for(Party par: candidates){
+                if(gro.proximityWith(par)>tresh){
+                    hasvoted = true;
+                    if(gro.proximityWith(par)>maxProximity){
+                        maxProximity = gro.proximityWith(par);
+                    }
+                    int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
+                    if(rulingCoalition!= null){
+                        if(rulingCoalition.getMemberList().contains(par)){
+                            toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
+                        }
+                    }
+                    toAdd += (int) toAdd* par.getRecognition();
+                    if(toAdd>0){
+                        toAdd-=(int) toAdd*par.getFatigue();
+                    }else{
+                        toAdd+=(int) toAdd*par.getFatigue();
+                    }
+                    int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
+                    toAdd = (toAdd*pctginAccept)/100;
+                    par.addVotes(toAdd/(ra.nextInt(4)+1));
+                    //par.addVotes(toAdd);
+                    par.recordVotes(gro,toAdd);
+                }
+            }
+            int satischange = -1*(5-(maxProximity/20));
+            if(!hasvoted){
+                satischange-=ra.nextInt(10);
+            }
+            satischange+= ra.nextInt(3)-ra.nextInt(3);
+            gro.updateSatisfaction(satischange);
+            
+        }
+        int totvotes = 0;
+        for(Party par: candidates){
+            if(par.getScore()> winvotes){
+                winvotes = par.getScore();
+                winner = par;
+            }
+            totvotes+= par.getScore();
+        }
+        candidates.sort(Comparator.comparingInt(Party::getScore).reversed());
+        System.out.println("==========Presidential Election==========");
+        System.out.println("Round 1");
+        int ordinal = 0;
+        int majorvotes = 0;
+        for(Party par: candidates){
+            if(ordinal <3){
+                System.out.print(par.getName()+ par.ideoDisplay()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
+                majorvotes+= par.getScore();
+            }
+            ordinal++;
+        }
+        int others = totvotes-majorvotes;
+        System.out.print("Others ["+((others*100)/totvotes)+"%] | ");
+        if(!(winvotes>totvotes/2)){
+            candidates.sort(Comparator.comparingInt(Party::getScore).reversed());
+            winvotes = -1;
+            List<Party> toDelete = new ArrayList<>();
+            for(Party par: candidates){
+                if(par != candidates.get(0) && par != candidates.get(1)){
+                    toDelete.add(par);
+                }
+            }
+            candidates.removeAll(toDelete);
+            
+            for(Party par: candidates){
+            par.resetScore();
+        }
+        acceptables.clear();
+        tresh = 85;
+        for(ideoGroup gro: allGroups){
+            for(Party par: candidates){
+                if(gro.proximityWith(par)> tresh){
+                    if(!acceptables.containsKey(gro)){
+                        acceptables.put(gro, par.getPercent()+1);
+                    }else{
+                        acceptables.put(gro, acceptables.get(gro)+(par.getPercent()+1));
+                    }
+                }
+            }
+        }
+        
+        for(ideoGroup gro: allGroups){
+            boolean hasvoted = false;
+            int maxProximity = 0;
+            
+            for(Party par: candidates){
+                if(gro.proximityWith(par)>tresh){
+                    hasvoted = true;
+                    if(gro.proximityWith(par)>maxProximity){
+                        maxProximity = gro.proximityWith(par);
+                    }
+                    int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
+                    if(rulingCoalition!= null){
+                        if(rulingCoalition.getMemberList().contains(par)){
+                            toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
+                        }
+                    }
+                    toAdd += (int) toAdd* par.getRecognition();
+                    if(toAdd>0){
+                        toAdd-=(int) toAdd*par.getFatigue();
+                    }else{
+                        toAdd+=(int) toAdd*par.getFatigue();
+                    }
+                    int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
+                    toAdd = (toAdd*pctginAccept)/100;
+                    par.addVotes(toAdd/(ra.nextInt(4)+1));
+                    //par.addVotes(toAdd);
+                    par.recordVotes(gro,toAdd);
+                }
+            }
+            int satischange = -1*(5-(maxProximity/20));
+            if(!hasvoted){
+                satischange-=ra.nextInt(10);
+            }
+            satischange+= ra.nextInt(3)-ra.nextInt(3);
+            gro.updateSatisfaction(satischange);
+            
+        }
+            winvotes = 0;
+            totvotes=0;
+            for(Party par: candidates){
+            if(par.getScore()> winvotes){
+                winvotes = par.getScore();
+                winner = par;
+            }
+            totvotes+= par.getScore();
+            }
+            
+            System.out.println("\n\nRound 2");
+        for(Party par: candidates){
+            
+            System.out.print(par.getName()+ par.ideoDisplay()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
+        }
+        }
+        President = winner;
+        System.out.println("\n===============\nElected President: "+ President.getColor()+President.getName()+RESET+" "+ President.ideoDisplay());
+        
     }
-}*/
     
+    
+    public static Party President = null;
     public static void electLeadParty(){
         
         int tries = 0;
@@ -852,7 +891,7 @@ public static void events(){
     boolean eventHappened = false;
     if(ra.nextInt(10)<5){
        
-        switch(ra.nextInt(6)){
+        switch(ra.nextInt(7)){
             case 0:
                 System.out.println("Economic Crisis!");
             for(ideoGroup gro : allGroups){
@@ -1226,6 +1265,7 @@ public static void seeDominant(){
 		    System.out.println(year+ "=========================");
 		    election();
 		    electLeadParty();
+		    electPresident();
 		    
 		    //System.out.println("Winner: "+ rulingCoalition.getLeader().getName());
 		    
