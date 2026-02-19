@@ -521,6 +521,8 @@ public class Main // Don't tell mom I use java
     public static int startyear;
     public static int year = 1852;
     
+    
+    
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
         int tresh = 30;
@@ -944,9 +946,7 @@ if(totalRecog > 0.5){
             
             par.setRecog(0.5); 
         }
-        if(par.getPercent()> 20){
-            par.setRecog(par.getRecognition()-1);
-        }
+        
         
     }
    
