@@ -793,6 +793,11 @@ public class Main // Don't tell mom I use java
         for(Party par: allParties){
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
+            }else{
+                par.addFatigue();
+            }
+            if(par == rulingCoalition.getLeader()){
+                par.addFatigue();
             }
         }
         
