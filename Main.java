@@ -344,17 +344,11 @@ public class Main // Don't tell mom I use java
     if(diceroll == 4){
         allParties.add(new Party("National Unity Party", 15, true, assignColor(15)));
     }else if(diceroll == 3){
-        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
-        allParties.add(new Party("National Unity Party - Left", 20, true, assignColor(20)));
+        allParties.add(new Party("National Unity Party", 25, true, assignColor(15)));
     }else if(diceroll == 2){
-        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
-        allParties.add(new Party("National Unity Party - Center", 20, true, assignColor(20)));
-        allParties.add(new Party("National Unity Party - Left", 25, true, assignColor(25)));
+        allParties.add(new Party("Peasants Republican Party", 35, true, assignColor(30)));
     }else{
-        allParties.add(new Party("National Unity Party - Right", 15, true, assignColor(15)));
-        allParties.add(new Party("National Unity Party - Center", 20, true, assignColor(20)));
-        allParties.add(new Party("National Unity Party - Left", 25, true, assignColor(25)));
-        allParties.add(new Party("Republican Party - Right", 30, true, assignColor(30)));
+        
     }
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
@@ -363,28 +357,28 @@ public class Main // Don't tell mom I use java
         allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
         allParties.add(new Party("National Party", 48, true, assignColor(48)));  
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party - Center", 50, true, assignColor(50)));  
+       allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
         allParties.add(new Party("National Party", 48, true, assignColor(48)));  
-        allParties.add(new Party("Republican Party - Liberal", 52, true, assignColor(52)));  
+        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));  
     }else{
-        allParties.add(new Party("Republican Party - Center", 50, true, assignColor(50)));  
-        allParties.add(new Party("National Party - Moderate", 48, true, assignColor(48)));  
-        allParties.add(new Party("Republican Party - Liberal", 52, true, assignColor(52)));  
-        allParties.add(new Party("National Party - Right", 40, true, assignColor(40)));  
+        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
+        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));  
+        allParties.add(new Party("Conservative Republican Party", 40, true, assignColor(40)));  
     }
     // Left-wing opposition unity
     diceroll = (ra.nextInt(12))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
+        allParties.add(new Party("Left Republican Party", 60, true, assignColor(65)));
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
+        allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
+       allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
         allParties.add(new Party("Workers Democratic Party", 75, true, assignColor(75)));
     }else{
-        allParties.add(new Party("Republican Party - Left", 65, true, assignColor(65)));
-        allParties.add(new Party("Workers Democratic Party - Left", 85, true, assignColor(85)));
-        allParties.add(new Party("Workers Democratic Party - Right", 70, true, assignColor(70)));
+        allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
+        allParties.add(new Party("Revolutionary Democratic Party", 85, true, assignColor(85)));
+        allParties.add(new Party("Workers Democratic Party", 70, true, assignColor(70)));
     }
     
     
@@ -540,9 +534,9 @@ public class Main // Don't tell mom I use java
                 
             }
             
-            points+= ra.nextInt(50);
+            points+= ra.nextInt((100-par.getPercent())+1);
             points += points*par.getRecognition();
-            points -= points*par.getFatigue();
+            points -= (points*par.getFatigue())/2;
             
             if(points>= tresh){
                 candidates.add(par);
@@ -627,7 +621,7 @@ public class Main // Don't tell mom I use java
             ordinal++;
         }
         int others = totvotes-majorvotes;
-        System.out.print("Others ["+((others*100)/totvotes)+"%] | ");
+        System.out.print("Others ["+((others*100)/(totvotes+1))+"%] | ");
         if(!(winvotes>totvotes/2)){
             candidates.sort(Comparator.comparingInt(Party::getScore).reversed());
             winvotes = -1;
