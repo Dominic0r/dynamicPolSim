@@ -1109,13 +1109,14 @@ public static final String MEMBERBG = "\u001B[47m";
     System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
     
     List<String> allSeats = new ArrayList<>();
+    List<String> oppoSeats = new ArrayList<>();
     for (Party par : allParties) {
         String color = getDynamicColor(par.getIdeology());
         for (int i = 0; i < par.getPercent(); i++) {
             if(rulingCoalition.containsParty(par)){
                 allSeats.add(color + "o" + RESET);
             }else{
-                allSeats.add(color + "-" + RESET);
+                oppoSeats.add(color + "o" + RESET);
             }
         }
     }
@@ -1123,11 +1124,15 @@ public static final String MEMBERBG = "\u001B[47m";
     
     while (allSeats.size() < 100) allSeats.add("·");
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < allSeats.size(); i++) {
         System.out.print(allSeats.get(i) + " ");
         if ((i + 1) % 10 == 0) System.out.println(); 
     }
-
+    System.out.println("\n");
+for (int i = 0; i < oppoSeats.size(); i++) {
+        System.out.print(oppoSeats.get(i) + " ");
+        if ((i + 1) % 10 == 0) System.out.println(); 
+    }
     System.out.println("-------------------------------------");
     
     for (Party par : allParties) {
@@ -1142,30 +1147,52 @@ public static final String MEMBERBG = "\u001B[47m";
 public static void visualizeParliament() {
     Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
 
-    System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
-    
     List<String> allSeats = new ArrayList<>();
     for (Party par : allParties) {
-        String color = par.getColor();
+        String symbol = rulingCoalition.containsParty(par) ? "o" : "-";
         for (int i = 0; i < par.getPercent(); i++) {
-            if(rulingCoalition.containsParty(par)){
-                allSeats.add(color + "o" + RESET);
-            }else{
-                allSeats.add(color + "-" + RESET);
+            allSeats.add(par.getColor() + symbol + RESET);
+        }
+    }
+    while (allSeats.size() < 100) allSeats.add("·");
+
+    int rows = 10;
+    int cols = 40; 
+    String[][] canvas = new String[rows][cols];
+    for (String[] row : canvas) Arrays.fill(row, " ");
+
+    int seatIndex = 0;
+    int totalSteps = 20; 
+    int rings = 5;      
+
+    
+    for (int s = 0; s < totalSteps; s++) {
+        double angle = (s * (Math.PI / (totalSteps - 1)));
+
+        for (int ring = 0; ring < rings; ring++) {
+            if (seatIndex >= allSeats.size()) break;
+
+            double r = 10.0 - (ring * 1.3); 
+
+            int x = (int) Math.round(cols / 2.0 + (r * Math.cos(angle) * 1.575));
+            int y = (int) Math.round(rows - 1 - (r * Math.sin(angle))*0.855);
+
+            if (y >= 0 && y < rows && x >= 0 && x < cols) {
+                canvas[y][x] = allSeats.get(seatIndex);
             }
+            seatIndex++;
         }
     }
 
-    
-    while (allSeats.size() < 100) allSeats.add("·");
-
-    for (int i = 0; i < 100; i++) {
-        System.out.print(allSeats.get(i) + " ");
-        if ((i + 1) % 10 == 0) System.out.println(); 
+    System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            System.out.print(canvas[i][j]);
+        }
+        System.out.println();
     }
 
-    System.out.println("-------------------------------------");
-    
+    System.out.println("---------------------------------------------");
     for (Party par : allParties) {
         if (par.getPercent() > 0) {
             System.out.print(par.getColor() + "o " + RESET 
