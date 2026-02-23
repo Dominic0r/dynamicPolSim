@@ -637,7 +637,7 @@ public class Main // Don't tell mom I use java
             par.resetScore();
         }
         acceptables.clear();
-        tresh = 85;
+        
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -744,8 +744,13 @@ public class Main // Don't tell mom I use java
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
-                    tresh += Math.abs(par.getIdeology()-50)/5;
+                    tresh += Math.abs(par.getIdeology()-50)/4;
+                    tresh += Math.abs(winner.getIdeology()-50)/4;
                     tresh += down*3;
+                    if(par == President || winner == President){
+                        tresh -= tresh/3;
+                    }
+                    
                     if(partiesInParliament<5){
                         tresh -= 5* (5-partiesInParliament);
                     }
