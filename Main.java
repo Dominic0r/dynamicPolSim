@@ -820,7 +820,8 @@ public class Main // Don't tell mom I use java
         
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
-                System.out.println("Total Seats: "+ totGovSeats+"%");
+                System.out.println("Government formed by "+ rulingCoalition.getLeader().getName());
+                System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
                 
@@ -837,6 +838,23 @@ public class Main // Don't tell mom I use java
             }
             
         }
+        LOTO = null;
+        Party maxpar = null;
+        int maxnum=-10;
+        for(Party par: allParties){
+            if(par.getPercent()>maxnum && !rulingCoalition.containsParty(par)){
+                maxnum = par.getPercent();
+                maxpar = par;
+            }
+        }
+        
+        LOTO = maxpar;
+        if(LOTO !=null){
+            System.out.println("\nLargest Opposition Party: "+ LOTO.getColor()+"o"+RESET+" - "+ LOTO.getName()+LOTO.ideoDisplay()+" ["+ LOTO.getPercent()+"%]");
+            LOTO.incrementRecognition();
+        }else{
+            System.out.println("\nLargest Opposition Party: None");
+        }
         for(Party par: allParties){
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
@@ -850,6 +868,7 @@ public class Main // Don't tell mom I use java
         
         
     }
+    public static Party LOTO;
     
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
