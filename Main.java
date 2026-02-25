@@ -589,6 +589,9 @@ public class Main // Don't tell mom I use java
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
                     toAdd = IdeoCheck(toAdd, par);
+                    if(toAdd<0){
+                        toAdd =0;
+                    }
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -679,6 +682,9 @@ public class Main // Don't tell mom I use java
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
                     toAdd = IdeoCheck(toAdd, par);
+                    if(toAdd<0){
+                        toAdd =0;
+                    }
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
