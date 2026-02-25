@@ -435,6 +435,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
+                    toAdd = IdeoCheck(toAdd, par);
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -587,6 +588,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
+                    toAdd = IdeoCheck(toAdd, par);
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -638,6 +640,8 @@ public class Main // Don't tell mom I use java
         }
         acceptables.clear();
         
+        
+        
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -674,6 +678,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
+                    toAdd = IdeoCheck(toAdd, par);
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -703,9 +708,46 @@ public class Main // Don't tell mom I use java
             System.out.print(par.getName()+ par.ideoDisplay()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
         }
         }
+        
+        for(Party par: candidates){
+            par.incrementRecognition();
+        }
         President = winner;
+        President.incrementRecognition();
         System.out.println("\n===============\nElected President: "+ President.getColor()+President.getName()+RESET+" "+ President.ideoDisplay());
         
+    }
+    
+    public static int IdeoCheck(int toAdd, Party par){
+        if(lean == "Republic"){
+                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                            toAdd+= toAdd/2;
+                        }else{
+                            toAdd/=2;
+                        }
+                    }else if(lean == "Reaction"){
+                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                            toAdd/=2;
+                        }else{
+                            if(par.getIdeology()<35){
+                                toAdd += toAdd/2;
+                            }else{
+                                toAdd/=2;
+                            }
+                        }
+                    }else{
+                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                            toAdd/=2;
+                        }else{
+                            if(par.getIdeology()<35){
+                                toAdd/=2;
+                            }else{
+                                toAdd += toAdd/2;
+                            }
+                        }
+                    }
+                    
+                    return toAdd;
     }
     
     
@@ -1193,7 +1235,8 @@ public static void visualizeParliament() {
     }
 
     System.out.println("---------------------------------------------");
-    for (Party par : allParties) {
+    for (int i = allParties.size() - 1; i >= 0; i--) {
+        Party par = allParties.get(i);
         if (par.getPercent() > 0) {
             System.out.print(par.getColor() + "o " + RESET 
                 + par.getName() + " [" + par.getPercent() + "%]  ");
@@ -1201,7 +1244,7 @@ public static void visualizeParliament() {
     }
     System.out.println("\n");
 }
-
+public static String lean = "Republic";
 public static void nationalLean(){
     int reaction =0,republic =0, revolution=0;
     int total =0;
@@ -1218,12 +1261,16 @@ public static void nationalLean(){
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
         System.out.println("\u001B[38;5;18m Reaction \u001B[0m");
+        lean = "Reaction";
     }else if(republic>= reaction+revolution){
         System.out.println("\u001B[38;5;226m Republic \u001B[0m");
+        lean = "Republic";
     }else if(revolution> reaction+republic){
         System.out.println("\u001B[38;5;88m Revolution \u001B[0m");
+        lean = "Revolution";
     }else{
         System.out.println("\u001B[38;5;226m Republic \u001B[0m");
+        lean = "Republic";
     }
 }
 
