@@ -395,7 +395,7 @@ public class Main // Don't tell mom I use java
     public static void updateGroupSize(){
         int changeby = 0;
         for(ideoGroup gro: allGroups){
-            changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:10;
+            changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
             gro.updateSize(ra.nextInt(changeby));
         }
     }
@@ -406,7 +406,7 @@ public class Main // Don't tell mom I use java
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 80;
+        int tresh = 85;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -733,27 +733,28 @@ public class Main // Don't tell mom I use java
     }
     
     public static int IdeoCheck(int toAdd, Party par){
+        int lefttresh = 70, righttresh = 30;
         if(lean == "Republic"){
-                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                        if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
                             toAdd+= toAdd/2;
                         }else{
                             toAdd/=2;
                         }
                     }else if(lean == "Reaction"){
-                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                        if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=2;
                         }else{
-                            if(par.getIdeology()<35){
+                            if(par.getIdeology()<righttresh){
                                 toAdd += toAdd/2;
                             }else{
                                 toAdd/=2;
                             }
                         }
                     }else{
-                        if(par.getIdeology()>35 && par.getIdeology()< 65){
+                        if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=2;
                         }else{
-                            if(par.getIdeology()<35){
+                            if(par.getIdeology()<righttresh){
                                 toAdd/=2;
                             }else{
                                 toAdd += toAdd/2;
@@ -1280,9 +1281,9 @@ public static void nationalLean(){
     int reaction =0,republic =0, revolution=0;
     int total =0;
     for(ideoGroup gro : allGroups){
-        if(gro.getIdeology() <= 35){
+        if(gro.getIdeology() <= 30){
             reaction+= gro.getSize();
-        } else if(gro.getIdeology()>=65 ){
+        } else if(gro.getIdeology()>=70 ){
             revolution+=gro.getSize();
         }else{
             republic += gro.getSize();
