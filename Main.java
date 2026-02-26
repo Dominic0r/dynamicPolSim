@@ -219,7 +219,15 @@ public class Main // Don't tell mom I use java
             driftspeed = 2;
             if(this.ideology < targetIdeo) this.ideology+= driftspeed;
             if(this.ideology> targetIdeo) this.ideology-= driftspeed;
-            
+            int avgideo = 0;
+            if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
+                for(Party par: rulingCoalition.getMemberList()){
+                    avgideo += par.getIdeology();
+                    avgideo = avgideo/rulingCoalition.getMemberList().size();
+                }
+            }
+            if(this.ideology < avgideo) this.ideology+= driftspeed;
+            if(this.ideology> avgideo) this.ideology-= driftspeed;
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -479,7 +487,7 @@ public class Main // Don't tell mom I use java
         
         
         //seat distribution
-        for(int i=0; i<50;i++){ // simulation of first past the post
+        /*for(int i=0; i<50;i++){ // simulation of first past the post
             int maxnum =0;
             Party maxpar = null;
             for(Party par: allParties){
@@ -491,10 +499,10 @@ public class Main // Don't tell mom I use java
             }
             //if (totalVotes <= 0) return;
             maxpar.setPercent(maxpar.getPercent()+1); 
-        }
+        }*/
         
         //dhondt
-        for(int i=0; i<50;i++){
+        for(int i=0; i<100;i++){
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: allParties){
@@ -794,13 +802,11 @@ public class Main // Don't tell mom I use java
                     int tresh = 50+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/4;
                     tresh += Math.abs(winner.getIdeology()-50)/4;
-                    tresh += down*3;
-                    if(par == President || winner == President){
-                        tresh -= tresh/3;
-                    }
+                    tresh -= down*3;
+                    tresh += par.getPercent()/5;
                     
                     if(partiesInParliament<5){
-                        tresh -= 5* (5-partiesInParliament);
+                        tresh -= 3* (5-partiesInParliament);
                     }
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
