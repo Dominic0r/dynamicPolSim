@@ -406,7 +406,7 @@ public class Main // Don't tell mom I use java
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 85;
+        int tresh = 65;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -559,7 +559,7 @@ public class Main // Don't tell mom I use java
             par.resetScore();
         }
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        tresh = 85;
+        tresh = 75;
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -651,7 +651,7 @@ public class Main // Don't tell mom I use java
         }
         acceptables.clear();
         
-        
+        tresh = 55;
         
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
