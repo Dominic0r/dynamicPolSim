@@ -406,7 +406,7 @@ public class Main // Don't tell mom I use java
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 65;
+        int tresh = 80;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
