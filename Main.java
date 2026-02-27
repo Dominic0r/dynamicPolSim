@@ -226,8 +226,8 @@ public class Main // Don't tell mom I use java
                     avgideo = avgideo/rulingCoalition.getMemberList().size();
                 }
             }
-            if(this.ideology < avgideo) this.ideology+= driftspeed;
-            if(this.ideology> avgideo) this.ideology-= driftspeed;
+            if(this.ideology < avgideo) this.ideology+= driftspeed/2;
+            if(this.ideology> avgideo) this.ideology-= driftspeed/2;
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -443,7 +443,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
+                    //toAdd = IdeoCheck(toAdd, par);
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -506,7 +506,7 @@ public class Main // Don't tell mom I use java
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: allParties){
-                int parscore = par.getScore()/(par.getPercent()+1);
+                int parscore = (par.getScore()/(IdeoCheck(par)+1))/(par.getPercent()+1);
                 if(parscore>maxnum){
                     maxnum=parscore;
                     maxpar = par;
@@ -596,7 +596,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
+                    //toAdd = IdeoCheck(toAdd, par);
                     if(toAdd<0){
                         toAdd =0;
                     }
@@ -689,7 +689,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
+                    //toAdd = IdeoCheck(toAdd, par);
                     if(toAdd<0){
                         toAdd =0;
                     }
@@ -732,37 +732,38 @@ public class Main // Don't tell mom I use java
         
     }
     
-    public static int IdeoCheck(int toAdd, Party par){
+    public static int IdeoCheck(Party par){
         int lefttresh = 70, righttresh = 30;
+        int divi = 1;
         if(lean == "Republic"){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
-                            toAdd+= toAdd/2;
+                            divi = 2;
                         }else{
-                            toAdd/=2;
+                            
                         }
                     }else if(lean == "Reaction"){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=2;
+                            divi = 2;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd += toAdd/2;
+                                
                             }else{
-                                toAdd/=2;
+                                divi = 2;
                             }
                         }
                     }else{
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=2;
+                            divi = 2;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd/=2;
+                                divi = 2;
                             }else{
-                                toAdd += toAdd/2;
+                                
                             }
                         }
                     }
                     
-                    return toAdd;
+                    return divi;
     }
     
     
@@ -827,7 +828,7 @@ public class Main // Don't tell mom I use java
         
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
-                System.out.println("Government formed by "+ rulingCoalition.getLeader().getName());
+                System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + par.ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
