@@ -397,7 +397,23 @@ public class Main // Don't tell mom I use java
         int changeby = 0;
         for(ideoGroup gro: allGroups){
             changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
-            gro.updateSize(ra.nextInt(changeby));
+            if(lean.equalsIgnoreCase("Republic")){
+                if(gro.getIdeology()>70 || gro.getIdeology()<20){
+                changeby/=10;
+                }
+            }else{
+                if(lean.equalsIgnoreCase("Reaction")){
+                    if(gro.getIdeology()>20){
+                        changeby/=10;
+                    }
+                }else{
+                    if(gro.getIdeology()<70){
+                        changeby/=10;
+                    }
+                }
+            }
+            
+            gro.updateSize(ra.nextInt(changeby+1));
         }
     }
     
@@ -444,7 +460,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    //toAdd = IdeoCheck(toAdd, par);
+                    toAdd = IdeoCheck(toAdd, par);
                     par.addVotes(toAdd/(ra.nextInt(4)+1));
                     //par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
@@ -507,7 +523,7 @@ public class Main // Don't tell mom I use java
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: allParties){
-                int parscore = (par.getScore()/(IdeoCheck(par)+1))/(par.getPercent()+1);
+                int parscore = par.getScore()/(par.getPercent()+1);
                 if(parscore>maxnum){
                     maxnum=parscore;
                     maxpar = par;
@@ -597,7 +613,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    //toAdd = IdeoCheck(toAdd, par);
+                    toAdd = IdeoCheck(toAdd, par);
                     if(toAdd<0){
                         toAdd =0;
                     }
@@ -690,7 +706,7 @@ public class Main // Don't tell mom I use java
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
-                    //toAdd = IdeoCheck(toAdd, par);
+                    toAdd = IdeoCheck(toAdd, par);
                     if(toAdd<0){
                         toAdd =0;
                     }
@@ -733,38 +749,38 @@ public class Main // Don't tell mom I use java
         
     }
     
-    public static int IdeoCheck(Party par){
+    public static int IdeoCheck(int toAdd,Party par){
         int lefttresh = 70, righttresh = 30;
         int divi = 1;
-        if(lean == "Republic"){
+        if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
-                            divi = 2;
+                            toAdd/=5;
                         }else{
-                            
+                            toAdd+= toAdd/2;
                         }
-                    }else if(lean == "Reaction"){
+                    }else if(lean.equalsIgnoreCase("Reaction")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            divi = 2;
+                            toAdd/=5;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                
+                                toAdd += toAdd/2;
                             }else{
-                                divi = 2;
+                                toAdd/=5;
                             }
                         }
                     }else{
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            divi = 2;
+                            toAdd/=5;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                divi = 2;
+                                toAdd/=5;
                             }else{
-                                
+                                toAdd+= toAdd/2;
                             }
                         }
                     }
                     
-                    return divi;
+                    return toAdd;
     }
     
     
