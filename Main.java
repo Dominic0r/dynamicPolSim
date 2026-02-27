@@ -223,8 +223,9 @@ public class Main // Don't tell mom I use java
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
                 for(Party par: rulingCoalition.getMemberList()){
                     avgideo += par.getIdeology();
-                    avgideo = avgideo/rulingCoalition.getMemberList().size();
+                    
                 }
+                avgideo = avgideo/rulingCoalition.getMemberList().size();
             }
             if(this.ideology < avgideo) this.ideology+= driftspeed/2;
             if(this.ideology> avgideo) this.ideology-= driftspeed/2;
