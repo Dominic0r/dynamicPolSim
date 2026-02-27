@@ -828,7 +828,7 @@ public class Main // Don't tell mom I use java
         
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
-                System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + par.ideoDisplay());
+                System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
