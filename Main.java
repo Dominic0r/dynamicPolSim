@@ -938,7 +938,7 @@ public static String assignColor(int ideo){
         r = 200; g = 0; b = 0;
     }
 
-    int variance = (partyId * 12345) % (ra.nextInt(100)+1); 
+    int variance = (partyId * 12345) % (ra.nextInt(200)+1); 
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
