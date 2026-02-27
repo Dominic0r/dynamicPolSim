@@ -1416,7 +1416,8 @@ public static void seeDominant(){
         else if (p.getPercent() > 5) spectrum[index] = 'o'; // min Party
     }
     visualizeParliament();
-    System.out.println("Spectrum: [R] " + String.valueOf(spectrum) + " [L]");
+    String spectr =  new StringBuilder(String.valueOf(spectrum)).reverse().toString();
+    System.out.println("Spectrum: [L] " + spectr + " [R]");
 		    for(ideoGroup gro : allGroups){
 		        //System.out.println(gro.getName()+ " "+ gro.getSize() + " "+ gro.getSatisfaction());
 		    }
