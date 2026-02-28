@@ -1,5 +1,5 @@
 import java.util.*;
-public class Main // Don't tell mom I use java
+public class Main 
 {
     public static Scanner sc = new Scanner(System.in);
     public static Random ra = new Random();
@@ -201,7 +201,7 @@ public class Main // Don't tell mom I use java
             }
             
             int targetIdeo = maxGroup.getIdeology();
-            int driftspeed = 3;
+            int driftspeed = 2;
             if(this.ideology < targetIdeo) this.ideology+= driftspeed;
             if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             
@@ -399,16 +399,16 @@ public class Main // Don't tell mom I use java
             changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
             if(lean.equalsIgnoreCase("Republic")){
                 if(gro.getIdeology()>70 || gro.getIdeology()<20){
-                changeby/=10;
+                changeby/=2;
                 }
             }else{
                 if(lean.equalsIgnoreCase("Reaction")){
                     if(gro.getIdeology()>20){
-                        changeby/=10;
+                        changeby/=2;
                     }
                 }else{
                     if(gro.getIdeology()<70){
-                        changeby/=10;
+                        changeby/=2;
                     }
                 }
             }
@@ -423,7 +423,7 @@ public class Main // Don't tell mom I use java
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 85;
+        int tresh = 70;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -449,7 +449,7 @@ public class Main // Don't tell mom I use java
                     int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
                     if(rulingCoalition!= null){
                         if(rulingCoalition.getMemberList().contains(par)){
-                            toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
+                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
                     toAdd += (int) toAdd* par.getRecognition();
@@ -461,8 +461,8 @@ public class Main // Don't tell mom I use java
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
                     toAdd = IdeoCheck(toAdd, par);
-                    par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    //par.addVotes(toAdd);
+                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
+                    par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
                 }
             }
@@ -602,7 +602,7 @@ public class Main // Don't tell mom I use java
                     int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
                     if(rulingCoalition!= null){
                         if(rulingCoalition.getMemberList().contains(par)){
-                            toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
+                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
                     toAdd += (int) toAdd* par.getRecognition();
@@ -617,14 +617,14 @@ public class Main // Don't tell mom I use java
                     if(toAdd<0){
                         toAdd =0;
                     }
-                    par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    //par.addVotes(toAdd);
+                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
+                    par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
                 }
             }
-            int satischange = -1*(5-(maxProximity/20));
+            int satischange = (-1*(5-(maxProximity/20)))/2;
             if(!hasvoted){
-                satischange-=ra.nextInt(10);
+                satischange-=ra.nextInt(3);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
             gro.updateSatisfaction(satischange);
@@ -695,7 +695,7 @@ public class Main // Don't tell mom I use java
                     int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
                     if(rulingCoalition!= null){
                         if(rulingCoalition.getMemberList().contains(par)){
-                            toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
+                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
                     toAdd += (int) toAdd* par.getRecognition();
@@ -710,14 +710,14 @@ public class Main // Don't tell mom I use java
                     if(toAdd<0){
                         toAdd =0;
                     }
-                    par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    //par.addVotes(toAdd);
+                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
+                    par.addVotes(toAdd);
                     par.recordVotes(gro,toAdd);
                 }
             }
-            int satischange = -1*(5-(maxProximity/20));
+            int satischange = (-1*(5-(maxProximity/20)))/2;
             if(!hasvoted){
-                satischange-=ra.nextInt(10);
+                satischange-=ra.nextInt(5);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
             gro.updateSatisfaction(satischange);
@@ -754,13 +754,13 @@ public class Main // Don't tell mom I use java
         int divi = 1;
         if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
-                            toAdd/=5;
+                            toAdd/=10;
                         }else{
                             toAdd+= toAdd/2;
                         }
                     }else if(lean.equalsIgnoreCase("Reaction")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=5;
+                            toAdd/=10;
                         }else{
                             if(par.getIdeology()<righttresh){
                                 toAdd += toAdd/2;
@@ -770,10 +770,10 @@ public class Main // Don't tell mom I use java
                         }
                     }else{
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=5;
+                            toAdd/=10;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd/=5;
+                                toAdd/=10;
                             }else{
                                 toAdd+= toAdd/2;
                             }
@@ -1037,7 +1037,7 @@ if(totalRecog > 0.5){
                 for(Party par : allParties) {
        
         if (par.getRecognition() > 0.1) {
-            par.setRecog(par.getRecognition() * -1.5); 
+            par.setRecog(par.getRecognition() * -0.5); 
         } else {
             
             par.setRecog(0.5); 
@@ -1064,10 +1064,10 @@ if(totalRecog > 0.5){
             case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
-                    for(int i=0; i<targetpar.getPercent()/10;i++){
+                    for(int i=0; i<targetpar.getPercent()/20;i++){
                         targetpar.addFatigue();
                     }
-                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/10));
+                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/20));
                     
                     for(ideoGroup gro : allGroups){
                         if(gro.proximityWith(targetpar)>85){
@@ -1307,6 +1307,22 @@ public static void nationalLean(){
             republic += gro.getSize();
         }
     }
+    if(rulingCoalition.getLeader().getIdeology() <= 30){
+            reaction+= reaction/2;
+        } else if(rulingCoalition.getLeader().getIdeology()>=70 ){
+            revolution+=revolution/2;
+        }else{
+            republic += republic/2;
+        }
+        
+    if(President.getIdeology() <= 30){
+            reaction+= republic/3;
+        } else if(President.getIdeology()>=70 ){
+            revolution+=revolution/3;
+        }else{
+            republic += republic/3;
+        }
+    
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
