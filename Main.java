@@ -639,7 +639,7 @@ public class Main
             totvotes+= par.getScore();
         }
         candidates.sort(Comparator.comparingInt(Party::getScore).reversed());
-        System.out.println("==========Presidential Election==========");
+        System.out.println("Presidential Election");
         System.out.println("Round 1");
         int ordinal = 0;
         int majorvotes = 0;
@@ -845,7 +845,40 @@ public class Main
         
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
-                System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
+                
+                if(totGovSeats <50){
+                    Coalition gov = new Coalition(President);
+                    List<Party> potentialPartners = new ArrayList<>(allParties);
+                potentialPartners.remove(President);
+                potentialPartners.sort(Comparator.comparingInt(p -> 
+                Math.abs(p.getIdeology() - President.getIdeology())
+                ));
+                int down = 0;
+                int totalSeats = President.getPercent();
+                for(Party par: potentialPartners){
+                    if(totalSeats>50){ got50 = true; break;}
+                    int tresh = 25+(par.getPercent()/2);
+                    tresh += Math.abs(par.getIdeology()-50)/4;
+                    tresh += Math.abs(President.getIdeology()-50)/4;
+                    tresh -= down*3;
+                    tresh += par.getPercent()/5;
+                    
+                    if(partiesInParliament<5){
+                        tresh -= 3* (5-partiesInParliament);
+                    }
+                    if(President.proximityWith(par)>tresh){
+                        gov.addParty(par);
+                        totalSeats+=par.getPercent();
+                        
+                    }
+                    down++;
+                    
+                }
+                rulingCoalition = gov;
+                }
+                
+                
+                System.out.println("========================\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
@@ -1410,9 +1443,10 @@ public static void seeDominant(){
 		
 		for(int i=0; i<electionsToSimulate;i++){
 		    System.out.println(year+ "=========================");
+		    electPresident();
 		    election();
 		    electLeadParty();
-		    electPresident();
+		    
 		    
 		    //System.out.println("Winner: "+ rulingCoalition.getLeader().getName());
 		    
