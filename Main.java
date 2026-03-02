@@ -452,11 +452,11 @@ public class Main
                             //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
-                    toAdd += (int) toAdd* par.getRecognition();
+                    toAdd += (int) (toAdd* par.getRecognition())/2;
                     if(toAdd>0){
-                        toAdd-=(int) toAdd*par.getFatigue();
+                        toAdd-=(int) (toAdd*par.getFatigue())/2;
                     }else{
-                        toAdd+=(int) toAdd*par.getFatigue();
+                        toAdd+=(int) (toAdd*par.getFatigue())/2;
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
@@ -561,7 +561,7 @@ public class Main
             }
             
             points+= ra.nextInt((100-par.getPercent())+1);
-            points += points*par.getRecognition();
+            points += (points*par.getRecognition())/2;
             points -= (points*par.getFatigue())/2;
             
             if(points>= tresh){
@@ -605,11 +605,11 @@ public class Main
                             //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
-                    toAdd += (int) toAdd* par.getRecognition();
+                    toAdd += (int) (toAdd* par.getRecognition())/2;
                     if(toAdd>0){
-                        toAdd-=(int) toAdd*par.getFatigue();
+                        toAdd-=(int) (toAdd*par.getFatigue())/2;
                     }else{
-                        toAdd+=(int) toAdd*par.getFatigue();
+                        toAdd+=(int) (toAdd*par.getFatigue())/2;
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
@@ -698,11 +698,11 @@ public class Main
                             //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
                         }
                     }
-                    toAdd += (int) toAdd* par.getRecognition();
+                    toAdd += (int) (toAdd* par.getRecognition())/2;
                     if(toAdd>0){
-                        toAdd-=(int) toAdd*par.getFatigue();
+                        toAdd-=(int) (toAdd*par.getFatigue())/2;
                     }else{
-                        toAdd+=(int) toAdd*par.getFatigue();
+                        toAdd+=(int) (toAdd*par.getFatigue())/2;
                     }
                     int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
