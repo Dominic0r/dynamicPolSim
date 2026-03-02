@@ -299,11 +299,11 @@ public class Main
         allGroups.add(new ideoGroup("Fascist",2,5));*/
         //      allGroups.add(new ideoGroup("", "", 20, 60));
         // Reactionary Bloc
-    allGroups.add(new ideoGroup("Monarchists", "All-Peoples Congress for Tradition", 15, 10));
+    allGroups.add(new ideoGroup("Monarchists", "Peoples Congress for Tradition", 15, 10));
     allGroups.add(new ideoGroup("Illiberal Republicans", "Nationalist Peoples Assembly", 10, 25));
     
     allGroups.add(new ideoGroup("Unitary Monarchists", "Restoration Party", 5, 10));
-    allGroups.add(new ideoGroup("Particularists", "National Particularist Peoples Congress", 5, 12));
+    allGroups.add(new ideoGroup("Particularists", "National Independent Congress", 5, 12));
     
     allGroups.add(new ideoGroup("Aristocratic Conservatives", "Conservative Peoples Party", 15, 20));
     allGroups.add(new ideoGroup("Corporatists", "National Democratic Conservative Party", 15, 17));
@@ -423,7 +423,7 @@ public class Main
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 70;
+        int tresh = 60+ ra.nextInt(30);
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
