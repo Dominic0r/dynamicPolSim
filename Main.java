@@ -284,11 +284,18 @@ public class Main
             if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             int avgideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
-                for(Party par: rulingCoalition.getMemberList()){
-                    avgideo += par.getIdeology();
-                    
+                double totalWeightedIdeology = 0;
+                int totalSeats = 0;
+            
+                for (Party par : rulingCoalition.getMemberList()) {
+                    int seats = par.getPercent(); 
+                    totalWeightedIdeology += (par.getIdeology() * seats);
+                    totalSeats += seats;
                 }
-                avgideo = avgideo/rulingCoalition.getMemberList().size();
+            
+                if (totalSeats > 0) {
+                    avgideo =(int) (totalWeightedIdeology / totalSeats);
+                }
             }
             if(this.ideology < avgideo) this.ideology+= driftspeed/2;
             if(this.ideology> avgideo) this.ideology-= driftspeed/2;
