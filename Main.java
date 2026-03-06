@@ -1420,6 +1420,7 @@ public static void nationalLean(){
             republic += gro.getSize();
         }
     }
+    if(rulingCoalition.getMemberList().size() == 1 && rulingCoalition.getLeader().getPercent()>= 75){
     if(rulingCoalition.getLeader().getIdeology() <= 30){
             reaction+= reaction/2;
         } else if(rulingCoalition.getLeader().getIdeology()>=70 ){
@@ -1427,15 +1428,17 @@ public static void nationalLean(){
         }else{
             republic += republic/2;
         }
-        
-    if(President.getIdeology() <= 25){
-            reaction+= republic/3;
-        } else if(President.getIdeology()>=75 ){
-            revolution+=revolution/3;
-        }else{
-            republic += republic/3;
+    }
+     
+        if(President.getPercent()>=75){
+            if(President.getIdeology() <= 25){
+                    reaction+= republic/3;
+                } else if(President.getIdeology()>=75 ){
+                    revolution+=revolution/3;
+                }else{
+                    republic += republic/3;
+                }
         }
-    
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
