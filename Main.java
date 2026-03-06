@@ -1348,9 +1348,9 @@ public static void nationalLean(){
             republic += republic/2;
         }
         
-    if(President.getIdeology() <= 30){
+    if(President.getIdeology() <= 25){
             reaction+= republic/3;
-        } else if(President.getIdeology()>=70 ){
+        } else if(President.getIdeology()>=75 ){
             revolution+=revolution/3;
         }else{
             republic += republic/3;
