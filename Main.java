@@ -58,6 +58,7 @@ public class Main
         int failcount = 0;
         String color;
         int delegates = 0;
+        Map<Party, Integer> relations = new HashMap<>();
         
         double fatigue = 0;
         
@@ -83,6 +84,68 @@ public class Main
         public int getScore(){return score;}
         public int getPopularity(){return popularity;}
         public int getPercent(){return percent;}
+        
+        
+        public void updateRelations(){
+            if(relations == null){
+                for(Party par: allParties){
+                    relations.put(par, this.proximityWith(par));
+                }
+            }
+            for(Party par: allParties){
+                if(!relations.containsKey(par)){
+                    relations.put(par,this.proximityWith(par));
+                }
+            }
+            List<Party> toRemove = new ArrayList<>();
+            for(Party par: relations.keySet()){
+                if(!allParties.contains(par)){
+                    toRemove.add(par);
+                }
+            }
+            
+            for(Party par: toRemove){
+                relations.remove(par);
+            }
+            if(rulingCoalition.getMemberList().contains(this)){
+                for(Party par: allParties){
+                    if(rulingCoalition.getMemberList().contains(par)){
+                        relations.put(par, relations.get(par)+10);
+                    }
+                }
+            }
+            
+            if(LOTO == this){
+                for(Party par: allParties){
+                    if(rulingCoalition.getMemberList().contains(par)){
+                        relations.put(par, relations.get(par)-10);
+                    }
+                }
+            }
+            
+            for(Party par: allParties){
+                relations.put(par, relations.get(par)+ (this.proximityWith(par)/10));
+            }
+            
+            
+            for(Party par: relations.keySet()){
+                if(relations.get(par)>100){
+                    relations.put(par, 100);
+                }
+                if(relations.get(par)< 0){
+                    relations.put(par, 0);
+                }
+            }
+            
+        }
+        
+        public int relationWith(Party par){
+            int retVal = 0;
+            if(relations.containsKey(par)){
+                retVal = relations.get(par);
+            }
+            return retVal;
+        }
         
         public int getDelegates(){
             return delegates;
@@ -813,7 +876,7 @@ public class Main
                 List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt(p -> 
-                Math.abs(p.getIdeology() - winner.getIdeology())
+                Math.abs(p.getIdeology() - winner.getIdeology())*winner.relationWith(p)
                 ));
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -823,6 +886,9 @@ public class Main
                     tresh += Math.abs(winner.getIdeology()-50)/4;
                     tresh -= down*3;
                     tresh += par.getPercent()/5;
+                    if(winner.relationWith(par)<50){
+                        tresh += tresh/5;
+                    }
                     
                     if(partiesInParliament<5){
                         tresh -= 3* (5-partiesInParliament);
@@ -1165,6 +1231,12 @@ public static void radicalizeVoters() {
         }
     }
 }
+
+public static void updateRels(){
+    for(Party par: allParties){
+        par.updateRelations();
+    }
+}
     
     public static void updateTick(){
         events();
@@ -1172,6 +1244,7 @@ public static void radicalizeVoters() {
         updateGroupSize();
         radicalizeVoters();
         checkForNewParties();
+        updateRels();
         approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
         for(Party par: rulingCoalition.getMemberList()){
             approvalRatingChange*= (ra.nextInt(3))+1;
