@@ -128,11 +128,49 @@ public class Main
             
             for(Party par: allParties){
                 if(this.proximityWith(par)>50){
-                    relations.put(par, relations.get(par)+ 10);
+                    relations.put(par, relations.get(par)+ 20);
                 }else{
-                    relations.put(par, relations.get(par)- 10);
+                    relations.put(par, relations.get(par)- 20);
+                }
+                
+                if(this.getIdeology()>25 && this.getIdeology()<75){
+                    if(par.getIdeology()<25 || par.getIdeology()>75){
+                        relations.put(par, relations.get(par)-25);
+                    }
+                }else{
+                    if(par.getIdeology()>25 || par.getIdeology()<75){
+                        relations.put(par, relations.get(par)-25);
+                    }
                 }
             }
+            
+            
+            
+            
+            
+            if(!rulingCoalition.getMemberList().contains(this)){
+                for(Party par: rulingCoalition.getMemberList()){
+                    if(par!=this){
+                        for(Party targetPar: allParties){
+                            if(par.relationWith(targetPar)<50){
+                                relations.put(targetPar, relations.get(targetPar)+5);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            for(Party par: allParties){
+                    if(par!=this){
+                        if(this.relationWith(par)<50){
+                        for(Party targetPar: allParties){
+                            if(par.relationWith(targetPar)<50 && this!=targetPar){
+                                relations.put(targetPar, relations.get(targetPar)+5);
+                            }
+                        }
+                        }
+                    }
+                }
             
             
             for(Party par: relations.keySet()){
@@ -891,7 +929,7 @@ public class Main
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt(p -> 
                 
-    (winner.relationWith(p) * 2) - (100-winner.proximityWith(p))  // Higher relations, closer ideology preferred
+    ((winner.relationWith(p) * 2) - (winner.proximityWith(p)))-(p.getPercent()/5)  // Higher relations, closer ideology preferred
                 ));
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -1295,25 +1333,31 @@ public static void updateRels(){
     
     public static List<Archive> leaderArchive = new ArrayList<>();
     
-    
-    
+    //color set 
+    public static int NAVYBLUE = 18;
+    public static int BLUE = 27;
+    public static int ORANGE = 214;
+    public static int YELLOW = 226;
+    public static int LIGHTRED = 203;
+    public static int RED = 196;
+    public static int DARKRED = 88;
     
     public static String getDynamicColor(int ideo) {
     int colorCode;
     String ideoname;
     // RIGHT-WING: Blue/Navy spectrum
-    if (ideo < 20){ colorCode = 18; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
-    }else if (ideo < 35){ colorCode = 27; ideoname= "Right-Wing";  // Royal Blue (Conservative)
+    if (ideo < 20){ colorCode = NAVYBLUE; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
+    }else if (ideo < 35){ colorCode = BLUE; ideoname= "Right-Wing";  // Royal Blue (Conservative)
     
     // CENTER: Yellow/Gold/Orange spectrum
-    }else if (ideo < 45){ colorCode = 214; ideoname = "Center-Right"; // Orange-Yellow (Liberal/Center-Right)
-    }else if (ideo < 55){ colorCode = 226; ideoname = "Centrist"; // Bright Yellow (Pure Centrist)
-    }else if (ideo < 65){ colorCode = 203; ideoname = "Center-Left";// Light Red (Center-Left/Green)
+    }else if (ideo < 45){ colorCode = ORANGE; ideoname = "Center-Right"; // Orange-Yellow (Liberal/Center-Right)
+    }else if (ideo < 55){ colorCode = YELLOW; ideoname = "Centrist"; // Bright Yellow (Pure Centrist)
+    }else if (ideo < 65){ colorCode = LIGHTRED; ideoname = "Center-Left";// Light Red (Center-Left/Green)
     
     // LEFT-WING: Red/Crimson spectrum
     //else if (ideo < 80) colorCode = 203; // Light Red (Social Democrat)
-    }else if (ideo < 80){ colorCode = 196; ideoname = "Left-Wing"; // Pure Red (Socialist)
-    }else{ colorCode = 88; ideoname = "Far-Left";                // Dark Crimson (Communist/Far-Left)
+    }else if (ideo < 80){ colorCode = RED; ideoname = "Left-Wing"; // Pure Red (Socialist)
+    }else{ colorCode = DARKRED; ideoname = "Far-Left";                // Dark Crimson (Communist/Far-Left)
     }
     return "\u001B[38;5;" + colorCode + "m" + ""+ ideoname +RESET;
 }
@@ -1433,7 +1477,7 @@ public static void nationalLean(){
             republic += gro.getSize();
         }
     }
-    if(rulingCoalition.getMemberList().size() == 1 && rulingCoalition.getLeader().getPercent()>= 75){
+    if(rulingCoalition.getMemberList().size() == 1 && rulingCoalition.getLeader().getPercent()>= 65){
     if(rulingCoalition.getLeader().getIdeology() <= 30){
             reaction+= reaction/2;
         } else if(rulingCoalition.getLeader().getIdeology()>=70 ){
@@ -1443,7 +1487,7 @@ public static void nationalLean(){
         }
     }
      
-        if(President.getPercent()>=75){
+        if(President.getPercent()>=65){
             if(President.getIdeology() <= 25){
                     reaction+= republic/3;
                 } else if(President.getIdeology()>=75 ){
