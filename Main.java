@@ -109,8 +109,11 @@ public class Main
             }
             if(rulingCoalition.getMemberList().contains(this)){
                 for(Party par: allParties){
-                    if(rulingCoalition.getMemberList().contains(par)){
-                        relations.put(par, relations.get(par)+10);
+                    if(rulingCoalition.getMemberList().contains(par) && par!=this){
+                        int boost = 15 + (int)(rulingCoalition.getMemberList().size() * 2);
+                        relations.put(par, (relations.get(par)+20)+boost);
+                    }else{
+                        relations.put(par, relations.get(par)-10);
                     }
                 }
             }
@@ -118,13 +121,17 @@ public class Main
             if(LOTO == this){
                 for(Party par: allParties){
                     if(rulingCoalition.getMemberList().contains(par)){
-                        relations.put(par, relations.get(par)-10);
+                        relations.put(par, relations.get(par)-25);
                     }
                 }
             }
             
             for(Party par: allParties){
-                relations.put(par, relations.get(par)+ (this.proximityWith(par)/10));
+                if(this.proximityWith(par)>50){
+                    relations.put(par, relations.get(par)+ 10);
+                }else{
+                    relations.put(par, relations.get(par)- 10);
+                }
             }
             
             
@@ -883,7 +890,8 @@ public class Main
                 List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt(p -> 
-                Math.abs(p.getIdeology() - winner.getIdeology())*winner.relationWith(p)
+                
+    (winner.relationWith(p) * 2) - (100-winner.proximityWith(p))  // Higher relations, closer ideology preferred
                 ));
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -893,8 +901,16 @@ public class Main
                     tresh += Math.abs(winner.getIdeology()-50)/4;
                     tresh -= down*3;
                     tresh += par.getPercent()/5;
-                    if(winner.relationWith(par)<50){
-                        tresh += tresh/5;
+                    if(winner.relationWith(par)< 50){
+                        tresh += (50-winner.relationWith(par))*5;
+                    }
+                    
+                    if(winner.relationWith(par)>= 90){
+                        tresh -= (winner.relationWith(par)-5)*5;
+                    }
+                    
+                    if(partiesInParliament<5){
+                        tresh -= 3* (5-partiesInParliament);
                     }
                     
                     if(partiesInParliament<5){
@@ -936,9 +952,6 @@ public class Main
                     tresh -= down*3;
                     tresh += par.getPercent()/5;
                     
-                    if(partiesInParliament<5){
-                        tresh -= 3* (5-partiesInParliament);
-                    }
                     if(President.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
