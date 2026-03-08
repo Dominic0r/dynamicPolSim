@@ -127,14 +127,14 @@ public class Main
             }
             
             for(Party par: allParties){
-                if(this.proximityWith(par)>50){
+                if(this.proximityWith(par)>=80){
                     relations.put(par, relations.get(par)+ 20);
-                }else{
+                }else if (this.proximityWith(par) <= 20 ){
                     relations.put(par, relations.get(par)- 20);
                 }
                 
                 if(this.getIdeology()>25 && this.getIdeology()<75){
-                    if(par.getIdeology()<25 || par.getIdeology()>75){
+                    if(par.getIdeology()<25 && par.getIdeology()>75){
                         relations.put(par, relations.get(par)-25);
                     }
                 }else{
@@ -153,7 +153,7 @@ public class Main
                     if(par!=this){
                         for(Party targetPar: allParties){
                             if(par.relationWith(targetPar)<50){
-                                relations.put(targetPar, relations.get(targetPar)+5);
+                                relations.put(targetPar, relations.get(targetPar)+1);
                             }
                         }
                     }
@@ -165,7 +165,7 @@ public class Main
                         if(this.relationWith(par)<50){
                         for(Party targetPar: allParties){
                             if(par.relationWith(targetPar)<50 && this!=targetPar){
-                                relations.put(targetPar, relations.get(targetPar)+5);
+                                relations.put(targetPar, relations.get(targetPar)+1);
                             }
                         }
                         }
@@ -927,10 +927,10 @@ public class Main
             }else{
                 List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(winner);
-                potentialPartners.sort(Comparator.comparingInt(p -> 
+                potentialPartners.sort(Comparator.comparingInt((Party p)-> 
                 
-    (winner.relationWith(p) * 2) - (winner.proximityWith(p)) // Higher relations, closer ideology preferred
-                ));
+    ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) + (p.getPercent()/5) // Higher relations, closer ideology preferred
+                ).reversed());
                 int down = 0;
                 for(Party par: potentialPartners){
                     if(totalSeats>50){ got50 = true; break;}
