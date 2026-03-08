@@ -742,7 +742,7 @@ public class Main
                 satischange-=ra.nextInt(3);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
-            gro.updateSatisfaction(satischange);
+            gro.updateSatisfaction(satischange/2);
             
         }
         int totvotes = 0;
@@ -835,7 +835,7 @@ public class Main
                 satischange-=ra.nextInt(5);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
-            gro.updateSatisfaction(satischange);
+            gro.updateSatisfaction(satischange/2);
             
         }
             winvotes = 0;
@@ -1000,8 +1000,10 @@ public class Main
                 }
                 rulingCoalition = gov;
                 }
-                
-                
+                totGovSeats=0;
+                for(Party par: rulingCoalition.getMemberList()){
+                    totGovSeats+= par.getPercent();
+                }
                 System.out.println("========================\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
@@ -1487,7 +1489,6 @@ public static void nationalLean(){
         }
     }
      
-        if(President.getPercent()>=65){
             if(President.getIdeology() <= 25){
                     reaction+= republic/3;
                 } else if(President.getIdeology()>=75 ){
@@ -1495,7 +1496,7 @@ public static void nationalLean(){
                 }else{
                     republic += republic/3;
                 }
-        }
+        
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
