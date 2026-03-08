@@ -929,7 +929,7 @@ public class Main
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt(p -> 
                 
-    ((winner.relationWith(p) * 2) - (winner.proximityWith(p)))-(p.getPercent()/5)  // Higher relations, closer ideology preferred
+    (winner.relationWith(p) * 2) - (winner.proximityWith(p)) // Higher relations, closer ideology preferred
                 ));
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -1095,7 +1095,7 @@ public static String assignColor(int ideo){
         r = 200; g = 0; b = 0;
     }
 
-    int variance = (partyId * 12345) % (ra.nextInt(200)+1); 
+    int variance = (partyId * 12345) % (ra.nextInt(100)+1); 
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
