@@ -309,7 +309,7 @@ public class Main
             }
             
             int targetIdeo = maxGroup.getIdeology();
-            int driftspeed = 2;
+            int driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
             if(this.ideology < targetIdeo) this.ideology+= driftspeed;
             if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             
@@ -324,7 +324,7 @@ public class Main
                 }
             }
             targetIdeo = minGroup.getIdeology();
-            driftspeed = 2;
+            driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
             if(this.ideology < targetIdeo) this.ideology+= driftspeed;
             if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             int avgideo = 0;
@@ -742,6 +742,50 @@ public class Main
                 satischange-=ra.nextInt(3);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
+            
+            if(lean.equalsIgnoreCase("Republic")){
+                if(gro.getIdeology()>25 && gro.getIdeology()<75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Reaction")){
+                if(gro.getIdeology()<25){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Revolution")){
+                if(gro.getIdeology()>75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            
+            if(lean.equalsIgnoreCase("Republic")){
+                if(gro.getIdeology()>25 && gro.getIdeology()<75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Reaction")){
+                if(gro.getIdeology()<25){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Revolution")){
+                if(gro.getIdeology()>75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
             gro.updateSatisfaction(satischange/2);
             
         }
@@ -835,6 +879,29 @@ public class Main
                 satischange-=ra.nextInt(5);
             }
             satischange+= ra.nextInt(3)-ra.nextInt(3);
+            
+            if(lean.equalsIgnoreCase("Republic")){
+                if(gro.getIdeology()>25 && gro.getIdeology()<75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Reaction")){
+                if(gro.getIdeology()<25){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            if(lean.equalsIgnoreCase("Revolution")){
+                if(gro.getIdeology()>75){
+                    satischange*=2;
+                }else{
+                    satischange/=2;
+                }
+            }
+            
             gro.updateSatisfaction(satischange/2);
             
         }
@@ -871,16 +938,16 @@ public class Main
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
                             toAdd/=10;
                         }else{
-                            toAdd+= toAdd/2;
+                            toAdd*=2;
                         }
                     }else if(lean.equalsIgnoreCase("Reaction")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=10;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd += toAdd/2;
+                                toAdd*=2;
                             }else{
-                                toAdd/=5;
+                                toAdd/=10;
                             }
                         }
                     }else{
@@ -890,7 +957,7 @@ public class Main
                             if(par.getIdeology()<righttresh){
                                 toAdd/=10;
                             }else{
-                                toAdd+= toAdd/2;
+                                toAdd*=2;
                             }
                         }
                     }
