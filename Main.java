@@ -463,7 +463,7 @@ public class Main
     //allParties.add(new Party("Republican Party", 50, true));     // Republican
    // allParties.add(new Party("Left Republican Party", 85, true)); // Revolutionary
     
-    int diceroll = (ra.nextInt(12))/3;
+    int diceroll = (ra.nextInt(16))/3;
     // roll far right unity
     if(diceroll == 4){
         allParties.add(new Party("National Unity Party", 15, true, assignColor(15)));
@@ -474,7 +474,7 @@ public class Main
     }else{
         
     }
-    diceroll = (ra.nextInt(12))/3;
+    diceroll = (ra.nextInt(16))/3;
     if(diceroll == 4){
         allParties.add(new Party("National Republican Party", 50, true, assignColor(50)));  
     }else if(diceroll == 3){
@@ -491,7 +491,7 @@ public class Main
         allParties.add(new Party("Conservative Republican Party", 40, true, assignColor(40)));  
     }
     // Left-wing opposition unity
-    diceroll = (ra.nextInt(12))/3;
+    diceroll = (ra.nextInt(16))/3;
     if(diceroll == 4){
         allParties.add(new Party("Left Republican Party", 60, true, assignColor(65)));
     }else if(diceroll == 3){
