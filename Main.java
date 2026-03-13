@@ -1217,7 +1217,7 @@ public static void events(){
     boolean eventHappened = false;
     if(ra.nextInt(10)<5){
        
-        switch(ra.nextInt(7)){
+        switch(ra.nextInt(8)){
             case 0:
                 System.out.println("Economic Crisis!");
             for(ideoGroup gro : allGroups){
@@ -1301,6 +1301,20 @@ if(totalRecog > 0.5){
                         }
                     }
             break;
+            case 6:
+                Party targetpar = allParties.get(ra.nextInt(allParties.size())); 
+                int supSeats = 0;
+                int tresh = 75;
+                for(Party par : allParties){
+                    supSeats+= (par.getPercent()*par.proximityWith(targetpar))/100;
+                    
+                }
+                
+                if(supSeats<50){
+                    System.out.println("Landmark bil by "+ targetpar.getName());
+                    targetpar.incrementRecognition();
+                }
+                break;
             default:
             
         }
