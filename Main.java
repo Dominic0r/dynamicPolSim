@@ -1302,7 +1302,7 @@ if(totalRecog > 0.5){
                     }
             break;
             case 6:
-                Party targetpar = allParties.get(ra.nextInt(allParties.size())); 
+                targetpar = allParties.get(ra.nextInt(allParties.size())); 
                 int supSeats = 0;
                 int tresh = 75;
                 for(Party par : allParties){
