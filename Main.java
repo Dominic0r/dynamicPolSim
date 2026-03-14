@@ -1650,6 +1650,13 @@ public static void nationalLean(){
                 }else{
                     republic += republic/3;
                 }
+        if(speaker.getIdeology() <= 25){
+                    reaction+= republic/5;
+                } else if(speaker.getIdeology()>=75 ){
+                    revolution+=revolution/5;
+                }else{
+                    republic += republic/5;
+                }
         
     
     System.out.print("The Nation leans towards");
