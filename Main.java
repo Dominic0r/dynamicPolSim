@@ -1071,7 +1071,7 @@ public class Main
                 for(Party par: rulingCoalition.getMemberList()){
                     totGovSeats+= par.getPercent();
                 }
-                System.out.println("========================\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
+                System.out.println("===============\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
@@ -1098,10 +1098,14 @@ public class Main
                 maxpar = par;
             }
         }
+        if(speaker !=null){
+        System.out.println("===============\nSpeaker: "+ speaker.getColor()+ speaker.getName()+ RESET+ speaker.ideoDisplay()); 
+        speaker.incrementRecognition();
+        }
         
         LOTO = maxpar;
         if(LOTO !=null){
-            System.out.println("\nLargest Opposition Party: "+ LOTO.getColor()+"o"+RESET+" - "+ LOTO.getName()+LOTO.ideoDisplay()+" ["+ LOTO.getPercent()+"%]");
+            System.out.println("===============\nLargest Opposition Party: "+ LOTO.getColor()+LOTO.getName() +RESET+LOTO.ideoDisplay()+" ["+ LOTO.getPercent()+"%]");
             LOTO.incrementRecognition();
         }else{
             System.out.println("\nLargest Opposition Party: None");
@@ -1120,6 +1124,73 @@ public class Main
         
     }
     public static Party LOTO;
+    
+    
+    public static Party speaker;
+    public static void electSpeaker(){
+        Map<Party, Integer> candidates = new HashMap<>();
+        for(Party par: allParties){
+            if(par.getPercent()>0){
+                candidates.put(par, par.getPercent());
+            }
+        }
+        
+        Party winner = null;
+        int winseats = 0;
+        
+        Party loser = null;
+        int loseSeats = 1000;
+        
+        do{
+            for(Party par: candidates.keySet()){
+                candidates.put(par, par.getPercent());
+            }
+            
+            for(Party par: allParties){
+                if(!candidates.keySet().contains(par) && par.getPercent()> 0){
+                    int maxres = -100;
+                    Party maxpar = null;
+                    for(Party pra: candidates.keySet()){
+                        int points = par.proximityWith(pra);
+                        if(rulingCoalition.getMemberList().contains(par) && rulingCoalition.getLeader() == pra){
+                            points += points/2;
+                        }
+                        points += (par.relationWith(pra)*points)/2;
+                        if(par.proximityWith(pra)> maxres){
+                            maxres = par.proximityWith(pra);
+                            maxpar = pra;
+                        }
+                    }
+                    
+                    candidates.put(maxpar, candidates.get(maxpar)+par.getPercent());
+                }
+            }
+            
+            loseSeats = 1000;
+            for(Party par: candidates.keySet()){
+                if(candidates.get(par) < loseSeats){
+                    loser = par;
+                    loseSeats = candidates.get(par);
+                }
+            }
+            if(candidates.size()>2){
+                candidates.remove(loser);
+            }
+            winseats = -1;
+            for(Party par: candidates.keySet()){
+                if(candidates.get(par) > winseats){
+                    winseats = candidates.get(par);
+                    winner = par;
+                }
+            }
+            
+        }while(winseats<50);
+        
+        speaker = winner;
+        
+        
+    }
+    
     
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
@@ -1528,6 +1599,8 @@ public static void visualizeParliament() {
             seatIndex++;
         }
     }
+    
+    
 
     System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
     for (int i = 0; i < rows; i++) {
@@ -1668,6 +1741,7 @@ public static void seeDominant(){
 		    electPresident();
 		    election();
 		    electLeadParty();
+		    electSpeaker();
 		    
 		    
 		    //System.out.println("Winner: "+ rulingCoalition.getLeader().getName());
@@ -1687,6 +1761,7 @@ public static void seeDominant(){
         if (p.getPercent() > 20) spectrum[index] = 'X'; // maj Party
         else if (p.getPercent() > 5) spectrum[index] = 'o'; // min Party
     }
+    
     visualizeParliament();
     String spectr =  new StringBuilder(String.valueOf(spectrum)).reverse().toString();
     System.out.println("Spectrum: [L] " + spectr + " [R]");
