@@ -35,6 +35,9 @@ public class Main
         public int proximityWith(Party par){
             return 100-Math.abs(par.getIdeology()-ideology);
         }
+        public int proximityWith(int num){
+            return 100-Math.abs(num-ideology);
+        }
         
         public void updateSize(int toAdd){
             size+= toAdd;
@@ -85,6 +88,9 @@ public class Main
         public int getPopularity(){return popularity;}
         public int getPercent(){return percent;}
         
+        public int proximityWith(int num){
+            return 100-Math.abs(num-ideology);
+        }
         
         public void updateRelations(){
             if(relations == null){
@@ -1152,8 +1158,8 @@ public class Main
                     Party maxpar = null;
                     for(Party pra: candidates.keySet()){
                         int points = par.proximityWith(pra);
-                        if(rulingCoalition.getMemberList().contains(par) && rulingCoalition.getLeader() == pra){
-                            points += points/2;
+                        if(rulingCoalition.getMemberList().contains(par)){
+                            points *=2;
                         }
                         points += (par.relationWith(pra)*points)/2;
                         if(par.proximityWith(pra)> maxres){
@@ -1495,6 +1501,7 @@ public static void updateRels(){
     public static int LIGHTRED = 203;
     public static int RED = 196;
     public static int DARKRED = 88;
+    public static int GREEN = 10;
     
     public static String getDynamicColor(int ideo) {
     int colorCode;
@@ -1620,6 +1627,38 @@ public static void visualizeParliament() {
     }
     System.out.println("\n");
 }
+
+public static void passageRate(){
+    String[] plots = new String[20];
+    int supseats=0;
+    int i=100;
+    int index =0;
+    while(i>0){
+        supseats=0;
+        for(Party par: allParties){
+            
+            supseats+= ((par.proximityWith(i)-20)*par.getPercent())/100;
+            
+        }
+        
+        if(supseats>50){
+            plots[index] = "\u001B[38;5;"+GREEN+ "moo"+RESET;
+        }else{
+            plots[index] = "\u001B[38;5;"+RED+ "moo"+RESET;
+        }
+        i-=5;
+        index++;
+        //System.out.println(supseats);
+    }
+    
+    System.out.print("Bill Passage Rate:");
+    for(int p=0; p<20;p++){
+        System.out.print(plots[p]);
+    }
+    System.out.println("");
+    
+}
+
 public static String lean = "Republic";
 public static void nationalLean(){
     int reaction =0,republic =0, revolution=0;
@@ -1778,6 +1817,7 @@ public static void seeDominant(){
 		    double totalRecog = 0;
 for(Party p : allParties) totalRecog += p.getRecognition();
 System.out.println("Establishment Strength: " + String.format("%.2f", totalRecog));
+passageRate();
 nationalLean();
 seeDominant();
 		    sc.nextLine();
