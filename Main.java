@@ -1104,10 +1104,10 @@ public class Main
                 maxpar = par;
             }
         }
-        if(speaker !=null){
+        electSpeaker();
         System.out.println("===============\nSpeaker: "+ speaker.getColor()+ speaker.getName()+ RESET+ speaker.ideoDisplay()); 
         speaker.incrementRecognition();
-        }
+        
         
         LOTO = maxpar;
         if(LOTO !=null){
@@ -1167,8 +1167,8 @@ public class Main
                             maxpar = pra;
                         }
                     }
-                    
-                    candidates.put(maxpar, candidates.get(maxpar)+par.getPercent());
+                    int cseats = candidates.get(maxpar);
+                    candidates.put(maxpar, cseats+par.getPercent());
                 }
             }
             
@@ -1179,21 +1179,20 @@ public class Main
                     loseSeats = candidates.get(par);
                 }
             }
-            if(candidates.size()>2){
                 candidates.remove(loser);
-            }
+            
             winseats = -1;
             for(Party par: candidates.keySet()){
+                //System.out.println(candidates.get(par));
                 if(candidates.get(par) > winseats){
                     winseats = candidates.get(par);
                     winner = par;
                 }
             }
             
-        }while(winseats<50);
+        }while(winseats<=50);
         
         speaker = winner;
-        
         
     }
     
@@ -1787,7 +1786,7 @@ public static void seeDominant(){
 		    electPresident();
 		    election();
 		    electLeadParty();
-		    electSpeaker();
+		    
 		    
 		    
 		    //System.out.println("Winner: "+ rulingCoalition.getLeader().getName());
