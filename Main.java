@@ -474,9 +474,12 @@ public class Main
     if(diceroll == 4){
         allParties.add(new Party("National Unity Party", 15, true, assignColor(15)));
     }else if(diceroll == 3){
-        allParties.add(new Party("National Unity Party", 25, true, assignColor(15)));
+        allParties.add(new Party("National Unity Party", 25, true, assignColor(25)));
     }else if(diceroll == 2){
-        allParties.add(new Party("Peasants Republican Party", 35, true, assignColor(30)));
+        allParties.add(new Party("United Loyal Party", 5, true, assignColor(5)));
+        allParties.add(new Party("Alliance of Nationalists", 15, true, assignColor(15)));
+        allParties.add(new Party("National Representation Party", 25, true, assignColor(25)));
+        allParties.add(new Party("Peasants Republican Party", 35, true, assignColor(35)));
     }else{
         
     }
@@ -499,7 +502,7 @@ public class Main
     // Left-wing opposition unity
     diceroll = (ra.nextInt(15))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Left Republican Party", 60, true, assignColor(65)));
+        allParties.add(new Party("Left Republican Party", 60, true, assignColor(60)));
     }else if(diceroll == 3){
         allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
     }else if(diceroll == 2){
@@ -1179,7 +1182,9 @@ public class Main
                     loseSeats = candidates.get(par);
                 }
             }
+            if(candidates.size() >1){
                 candidates.remove(loser);
+            }
             
             winseats = -1;
             for(Party par: candidates.keySet()){
