@@ -941,32 +941,34 @@ public class Main
     }
     
     public static int IdeoCheck(int toAdd,Party par){
-        int lefttresh = 70, righttresh = 30;
-        int divi = 1;
+        int lefttresh = 60, righttresh = 40;
+        int divileft = Math.abs(100-par.getIdeology());
+        int diviright = Math.abs(0-par.getIdeology());
+        int divicenter = Math.abs(50-par.getIdeology());
         if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
-                            toAdd/=10;
+                            toAdd/=divicenter;
                         }else{
-                            toAdd*=2;
+                            toAdd*=(100-divicenter)/10;
                         }
                     }else if(lean.equalsIgnoreCase("Reaction")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=10;
+                            toAdd/=diviright;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd*=2;
+                                toAdd*=(100-diviright)/10;
                             }else{
-                                toAdd/=10;
+                                toAdd/=diviright;
                             }
                         }
                     }else{
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
-                            toAdd/=10;
+                            toAdd/=divileft;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd/=10;
+                                toAdd/=divileft;
                             }else{
-                                toAdd*=2;
+                                toAdd*=(100-divileft)/10;
                             }
                         }
                     }
