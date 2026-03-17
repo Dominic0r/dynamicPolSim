@@ -582,7 +582,7 @@ public class Main
                     }else{
                         toAdd+=(int) (toAdd*par.getFatigue())/2;
                     }
-                    int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
+                    int pctginAccept = (int)((par.getPercent()+1)*((100+(par.getPercent()/10))))/(acceptables.get(gro)+1);
                     toAdd = (toAdd*pctginAccept)/100;
                     toAdd = IdeoCheck(toAdd, par);
                     //par.addVotes(toAdd/(ra.nextInt(4)+1));
