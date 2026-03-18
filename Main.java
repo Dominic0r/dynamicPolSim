@@ -1689,20 +1689,35 @@ public static void nationalLean(){
     }
      
             if(President.getIdeology() <= 25){
-                    reaction+= republic/3;
+                    reaction+= reaction/3;
                 } else if(President.getIdeology()>=75 ){
                     revolution+=revolution/3;
                 }else{
                     republic += republic/3;
                 }
         if(speaker.getIdeology() <= 25){
-                    reaction+= republic/5;
+                    reaction+= reaction/5;
                 } else if(speaker.getIdeology()>=75 ){
                     revolution+=revolution/5;
                 }else{
                     republic += republic/5;
                 }
         
+    int leftistseats =0, rightistseats=0;
+    for(Party par: allParties){
+        if(par.getIdeology()<=35){
+            rightistseats+=par.getPercent();
+        }else if(par.getIdeology()>=65){
+            leftistseats+=par.getPercent();
+        }
+    }
+    
+    if(rightistseats>= 50){
+        reaction+= (reaction/5)* (((rightistseats-50)/10)+1);
+    }
+    if(leftistseats>= 50){
+        revolution+=(revolution/5)* (((leftistseats-50)/10)+1);
+    }
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
