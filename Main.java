@@ -686,7 +686,7 @@ public class Main
             
             points+= ra.nextInt((100-par.getPercent())+1);
             points += (points*par.getRecognition())/2;
-            points -= (points*par.getFatigue())/2;
+            //points -= (points*par.getFatigue())/2;
             
             if(points>= tresh){
                 candidates.add(par);
@@ -1011,7 +1011,7 @@ public class Main
                 ).reversed());
                 int down = 0;
                 for(Party par: potentialPartners){
-                    if(totalSeats>50){ got50 = true; break;}
+                    if(totalSeats>=50){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/4;
                     tresh += Math.abs(winner.getIdeology()-50)/4;
@@ -1061,7 +1061,7 @@ public class Main
                 int down = 0;
                 int totalSeats = President.getPercent();
                 for(Party par: potentialPartners){
-                    if(totalSeats>50){ got50 = true; break;}
+                    if(totalSeats>=50){ got50 = true; break;}
                     int tresh = 25+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/4;
                     tresh += Math.abs(President.getIdeology()-50)/4;
@@ -1121,17 +1121,30 @@ public class Main
         }else{
             System.out.println("\nLargest Opposition Party: None");
         }
+        if(lean.equalsIgnoreCase("Republic")){
         for(Party par: allParties){
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
                 par.addFatigue();
+                for(int i=0; i<(totGovSeats-50)/5;i++){
+                    par.addFatigue();
+                }
+                
             }
             if(par == rulingCoalition.getLeader()){
                 par.addFatigue();
+                
+                if(par.getPercent()> 50){
+                    for(int i=0; i< (par.getPercent()-50)/4;i++){
+                        par.addFatigue();
+                    }
+                }
             }
+            
+            
         }
-        
+        }
         
     }
     public static Party LOTO;
