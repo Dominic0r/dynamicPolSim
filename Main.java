@@ -225,7 +225,7 @@ public class Main
         }
         
         public void addFatigue(){
-            fatigue +=0.1;
+            fatigue +=0.01;
         }
         public void decreaseFatigue(){
             if(fatigue>0){
@@ -593,8 +593,11 @@ public class Main
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
             // Apply fatigue 
-            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
-
+            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
+            votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
+            
+            votesFromThisGroup += (votesFromThisGroup*par.getRecognition());
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
@@ -726,91 +729,61 @@ public class Main
             }
         }
         
-        for(ideoGroup gro: allGroups){
-            boolean hasvoted = false;
-            int maxProximity = 0;
-            
-            for(Party par: candidates){
-                if(gro.proximityWith(par)>tresh){
-                    hasvoted = true;
-                    if(gro.proximityWith(par)>maxProximity){
-                        maxProximity = gro.proximityWith(par);
-                    }
-                    int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
-                    if(rulingCoalition!= null){
-                        if(rulingCoalition.getMemberList().contains(par)){
-                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
-                        }
-                    }
-                    toAdd += (int) (toAdd* par.getRecognition())/2;
-                    if(toAdd>0){
-                        toAdd-=(int) (toAdd*par.getFatigue())/2;
-                    }else{
-                        toAdd+=(int) (toAdd*par.getFatigue())/2;
-                    }
-                    int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
-                    toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
-                    if(toAdd<0){
-                        toAdd =0;
-                    }
-                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    par.addVotes(toAdd);
-                    par.recordVotes(gro,toAdd);
-                }
-            }
-            int satischange = (-1*(5-(maxProximity/20)))/2;
-            if(!hasvoted){
-                satischange-=ra.nextInt(3);
-            }
-            satischange+= ra.nextInt(3)-ra.nextInt(3);
-            
-            if(lean.equalsIgnoreCase("Republic")){
-                if(gro.getIdeology()>25 && gro.getIdeology()<75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Reaction")){
-                if(gro.getIdeology()<25){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Revolution")){
-                if(gro.getIdeology()>75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            
-            if(lean.equalsIgnoreCase("Republic")){
-                if(gro.getIdeology()>25 && gro.getIdeology()<75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Reaction")){
-                if(gro.getIdeology()<25){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Revolution")){
-                if(gro.getIdeology()>75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            gro.updateSatisfaction(satischange/2);
-            
+        
+        
+        for (ideoGroup gro : allGroups) {
+    boolean hasvoted = false;
+    int maxProximity = 0;
+    double totalAppealScore = 0;
+    Map<Party, Double> partyAppeals = new HashMap<>();
+
+    // 1. Determine who is eligible and find the best match
+    for (Party par : allParties) {
+        int currentProx = gro.proximityWith(par);
+        
+        // Track the highest proximity even if they don't vote
+        if (currentProx > maxProximity) {
+            maxProximity = currentProx;
         }
+
+        if (currentProx > tresh) {
+            // Factor in proximity and recognition
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            partyAppeals.put(par, appeal);
+            totalAppealScore += appeal;
+            hasvoted = true; // They found at least one acceptable party
+        }
+    }
+
+    // 2. Distribute votes only if there are acceptable parties
+    if (hasvoted) {
+        for (Party par : partyAppeals.keySet()) {
+            double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
+            int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
+
+            // Apply fatigue 
+            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+
+            par.addVotes(votesFromThisGroup);
+            par.recordVotes(gro, votesFromThisGroup);
+        }
+    }
+
+    // 3. Calculate Satisfaction
+    // If maxProximity is low, satischange will be more negative
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
+    if (!hasvoted) {
+        // Penalty for having no one to vote for
+        satischange -= ra.nextInt(10);
+    }
+    
+    satischange += ra.nextInt(3) - ra.nextInt(3);
+    gro.updateSatisfaction(satischange);
+}
+        
+        
+        
         int totvotes = 0;
         for(Party par: candidates){
             if(par.getScore()> winvotes){
@@ -863,70 +836,56 @@ public class Main
             }
         }
         
-        for(ideoGroup gro: allGroups){
-            boolean hasvoted = false;
-            int maxProximity = 0;
-            
-            for(Party par: candidates){
-                if(gro.proximityWith(par)>tresh){
-                    hasvoted = true;
-                    if(gro.proximityWith(par)>maxProximity){
-                        maxProximity = gro.proximityWith(par);
-                    }
-                    int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
-                    if(rulingCoalition!= null){
-                        if(rulingCoalition.getMemberList().contains(par)){
-                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
-                        }
-                    }
-                    toAdd += (int) (toAdd* par.getRecognition())/2;
-                    if(toAdd>0){
-                        toAdd-=(int) (toAdd*par.getFatigue())/2;
-                    }else{
-                        toAdd+=(int) (toAdd*par.getFatigue())/2;
-                    }
-                    int pctginAccept = ((par.getPercent()+1)*100)/(acceptables.get(gro)+1);
-                    toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
-                    if(toAdd<0){
-                        toAdd =0;
-                    }
-                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    par.addVotes(toAdd);
-                    par.recordVotes(gro,toAdd);
-                }
-            }
-            int satischange = (-1*(5-(maxProximity/20)))/2;
-            if(!hasvoted){
-                satischange-=ra.nextInt(5);
-            }
-            satischange+= ra.nextInt(3)-ra.nextInt(3);
-            
-            if(lean.equalsIgnoreCase("Republic")){
-                if(gro.getIdeology()>25 && gro.getIdeology()<75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Reaction")){
-                if(gro.getIdeology()<25){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            if(lean.equalsIgnoreCase("Revolution")){
-                if(gro.getIdeology()>75){
-                    satischange*=2;
-                }else{
-                    satischange/=2;
-                }
-            }
-            
-            gro.updateSatisfaction(satischange/2);
-            
+        for (ideoGroup gro : allGroups) {
+    boolean hasvoted = false;
+    int maxProximity = 0;
+    double totalAppealScore = 0;
+    Map<Party, Double> partyAppeals = new HashMap<>();
+
+    // 1. Determine who is eligible and find the best match
+    for (Party par : allParties) {
+        int currentProx = gro.proximityWith(par);
+        
+        // Track the highest proximity even if they don't vote
+        if (currentProx > maxProximity) {
+            maxProximity = currentProx;
         }
+
+        if (currentProx > tresh) {
+            // Factor in proximity and recognition
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            partyAppeals.put(par, appeal);
+            totalAppealScore += appeal;
+            hasvoted = true; // They found at least one acceptable party
+        }
+    }
+
+    // 2. Distribute votes only if there are acceptable parties
+    if (hasvoted) {
+        for (Party par : partyAppeals.keySet()) {
+            double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
+            int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
+
+            // Apply fatigue 
+            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+
+            par.addVotes(votesFromThisGroup);
+            par.recordVotes(gro, votesFromThisGroup);
+        }
+    }
+
+    // 3. Calculate Satisfaction
+    // If maxProximity is low, satischange will be more negative
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
+    if (!hasvoted) {
+        // Penalty for having no one to vote for
+        satischange -= ra.nextInt(10);
+    }
+    
+    satischange += ra.nextInt(3) - ra.nextInt(3);
+    gro.updateSatisfaction(satischange);
+}
             winvotes = 0;
             totvotes=0;
             for(Party par: candidates){
@@ -1303,7 +1262,7 @@ public static String detIdeo(Party par){
 
 public static void checkFails(){
     List<Party> toRemove = new ArrayList<>();
-    int losetresh = (3*(allParties.size()));
+    int losetresh = (2*(allParties.size()));
     for(Party par: allParties){
         if(par.getPercent()<losetresh){
             par.incrementFail();
