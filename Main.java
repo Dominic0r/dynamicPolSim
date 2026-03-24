@@ -175,6 +175,8 @@ public class Main
                             }
                         }
                         }
+                        
+                        relations.put(par, relations.get(par)-(par.getPercent()/5));
                     }
                 }
             
@@ -223,7 +225,7 @@ public class Main
         }
         
         public void addFatigue(){
-            fatigue +=0.05;
+            fatigue +=0.1;
         }
         public void decreaseFatigue(){
             if(fatigue>0){
@@ -560,58 +562,68 @@ public class Main
             }
         }
         
-        for(ideoGroup gro: allGroups){
-            boolean hasvoted = false;
-            int maxProximity = 0;
-            
-            for(Party par: allParties){
-                if(gro.proximityWith(par)>tresh){
-                    hasvoted = true;
-                    if(gro.proximityWith(par)>maxProximity){
-                        maxProximity = gro.proximityWith(par);
-                    }
-                    int toAdd = (gro.getSize()*gro.proximityWith(par))/100;
-                    if(rulingCoalition!= null){
-                        if(rulingCoalition.getMemberList().contains(par)){
-                            //toAdd -= (int) (toAdd*Math.abs(approvalRatingChange))/1000;
-                        }
-                    }
-                    toAdd += (int) (toAdd* par.getRecognition())/2;
-                    if(toAdd>0){
-                        toAdd-=(int) (toAdd*par.getFatigue())/2;
-                    }else{
-                        toAdd+=(int) (toAdd*par.getFatigue())/2;
-                    }
-                    int pctginAccept = (int)((par.getPercent()+1)*((100+(par.getPercent()/10))))/(acceptables.get(gro)+1);
-                    toAdd = (toAdd*pctginAccept)/100;
-                    toAdd = IdeoCheck(toAdd, par);
-                    //par.addVotes(toAdd/(ra.nextInt(4)+1));
-                    par.addVotes(toAdd);
-                    par.recordVotes(gro,toAdd);
-                }
-            }
-            int satischange = -1*(5-(maxProximity/20));
-            if(!hasvoted){
-                satischange-=ra.nextInt(10);
-            }
-            satischange+= ra.nextInt(3)-ra.nextInt(3);
-            gro.updateSatisfaction(satischange);
-            
+        for (ideoGroup gro : allGroups) {
+    boolean hasvoted = false;
+    int maxProximity = 0;
+    double totalAppealScore = 0;
+    Map<Party, Double> partyAppeals = new HashMap<>();
+
+    // 1. Determine who is eligible and find the best match
+    for (Party par : allParties) {
+        int currentProx = gro.proximityWith(par);
+        
+        // Track the highest proximity even if they don't vote
+        if (currentProx > maxProximity) {
+            maxProximity = currentProx;
         }
+
+        if (currentProx > tresh) {
+            // Factor in proximity and recognition
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            partyAppeals.put(par, appeal);
+            totalAppealScore += appeal;
+            hasvoted = true; // They found at least one acceptable party
+        }
+    }
+
+    // 2. Distribute votes only if there are acceptable parties
+    if (hasvoted) {
+        for (Party par : partyAppeals.keySet()) {
+            double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
+            int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
+
+            // Apply fatigue 
+            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+
+            par.addVotes(votesFromThisGroup);
+            par.recordVotes(gro, votesFromThisGroup);
+        }
+    }
+
+    // 3. Calculate Satisfaction
+    // If maxProximity is low, satischange will be more negative
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
+    if (!hasvoted) {
+        // Penalty for having no one to vote for
+        satischange -= ra.nextInt(10);
+    }
+    
+    satischange += ra.nextInt(3) - ra.nextInt(3);
+    gro.updateSatisfaction(satischange);
+}
         
         // set percentages
         int totalVotes = 0;
         for(Party par: allParties){
             par.setPercent(0);
             totalVotes += par.getScore();
-            if(par.getPercent()>20){
+            if(par.getPercent()>30){
                 par.incrementRecognition();
+                par.addFatigue();
             }
             
-            int notoadd = par.getPercent()/20;
-            for(int i =0; i<notoadd;i++){
-                par.incrementRecognition();
-            }
+            
         }
         // proportional
         
@@ -687,6 +699,7 @@ public class Main
             points+= ra.nextInt((100-par.getPercent())+1);
             points += (points*par.getRecognition())/2;
             //points -= (points*par.getFatigue())/2;
+            
             
             if(points>= tresh){
                 candidates.add(par);
@@ -949,14 +962,14 @@ public class Main
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
                             toAdd/=divicenter;
                         }else{
-                            toAdd*=(100-divicenter)/10;
+                            toAdd*=(100-divicenter)/5;
                         }
                     }else if(lean.equalsIgnoreCase("Reaction")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=diviright;
                         }else{
                             if(par.getIdeology()<righttresh){
-                                toAdd*=(100-diviright)/10;
+                                toAdd*=(100-diviright)/5;
                             }else{
                                 toAdd/=diviright;
                             }
@@ -1096,7 +1109,7 @@ public class Main
                 System.out.println();
             }
             
-            par.incrementRecognition();
+            //par.incrementRecognition();
             }
             
         }
@@ -1290,8 +1303,9 @@ public static String detIdeo(Party par){
 
 public static void checkFails(){
     List<Party> toRemove = new ArrayList<>();
+    int losetresh = (3*(allParties.size()));
     for(Party par: allParties){
-        if(par.getPercent()<5){
+        if(par.getPercent()<losetresh){
             par.incrementFail();
         }else{
             par.resetFail();
@@ -1309,6 +1323,7 @@ public static void checkFails(){
     
 }
 
+
 public static void events(){
     boolean eventHappened = false;
     if(ra.nextInt(10)<5){
@@ -1316,10 +1331,10 @@ public static void events(){
         switch(ra.nextInt(8)){
             case 0:
                 System.out.println("Economic Crisis!");
+                approvalRatingChange -= ra.nextInt(5);
             for(ideoGroup gro : allGroups){
                 if(gro.getIdeology()> 80 || gro.getIdeology()< 20){
-                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
-                    approvalRatingChange -= ra.nextInt(5);
+                    
                     gro.updateSatisfaction(-1*ra.nextInt(25));
                 }
                 radicalizeVoters();
@@ -1327,10 +1342,12 @@ public static void events(){
                 break;
             case 1:
                 System.out.println("Economic Boom!");
+                approvalRatingChange += ra.nextInt(5);
             for(ideoGroup gro : allGroups){
+                
                 if(gro.getIdeology()< 80 || gro.getIdeology()> 20){
                     gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
-                    approvalRatingChange += ra.nextInt(5);
+                    
                 }
                 moderateVoters();
             }
@@ -1407,7 +1424,7 @@ if(totalRecog > 0.5){
                 }
                 
                 if(supSeats<50){
-                    System.out.println("Landmark bil by "+ targetpar.getName());
+                    System.out.println("Landmark bill by "+ targetpar.getName());
                     targetpar.incrementRecognition();
                 }
                 break;
@@ -1437,11 +1454,11 @@ public static void moderateVoters() {
             int moderates = gro.getSize() / 15; // move toward center
             gro.updateSize(-moderates);
             
-            ideoGroup target;
+            ideoGroup target=null;
             
-            if (gro.getIdeology() > 50) {
+            if (gro.getIdeology() > 60) {
                 target = findClosestGroup(gro.getIdeology() - 15);
-            } else {
+            } else if(gro.getIdeology()<40) {
                 target = findClosestGroup(gro.getIdeology() + 15);
             }
             
@@ -1459,12 +1476,14 @@ public static void radicalizeVoters() {
             
             
             ideoGroup target = null;
-            if (gro.getIdeology() > 50) {
-                target = findClosestGroup(gro.getIdeology() + 15);
-            } else {
-                target = findClosestGroup(gro.getIdeology() - 15);
+            if(gro.getIdeology()<60 && gro.getIdeology()> 40){
+                if (gro.getIdeology() < 50) {
+                    target = findClosestGroup(gro.getIdeology() + 15);
+                } else {
+                    target = findClosestGroup(gro.getIdeology() - 15);
+                }
+                if (target != null) target.updateSize(defectors);
             }
-            if (target != null) target.updateSize(defectors);
         }
     }
 }
@@ -1474,12 +1493,26 @@ public static void updateRels(){
         par.updateRelations();
     }
 }
+
+public static void genSatis(){
+    if(allParties.size()<4){
+        int numOfPars = allParties.size();
+        for(ideoGroup gro: allGroups){
+            int toRem = (ra.nextInt(10)*(4-numOfPars))*-1;
+            gro.updateSatisfaction(toRem);
+        }
+        
+        
+    }
+    
+}
     
     public static void updateTick(){
         events();
         checkFails();
         updateGroupSize();
-        radicalizeVoters();
+        genSatis();
+        //radicalizeVoters();
         checkForNewParties();
         updateRels();
         approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
