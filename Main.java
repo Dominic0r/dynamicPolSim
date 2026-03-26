@@ -1352,9 +1352,6 @@ if(totalRecog > 0.5){
         }
     }
     
-    for(ideoGroup gro: allGroups){
-        gro.updateSatisfaction(-2);
-    }
         }
         
             break;
