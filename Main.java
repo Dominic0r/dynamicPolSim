@@ -914,9 +914,9 @@ public class Main
     
     public static int IdeoCheck(int toAdd,Party par){
         int lefttresh = 60, righttresh = 40;
-        int divileft = Math.abs(100-par.getIdeology());
-        int diviright = Math.abs(0-par.getIdeology());
-        int divicenter = Math.abs(50-par.getIdeology());
+        int divileft = (Math.abs(100-par.getIdeology()))/2;
+        int diviright = (Math.abs(0-par.getIdeology()))/2;
+        int divicenter =(Math.abs(50-par.getIdeology()))/2;
         if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
                             toAdd/=divicenter;
