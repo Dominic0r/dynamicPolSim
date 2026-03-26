@@ -1362,11 +1362,9 @@ if(totalRecog > 0.5){
             case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
-                    for(int i=0; i<targetpar.getPercent()/20;i++){
+                    for(int i=0; i<targetpar.getPercent()/10;i++){
                         targetpar.addFatigue();
                     }
-                    targetpar.setRecog(targetpar.getRecognition()-(targetpar.getPercent()/20));
-                    
                     for(ideoGroup gro : allGroups){
                         if(gro.proximityWith(targetpar)>85){
                             gro.updateSatisfaction(-50);
