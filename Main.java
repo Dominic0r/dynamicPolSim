@@ -504,16 +504,19 @@ public class Main
     // Left-wing opposition unity
     diceroll = (ra.nextInt(15))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Left Republican Party", 60, true, assignColor(60)));
+        allParties.add(new Party("Democratic Popular Front", 55, true, assignColor(55)));
     }else if(diceroll == 3){
-        allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
+        allParties.add(new Party("Radical Republican Party", 60, true, assignColor(60)));
+        allParties.add(new Party("National Alliance of Labor", 65, true, assignColor(65)));
     }else if(diceroll == 2){
-       allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
-        allParties.add(new Party("Workers Democratic Party", 75, true, assignColor(75)));
+       allParties.add(new Party("Radical Republican Party", 65, true, assignColor(65)));
+        allParties.add(new Party("National Workers Party", 75, true, assignColor(75)));
+        allParties.add(new Party("Peoples Revolutionary Council", 80, true, assignColor(80)));
     }else{
-        allParties.add(new Party("Left Republican Party", 65, true, assignColor(65)));
-        allParties.add(new Party("Revolutionary Democratic Party", 85, true, assignColor(85)));
-        allParties.add(new Party("Workers Democratic Party", 70, true, assignColor(70)));
+        allParties.add(new Party("National Workers Party", 75, true, assignColor(75)));
+        allParties.add(new Party("Democratic Congress of the Revolution", 80, true, assignColor(80)));
+        allParties.add(new Party("Revolutionary Vanguard Party", 85, true, assignColor(85)));
+        allParties.add(new Party("Peoples Reform Council", 90, true, assignColor(90)));
     }
     
     
@@ -625,7 +628,9 @@ public class Main
                 par.incrementRecognition();
                 par.addFatigue();
             }
-            
+            for(int i=0; i<par.getPercent()/10;i++){
+                par.incrementRecognition();
+            }
             
         }
         // proportional
@@ -684,7 +689,7 @@ public class Main
     
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
-        int tresh = 30;
+        int tresh = 50;
         for(Party par: allParties){
             int points = par.getPercent();
             if(rulingCoalition!=null){
@@ -915,7 +920,7 @@ public class Main
     public static int IdeoCheck(int toAdd,Party par){
         int lefttresh = 60, righttresh = 40;
         int divileft = (Math.abs(100-par.getIdeology()))/2;
-        int diviright = (Math.abs(0-par.getIdeology()))/2;
+        int diviright = (Math.abs(0-par.getIdeology()))/20;
         int divicenter =(Math.abs(50-par.getIdeology()))/2;
         if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
@@ -1098,14 +1103,14 @@ public class Main
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-                par.addFatigue();
+                
                 for(int i=0; i<(totGovSeats-50)/5;i++){
                     par.addFatigue();
                 }
                 
             }
             if(par == rulingCoalition.getLeader()){
-                par.addFatigue();
+                
                 
                 if(par.getPercent()> 50){
                     for(int i=0; i< (par.getPercent()-50)/4;i++){
@@ -1262,7 +1267,7 @@ public static String detIdeo(Party par){
 
 public static void checkFails(){
     List<Party> toRemove = new ArrayList<>();
-    int losetresh = (2*(allParties.size()));
+    int losetresh = allParties.size()+((allParties.size())/2);
     for(Party par: allParties){
         if(par.getPercent()<losetresh){
             par.incrementFail();
