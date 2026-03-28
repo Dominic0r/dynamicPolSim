@@ -1234,7 +1234,7 @@ public class Main
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
         
-        if (gro.getSatisfaction() < 30) {
+        if (gro.getSatisfaction() < 100/allParties.size()) {
             
             
             boolean alreadyRepresented = false;
