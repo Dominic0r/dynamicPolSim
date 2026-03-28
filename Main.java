@@ -175,8 +175,9 @@ public class Main
                             }
                         }
                         }
-                        
-                        relations.put(par, relations.get(par)-(par.getPercent()/5));
+                        if(this.getPercent()>30){
+                            relations.put(par, relations.get(par)-(par.getPercent()/3));
+                        }
                     }
                 }
             
@@ -352,6 +353,37 @@ public class Main
             }
             if(this.ideology < avgideo) this.ideology+= driftspeed/2;
             if(this.ideology> avgideo) this.ideology-= driftspeed/2;
+            
+            if(this.ideology>75) this.ideology++;
+            if(this.ideology<25) this.ideology--;
+            
+            Party maxpar=null;
+            Party minpar=null;
+            int maxrel=Integer.MIN_VALUE;
+            int minrel=Integer.MAX_VALUE;
+            for(Party par: relations.keySet()){
+                if(relations.get(par)>maxrel){
+                    maxrel = relations.get(par);
+                    maxpar = par;
+                }
+                
+                if(relations.get(par)<minrel){
+                    minrel = relations.get(par);
+                    minpar=par;
+                }
+            }
+            
+            if(this.ideology > maxpar.getIdeology()){
+                this.ideology--;
+            }else{
+                this.ideology++;
+            }
+            
+            if(this.ideology > minpar.getIdeology()){
+                this.ideology++;
+            }else{
+                this.ideology--;
+            }
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -599,7 +631,7 @@ public class Main
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
             votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             
-            votesFromThisGroup += (votesFromThisGroup*par.getRecognition());
+            votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
             
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
@@ -652,7 +684,7 @@ public class Main
             int maxnum =0;
             Party maxpar = null;
             for(Party par: allParties){
-                int curscore = par.getScore()/ (ra.nextInt(4)+1);
+                int curscore = par.getScore()/ (ra.nextInt(3)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -689,7 +721,7 @@ public class Main
     
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
-        int tresh = 50;
+        int tresh = 100/ allParties.size();
         for(Party par: allParties){
             int points = par.getPercent();
             if(rulingCoalition!=null){
@@ -704,7 +736,7 @@ public class Main
                 
             }
             
-            points+= ra.nextInt((100-par.getPercent())+1);
+            //points+= ra.nextInt((100-par.getPercent())+1);
             points += (points*par.getRecognition())/2;
             //points -= (points*par.getFatigue())/2;
             
@@ -712,6 +744,11 @@ public class Main
             if(points>= tresh){
                 candidates.add(par);
             }
+        }
+        
+        if(candidates.isEmpty()){
+            candidates.add(allParties.get(ra.nextInt(allParties.size())));
+            candidates.add(allParties.get(ra.nextInt(allParties.size())));
         }
         
         int winvotes = 0;
@@ -784,7 +821,7 @@ public class Main
     }
     
     satischange += ra.nextInt(3) - ra.nextInt(3);
-    gro.updateSatisfaction(satischange);
+    gro.updateSatisfaction(satischange/3);
 }
         
         
@@ -889,7 +926,7 @@ public class Main
     }
     
     satischange += ra.nextInt(3) - ra.nextInt(3);
-    gro.updateSatisfaction(satischange);
+    gro.updateSatisfaction(satischange/2);
 }
             winvotes = 0;
             totvotes=0;
@@ -1223,7 +1260,7 @@ public class Main
 
 public static String assignColor(int ideo){
     int r = 0, g = 0, b = 0;
-    int partyId = ra.nextInt(100);
+    int partyId = ra.nextInt(500);
     
     if (ideo < 25) {        
         r = 20; g = 20; b = 150;
@@ -1237,7 +1274,7 @@ public static String assignColor(int ideo){
         r = 200; g = 0; b = 0;
     }
 
-    int variance = (partyId * 12345) % (ra.nextInt(100)+1); 
+    int variance = (partyId * 12345) % (ra.nextInt(200)+1); 
     
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
@@ -1267,7 +1304,7 @@ public static String detIdeo(Party par){
 
 public static void checkFails(){
     List<Party> toRemove = new ArrayList<>();
-    int losetresh = allParties.size()+((allParties.size())/2);
+    int losetresh = allParties.size();
     for(Party par: allParties){
         if(par.getPercent()<losetresh){
             par.incrementFail();
