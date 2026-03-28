@@ -751,6 +751,11 @@ public class Main
             candidates.add(allParties.get(ra.nextInt(allParties.size())));
         }
         
+        if(lean.equalsIgnoreCase("Republic")){
+            if(candidates.size() ==1){
+                candidates.add(allParties.get(ra.nextInt(allParties.size())));
+            }
+        }
         int winvotes = 0;
         Party winner = null;
         
@@ -955,7 +960,7 @@ public class Main
     }
     
     public static int IdeoCheck(int toAdd,Party par){
-        int lefttresh = 60, righttresh = 40;
+        int lefttresh = 70, righttresh = 30;
         int divileft = (Math.abs(100-par.getIdeology()))/2;
         int diviright = (Math.abs(0-par.getIdeology()))/20;
         int divicenter =(Math.abs(50-par.getIdeology()))/2;
