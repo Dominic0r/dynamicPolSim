@@ -319,10 +319,14 @@ public class Main
             
             int targetIdeo = maxGroup.getIdeology();
             int driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-            if(this.ideology < targetIdeo) this.ideology+= driftspeed;
-            if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             
-            this.ideology += ra.nextInt(3)-ra.nextInt(3);
+            if(ra.nextInt(10)<5){
+                if(this.ideology < targetIdeo) this.ideology+= driftspeed;
+                if(this.ideology> targetIdeo) this.ideology-= driftspeed;
+            }
+            
+            
+            this.ideology += ra.nextInt(1)-ra.nextInt(1);
             
             int minsat = 1000;
             ideoGroup minGroup = null;
@@ -334,8 +338,13 @@ public class Main
             }
             targetIdeo = minGroup.getIdeology();
             driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-            if(this.ideology < targetIdeo) this.ideology+= driftspeed;
-            if(this.ideology> targetIdeo) this.ideology-= driftspeed;
+            
+            if(ra.nextInt(10)<5){
+                if(this.ideology < targetIdeo) this.ideology+= driftspeed;
+                if(this.ideology> targetIdeo) this.ideology-= driftspeed;
+            }
+            
+            
             int avgideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
                 double totalWeightedIdeology = 0;
@@ -351,11 +360,16 @@ public class Main
                     avgideo =(int) (totalWeightedIdeology / totalSeats);
                 }
             }
-            if(this.ideology < avgideo) this.ideology+= driftspeed/2;
-            if(this.ideology> avgideo) this.ideology-= driftspeed/2;
+            if(ra.nextInt(10)<5){
+                if(this.ideology < avgideo) this.ideology+= driftspeed/2;
+                if(this.ideology> avgideo) this.ideology-= driftspeed/2;
+            }
             
-            if(this.ideology>75) this.ideology++;
-            if(this.ideology<25) this.ideology--;
+            if(ra.nextInt(10)<5){
+                if(this.ideology>75) this.ideology++;
+                if(this.ideology<25) this.ideology--;
+            }
+            
             
             Party maxpar=null;
             Party minpar=null;
@@ -372,18 +386,20 @@ public class Main
                     minpar=par;
                 }
             }
-            
-            if(this.ideology > maxpar.getIdeology()){
+            if(ra.nextInt(10)<5){
+                if(this.ideology > maxpar.getIdeology()){
                 this.ideology--;
-            }else{
-                this.ideology++;
+                }else{
+                    this.ideology++;
+                }
+                
+                if(this.ideology > minpar.getIdeology()){
+                    this.ideology++;
+                }else{
+                    this.ideology--;
+                }
             }
             
-            if(this.ideology > minpar.getIdeology()){
-                this.ideology++;
-            }else{
-                this.ideology--;
-            }
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -662,28 +678,37 @@ public class Main
             }
             for(int i=0; i<par.getPercent()/10;i++){
                 par.incrementRecognition();
+                par.addFatigue();
             }
             
         }
         // proportional
         
-        
-        /*for(Party par: allParties){
+        Map<Party,Integer> percents = new HashMap<>();
+        for(Party par: allParties){
             
             int pctg = (int) (par.getScore()*100)/ totalVotes;
-            par.setPercent(pctg);
-            par.setApproval(pctg);
+            percents.put(par, pctg);
             
-        }*/
+        }
         
         
         
+        int threshhold = 5;
+        
+        List<Party> partiesOverTresh = new ArrayList<>();
+        
+        for(Party par: allParties){
+            if(percents.get(par)>threshhold){
+                partiesOverTresh.add(par);
+            }
+        }
         
         //seat distribution
         for(int i=0; i<50;i++){ // simulation of first past the post
             int maxnum =0;
             Party maxpar = null;
-            for(Party par: allParties){
+            for(Party par: partiesOverTresh){
                 int curscore = par.getScore()/ (ra.nextInt(3)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
@@ -696,15 +721,18 @@ public class Main
         
         //dhondt
         for(int i=0; i<50;i++){
+            
             int maxnum=-1;
             Party maxpar=null;
-            for(Party par: allParties){
-                int parscore = par.getScore()/(par.getPercent()+1);
-                if(parscore>maxnum){
-                    maxnum=parscore;
-                    maxpar = par;
-                    
-                }
+            for(Party par: partiesOverTresh){
+                    int parscore = par.getScore()/(par.getPercent()+1);
+                    if(parscore>maxnum){
+                        maxnum=parscore;
+                        maxpar = par;
+                        
+                    }
+                
+                
             }
             if(maxpar!=null){
             maxpar.setPercent(maxpar.getPercent()+1);
@@ -1146,7 +1174,7 @@ public class Main
                 par.decreaseFatigue();
             }else{
                 
-                for(int i=0; i<(totGovSeats-50)/5;i++){
+                for(int i=0; i<totGovSeats/20;i++){
                     par.addFatigue();
                 }
                 
@@ -1155,7 +1183,7 @@ public class Main
                 
                 
                 if(par.getPercent()> 50){
-                    for(int i=0; i< (par.getPercent()-50)/4;i++){
+                    for(int i=0; i< par.getPercent()/10;i++){
                         par.addFatigue();
                     }
                 }
@@ -1406,7 +1434,7 @@ if(totalRecog > 0.5){
             case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
-                    for(int i=0; i<targetpar.getPercent()/10;i++){
+                    for(int i=0; i<targetpar.getPercent()/2;i++){
                         targetpar.addFatigue();
                     }
                     for(ideoGroup gro : allGroups){
