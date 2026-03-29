@@ -552,7 +552,7 @@ public class Main
     // Left-wing opposition unity
     diceroll = (ra.nextInt(15))/3;
     if(diceroll == 4){
-        allParties.add(new Party("Democratic Popular Front", 55, true, assignColor(55)));
+        allParties.add(new Party("Democratic Popular Front", 60, true, assignColor(55)));
     }else if(diceroll == 3){
         allParties.add(new Party("Radical Republican Party", 60, true, assignColor(60)));
         allParties.add(new Party("National Alliance of Labor", 65, true, assignColor(65)));
@@ -694,7 +694,7 @@ public class Main
         
         
         
-        int threshhold = 5;
+        int threshhold = 5+ (allParties.size()/2);
         
         List<Party> partiesOverTresh = new ArrayList<>();
         
@@ -1410,10 +1410,13 @@ if(totalRecog > 0.5){
                 for(Party par : allParties) {
        
         if (par.getRecognition() > 0.1) {
-            par.setRecog(par.getRecognition() * -0.5); 
+            par.setRecog(par.getRecognition()/10); 
+            for(int i=0; i<par.getPercent()/2;i++){
+                par.addFatigue();
+            }
         } else {
             
-            par.setRecog(0.5); 
+            
         }
         
         
