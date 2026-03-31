@@ -705,10 +705,10 @@ public class Main
         }
         
         //seat distribution
-        for(int i=0; i<50;i++){ // simulation of first past the post
+        for(int i=0; i<80;i++){ // simulation of first past the post
             int maxnum =0;
             Party maxpar = null;
-            for(Party par: partiesOverTresh){
+            for(Party par: allParties){
                 int curscore = par.getScore()/ (ra.nextInt(3)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
@@ -720,7 +720,7 @@ public class Main
         }
         
         //dhondt
-        for(int i=0; i<50;i++){
+        for(int i=0; i<20;i++){
             
             int maxnum=-1;
             Party maxpar=null;
@@ -775,8 +775,15 @@ public class Main
         }
         
         if(candidates.isEmpty()){
+            if(President== null && LOTO == null){
+                candidates.add(allParties.get(ra.nextInt(allParties.size())));
             candidates.add(allParties.get(ra.nextInt(allParties.size())));
-            candidates.add(allParties.get(ra.nextInt(allParties.size())));
+            }else{
+                candidates.add(President);
+                candidates.add(LOTO);
+                candidates.add(rulingCoalition.getLeader());
+            }
+            
         }
         
         if(lean.equalsIgnoreCase("Republic")){
