@@ -453,9 +453,91 @@ public class Main
         }
     }
     
+    public static class Region{
+        String name;
+        int ideology;
+        Party winPar=null;
+        
+        public Region(String name, int ideology){
+            this.name=name;
+            this.ideology=ideology;
+        }
+        
+        public void displayWinner(){
+            Party maxpar=null;
+            int maxnum=Integer.MIN_VALUE;
+            int divider=1;
+            int curscore=0;
+            for(Party par: allParties){
+                if(par.getPercent()>0){
+                divider = (Math.abs(par.getIdeology()-ideology)/10)+1;
+                curscore = (par.getScore()/divider);
+                
+                if(curscore>maxnum){
+                    maxnum=curscore;
+                    maxpar = par;
+                }
+                }
+            }
+            
+            if(maxpar!=null){
+                System.out.println(name+ ": "+maxpar.getColor()+maxpar.getName()+RESET+maxpar.ideoDisplay());
+                winPar = maxpar;
+            }else{
+                System.out.println("nowinner");
+            }
+        }
+        
+        public String getName(){
+            return name;
+        }
+        
+        public Party getWinner(){
+            return winPar;
+        }
+    }
+    
+    
+    
+public static String[][] mapProgside = {
+    {"-","-","N","N","N","N","N","N","N","-","-","-"},
+    {"-","N","N","N","N","N","N","N","N","E","E","-"},
+    {"W","W","N","N","C","C","C","N","E","E","E","E"},
+    {"W","W","W","C","C","C","C","E","E","E","E","-"},
+    {"-","W","W","C","C","C","C","-","-","E","E","-"},
+    {"-","W","W","W","C","C","-","-","-","-","-","-"},
+    {"-","-","W","W","S","S","S","-","-","-","-","-"},
+    {"-","-","-","S","S","S","S","S","S","-","-","-"},
+    {"-","-","-","S","S","S","S","S","S","S","-","-"}
+    
+    
+    
+};
+    public static String[][] mapUserSide = {
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",},
+        {"","","","","","","","","","",}
+    };
+    
     public static Coalition rulingCoalition;
     
     public static int approvalRatingChange;
+    
+    public static List<Region> allRegions = new ArrayList<>();
+    public static void addRegions(){
+        allRegions.add(new Region("Capital",55));
+        allRegions.add(new Region("Northern",75));
+        allRegions.add(new Region("Southern",25));
+        allRegions.add(new Region("Eastern",40));
+        allRegions.add(new Region("Western",65));
+    }
     
     
     
@@ -1750,6 +1832,53 @@ public static void passageRate(){
     
 }
 
+public static void displayRegionResults(){
+    Region North=null, South=null, East=null, West=null, Capital=null;
+    for(Region reg: allRegions){
+        reg.displayWinner();
+        if(reg.getName().equalsIgnoreCase("Northern")){
+            North = reg;
+        }
+        if(reg.getName().equalsIgnoreCase("Southern")){
+            South = reg;
+        }
+        if(reg.getName().equalsIgnoreCase("Eastern")){
+            East = reg;
+        }
+        if(reg.getName().equalsIgnoreCase("Western")){
+            West = reg;
+        }
+        if(reg.getName().equalsIgnoreCase("Capital")){
+            Capital = reg;
+        }
+    }
+    
+    /*int rows = mapProgside.length; WIP MAP SYSTEM
+int cols = mapProgside[0].length;
+
+for (int i = 0; i < rows; i++) {
+    for (int c = 0; c < cols; c++) {
+        String tile = mapProgside[i][c].toUpperCase();
+        
+        // Determine the color/symbol based on the ID
+        String displayChar = switch (tile) {
+            case "N" -> North.getWinner().getColor() + "o" + RESET;
+            case "C" -> Capital.getWinner().getColor() + "o" + RESET;
+            case "S" -> South.getWinner().getColor() + "o" + RESET;
+            case "E" -> East.getWinner().getColor() + "o" + RESET;
+            case "W" -> West.getWinner().getColor() + "o" + RESET;
+            default  -> BLACK+ " "+ RESET;
+        };
+
+        System.out.print(displayChar + " ");
+    }
+    System.out.println(); // cleaner than System.out.print("\n")*/
+}
+    
+    
+    
+}
+public static String BLACK = "\u001B[30m";
 public static String lean = "Republic";
 public static void nationalLean(){
     int reaction =0,republic =0, revolution=0;
@@ -1883,6 +2012,7 @@ public static void seeDominant(){
 	public static void main(String[] args) {
 	    addGroups();
 	    addParties();
+	    addRegions();
 	    
 		
 		int interval  =4;
@@ -1915,6 +2045,7 @@ public static void seeDominant(){
     }
     
     visualizeParliament();
+    displayRegionResults();
     String spectr =  new StringBuilder(String.valueOf(spectrum)).reverse().toString();
     System.out.println("Spectrum: [L] " + spectr + " [R]");
 		    for(ideoGroup gro : allGroups){
@@ -1926,6 +2057,7 @@ System.out.println("Establishment Strength: " + String.format("%.2f", totalRecog
 passageRate();
 nationalLean();
 seeDominant();
+
 		    sc.nextLine();
 		    updateTick();
 		    year+=interval;
