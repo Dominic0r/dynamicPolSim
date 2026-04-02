@@ -1967,16 +1967,21 @@ public static String[][] mapProgside = {
         
     }
     
-    public static int startyear;
-    public static int year = 1852;
+    public static int startyear=1852;
+    public static int year = startyear;
     
     
     
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
-        int tresh = 70/ allParties.size();
+        int tresh = 90/ allParties.size();
         for(Party par: allParties){
             int points = par.getPercent();
+            
+            if(points == 0 && year==startyear){
+                points += ra.nextInt(100);
+            }
+            
             if(rulingCoalition!=null){
                 if(rulingCoalition.getMemberList().contains(par)){
                     if(rulingCoalition.getLeader()!= par){
@@ -1999,22 +2004,7 @@ public static String[][] mapProgside = {
             }
         }
         
-        if(candidates.isEmpty()){
-            if(President== null && LOTO == null){
-                candidates.add(allParties.get(ra.nextInt(allParties.size())));
-            candidates.add(allParties.get(ra.nextInt(allParties.size())));
-            }else{
-                candidates.add(President);
-                candidates.add(allParties.get(ra.nextInt(allParties.size())));
-            }
-            
-        }
         
-        if(lean.equalsIgnoreCase("Republic")){
-            if(candidates.size() ==1){
-                candidates.add(allParties.get(ra.nextInt(allParties.size())));
-            }
-        }
         int winvotes = 0;
         Party winner = null;
         
