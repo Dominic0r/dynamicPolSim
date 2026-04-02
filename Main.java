@@ -63,6 +63,12 @@ public class Main
         int delegates = 0;
         Map<Party, Integer> relations = new HashMap<>();
         
+        Person standardBearer; // for president 
+        Person chairman; // for prime minister
+        Person forSpeaker; 
+        
+        
+        
         double fatigue = 0;
         
         public Party(String name, int ideology, boolean isActive, String color){
@@ -71,6 +77,47 @@ public class Main
             this.isActive = isActive;
             this.color = color;
             failcount = 0;
+        }
+        
+        public void determineLeadership(){
+            List<Person> memberPersons = new ArrayList();
+            for(Person per: activePersons){
+                if(per.getCurrentParty() == this){
+                    memberPersons.add(per);
+                }
+            }
+            
+            int maxnum = Integer.MIN_VALUE;
+            Person maxper=null;
+            for(Person per: memberPersons){
+                int points= per.getProminence();
+                if(points> maxnum){
+                    maxnum = points;
+                    maxper = per;
+                }
+            }
+            
+            standardBearer = maxper;
+            maxnum = Integer.MIN_VALUE;
+            maxper=null;
+            for(Person per: memberPersons){
+                int points= per.getProminence();
+                if(points> maxnum && per!=standardBearer){
+                    maxnum = points;
+                    maxper = per;
+                }
+            }
+            chairman = maxper;
+            maxnum = Integer.MIN_VALUE;
+            maxper=null;
+            for(Person per: memberPersons){
+                int points= per.getProminence();
+                if(points> maxnum && per!=standardBearer && per!=chairman){
+                    maxnum = points;
+                    maxper = per;
+                }
+            }
+            forSpeaker = maxper;
         }
         
         public void incrementFail(){failcount++;}
@@ -278,6 +325,16 @@ public class Main
         
         public void addVotes(int toAdd){
             score+= toAdd;
+        }
+        
+        public Person getStandardB(){
+            return standardBearer;
+        }
+        public Person getChair(){
+            return chairman;
+        }
+        public Person getForSpeak(){
+            return forSpeaker;
         }
         
         public void ideoDriftOld(){
@@ -496,6 +553,329 @@ public class Main
             return winPar;
         }
     }
+    
+    public static class Person{
+        String name;
+        int startYear, endYear;
+        int ideology;
+        int prominence;
+        Party currentParty;
+        
+        public Person(String name, int startYear, int endYear, int ideology){
+            this.name=name;
+            this.startYear=startYear;
+            this.endYear=endYear;
+            this.ideology=ideology;
+        }
+        public int proximityWith(Party par){
+            return 100-Math.abs(par.getIdeology()-ideology);
+        }
+        public int proximityWith(int num){
+            return 100-Math.abs(num-ideology);
+        }
+        
+        public Party getCurrentParty(){
+            return currentParty;
+        }
+        
+        public void determineParty(){
+            Party maxpar=null;
+            int maxnum = Integer.MIN_VALUE;
+            
+            for(Party par: allParties){
+                int points = proximityWith(par);
+                if(points> maxnum){
+                    maxnum = points;
+                    maxpar = par;
+                }
+            }
+            
+            currentParty = maxpar;
+        }
+        
+        public void determineProminence(){
+            
+            if(currentParty!=null){
+                
+                prominence = currentParty.getPercent()/4;
+                prominence+= proximityWith(currentParty)/2;
+                prominence+= ra.nextInt(25);
+                
+            }
+            
+            if(prominence>100){
+                prominence = 100;
+            }
+            
+            if(prominence<0){
+                prominence=0;
+            }
+        }
+        
+        public boolean withinActiveYears(){
+            return year>=startYear && year<=endYear;
+        }
+        
+        public int getProminence(){
+            return prominence;
+        }
+        
+        public String getName(){
+            return name;
+        }
+        
+        @Override
+        public String toString(){
+            return name + " - " + currentParty.getColor()+ currentParty.getName()+ RESET+ currentParty.ideoDisplay();
+        }
+    }
+    
+    public static List<Person> allPersons = new ArrayList<>();
+    public static List<Person> activePersons = new ArrayList<>();
+    
+    public static void addPersons(){
+        // format: allPersons.add(new Person("",startyear, endyear, ideology));
+        allPersons.add(new Person("Nicholas Moore", 1830, 1849, 12));
+allPersons.add(new Person("Eric Wright", 1831, 1867, 68));
+allPersons.add(new Person("Nicholas Morales", 1832, 1854, 18));
+allPersons.add(new Person("Jason Taylor", 1833, 1867, 10));
+allPersons.add(new Person("Kevin Lopez", 1834, 1859, 11));
+allPersons.add(new Person("Joseph Edwards", 1834, 1852, 30));
+allPersons.add(new Person("Justin Martinez", 1835, 1873, 51));
+allPersons.add(new Person("William Thomas", 1835, 1872, 68));
+allPersons.add(new Person("Timothy Hernandez", 1837, 1857, 38));
+allPersons.add(new Person("Cynthia Campbell", 1838, 1868, 57));
+allPersons.add(new Person("John Young", 1839, 1874, 77));
+allPersons.add(new Person("George Perez", 1840, 1860, 71));
+allPersons.add(new Person("Donna Murphy", 1840, 1871, 1));
+allPersons.add(new Person("Scott Martin", 1841, 1872, 55));
+allPersons.add(new Person("Robert Evans", 1841, 1865, 67));
+allPersons.add(new Person("Jeffrey Hill", 1843, 1871, 58));
+allPersons.add(new Person("Brandon Anderson", 1844, 1868, 95));
+allPersons.add(new Person("Joshua Parker", 1845, 1874, 3));
+allPersons.add(new Person("Justin Rivera", 1845, 1884, 47));
+allPersons.add(new Person("Charles Rogers", 1845, 1869, 54));
+allPersons.add(new Person("Michael Williams", 1847, 1866, 56));
+allPersons.add(new Person("Kevin Perez", 1847, 1882, 49));
+allPersons.add(new Person("Jacob Miller", 1847, 1875, 27));
+allPersons.add(new Person("Daniel Martin", 1852, 1886, 78));
+allPersons.add(new Person("Robert Morris", 1852, 1883, 48));
+allPersons.add(new Person("Donald Harris", 1853, 1879, 56));
+allPersons.add(new Person("Joshua Diaz", 1853, 1895, 48));
+allPersons.add(new Person("Donald Ramirez", 1854, 1872, 67));
+allPersons.add(new Person("Timothy Ortiz", 1855, 1897, 73));
+allPersons.add(new Person("Jeffrey Nelson", 1855, 1894, 92));
+allPersons.add(new Person("Anthony Green", 1855, 1890, 82));
+allPersons.add(new Person("Brian Adams", 1857, 1872, 8));
+allPersons.add(new Person("Jonathan Martinez", 1857, 1889, 86));
+allPersons.add(new Person("Anthony Williams", 1857, 1875, 62));
+allPersons.add(new Person("Christopher Robinson", 1858, 1873, 27));
+allPersons.add(new Person("Richard Smith", 1862, 1877, 87));
+allPersons.add(new Person("Matthew Allen", 1863, 1901, 10));
+allPersons.add(new Person("Larry King", 1863, 1903, 57));
+allPersons.add(new Person("Michael Roberts", 1864, 1883, 55));
+allPersons.add(new Person("Mark Morgan", 1864, 1881, 36));
+allPersons.add(new Person("Justin Wilson", 1867, 1889, 45));
+allPersons.add(new Person("Kenneth Ortiz", 1867, 1884, 92));
+allPersons.add(new Person("James Torres", 1868, 1893, 20));
+allPersons.add(new Person("Robert Brown", 1869, 1907, 58));
+allPersons.add(new Person("Anthony Morgan", 1869, 1889, 39));
+allPersons.add(new Person("George Morris", 1870, 1887, 92));
+allPersons.add(new Person("George Clark", 1871, 1910, 52));
+allPersons.add(new Person("Charles Miller", 1872, 1893, 16));
+allPersons.add(new Person("Kenneth Morgan", 1872, 1899, 88));
+allPersons.add(new Person("Jacob Turner", 1873, 1912, 29));
+allPersons.add(new Person("Michael Carter", 1873, 1908, 80));
+allPersons.add(new Person("Joseph Lewis", 1875, 1896, 25));
+allPersons.add(new Person("Michael Martin", 1876, 1899, 34));
+allPersons.add(new Person("Scott Scott", 1876, 1917, 62));
+allPersons.add(new Person("Edward Nguyen", 1877, 1916, 82));
+allPersons.add(new Person("Amanda Adams", 1877, 1914, 64));
+allPersons.add(new Person("Paul Flores", 1877, 1899, 83));
+allPersons.add(new Person("Robert Adams", 1878, 1913, 98));
+allPersons.add(new Person("Richard Thompson", 1881, 1921, 77));
+allPersons.add(new Person("Eric Morris", 1882, 1911, 87));
+allPersons.add(new Person("Kathleen Hill", 1882, 1902, 95));
+allPersons.add(new Person("Robert Clark", 1882, 1912, 77));
+allPersons.add(new Person("Jacob Green", 1883, 1912, 25));
+allPersons.add(new Person("Ryan Evans", 1883, 1923, 75));
+allPersons.add(new Person("James Thomas", 1886, 1906, 74));
+allPersons.add(new Person("Michael Harris", 1887, 1907, 17));
+allPersons.add(new Person("Andrew Smith", 1888, 1911, 84));
+allPersons.add(new Person("Scott Morris", 1888, 1915, 16));
+allPersons.add(new Person("Mark Young", 1888, 1922, 39));
+allPersons.add(new Person("Gary Allen", 1892, 1933, 54));
+allPersons.add(new Person("Jeffrey Lopez", 1892, 1920, 56));
+allPersons.add(new Person("Stephen Turner", 1892, 1913, 24));
+allPersons.add(new Person("Larry Adams", 1893, 1934, 25));
+allPersons.add(new Person("John Roberts", 1894, 1927, 4));
+allPersons.add(new Person("Brian Rodriguez", 1894, 1918, 89));
+allPersons.add(new Person("Joshua Taylor", 1895, 1921, 83));
+allPersons.add(new Person("Betty Williams", 1896, 1936, 88));
+allPersons.add(new Person("Anthony Robinson", 1896, 1937, 42));
+allPersons.add(new Person("Nicholas Johnson", 1899, 1938, 9));
+allPersons.add(new Person("Jacob Carter", 1900, 1933, 45));
+allPersons.add(new Person("John Robinson", 1900, 1930, 84));
+allPersons.add(new Person("Michael Brown", 1901, 1922, 70));
+allPersons.add(new Person("Gary Cooper", 1902, 1930, 69));
+allPersons.add(new Person("Charles Collins", 1904, 1922, 26));
+allPersons.add(new Person("William Anderson", 1904, 1946, 75));
+allPersons.add(new Person("Donald Turner", 1905, 1941, 15));
+allPersons.add(new Person("Daniel Hill", 1905, 1944, 66));
+allPersons.add(new Person("Christopher Lopez", 1907, 1948, 7));
+allPersons.add(new Person("Brian Thomas", 1907, 1934, 42));
+allPersons.add(new Person("Robert Nguyen", 1908, 1937, 58));
+allPersons.add(new Person("Nicholas Thompson", 1909, 1948, 61));
+allPersons.add(new Person("Jonathan Torres", 1911, 1933, 76));
+allPersons.add(new Person("Donald Wright", 1912, 1942, 90));
+allPersons.add(new Person("Donald King", 1912, 1939, 14));
+allPersons.add(new Person("Jason Roberts", 1913, 1948, 48));
+allPersons.add(new Person("Mark Edwards", 1913, 1937, 18));
+allPersons.add(new Person("Timothy Lopez", 1913, 1935, 7));
+allPersons.add(new Person("Robert Lewis", 1914, 1955, 89));
+allPersons.add(new Person("Stephen Hernandez", 1915, 1945, 17));
+allPersons.add(new Person("Paul Carter", 1915, 1931, 27));
+allPersons.add(new Person("Paul Ramirez", 1916, 1934, 40));
+allPersons.add(new Person("Jonathan Gutierrez", 1917, 1949, 35));
+allPersons.add(new Person("Edward Turner", 1917, 1937, 16));
+allPersons.add(new Person("Edward Thomas", 1919, 1942, 59));
+allPersons.add(new Person("Melissa Flores", 1919, 1950, 15));
+allPersons.add(new Person("Stephen White", 1922, 1946, 8));
+allPersons.add(new Person("Sandra Cooper", 1922, 1953, 23));
+allPersons.add(new Person("Margaret Baker", 1922, 1950, 30));
+allPersons.add(new Person("Joseph Flores", 1925, 1961, 47));
+allPersons.add(new Person("Andrew Thompson", 1925, 1947, 27));
+allPersons.add(new Person("Eric Smith", 1925, 1964, 15));
+allPersons.add(new Person("Steven Flores", 1926, 1942, 90));
+allPersons.add(new Person("Joshua Rogers", 1926, 1964, 54));
+allPersons.add(new Person("Richard Hill", 1926, 1955, 17));
+allPersons.add(new Person("Kathleen Gomez", 1929, 1954, 43));
+allPersons.add(new Person("Donald Edwards", 1929, 1971, 44));
+allPersons.add(new Person("Brandon Parker", 1930, 1969, 92));
+allPersons.add(new Person("Kenneth Garcia", 1931, 1959, 46));
+allPersons.add(new Person("Edward Morris", 1932, 1967, 9));
+allPersons.add(new Person("Brandon Collins", 1933, 1972, 76));
+allPersons.add(new Person("Scott Cooper", 1933, 1955, 14));
+allPersons.add(new Person("James Phillips", 1934, 1958, 0));
+allPersons.add(new Person("Michael Thompson", 1935, 1967, 34));
+allPersons.add(new Person("Ronald Roberts", 1937, 1971, 61));
+allPersons.add(new Person("Steven Diaz", 1938, 1962, 97));
+allPersons.add(new Person("James Diaz", 1938, 1957, 66));
+allPersons.add(new Person("Richard Morales", 1939, 1980, 1));
+allPersons.add(new Person("Gary Garcia", 1939, 1980, 8));
+allPersons.add(new Person("Amanda Clark", 1939, 1980, 84));
+allPersons.add(new Person("Jacob Ramirez", 1940, 1973, 25));
+allPersons.add(new Person("Deborah Martin", 1943, 1977, 26));
+allPersons.add(new Person("Donna Moore", 1944, 1962, 29));
+allPersons.add(new Person("Stephen Carter", 1945, 1987, 31));
+allPersons.add(new Person("Mark Cook", 1946, 1962, 93));
+allPersons.add(new Person("Jacob Hill", 1948, 1980, 16));
+allPersons.add(new Person("Brian Hill", 1949, 1985, 87));
+allPersons.add(new Person("Nicholas Sanchez", 1949, 1980, 19));
+allPersons.add(new Person("Jeffrey Rodriguez", 1950, 1968, 87));
+allPersons.add(new Person("Matthew Murphy", 1950, 1970, 96));
+allPersons.add(new Person("Matthew Gutierrez", 1953, 1994, 7));
+allPersons.add(new Person("Jason Phillips", 1953, 1980, 43));
+allPersons.add(new Person("Joseph Scott", 1956, 1997, 86));
+allPersons.add(new Person("Daniel Rodriguez", 1957, 1976, 98));
+allPersons.add(new Person("Joshua Anderson", 1957, 1984, 73));
+allPersons.add(new Person("Charles Campbell", 1958, 1975, 28));
+allPersons.add(new Person("Jonathan Jackson", 1959, 1975, 27));
+allPersons.add(new Person("William Harris", 1960, 1989, 36));
+allPersons.add(new Person("Karen Allen", 1960, 1988, 22));
+allPersons.add(new Person("James Jackson", 1960, 1996, 61));
+allPersons.add(new Person("Jason Williams", 1961, 1985, 34));
+allPersons.add(new Person("Joshua Williams", 1961, 1997, 62));
+allPersons.add(new Person("Angela Young", 1961, 1993, 5));
+allPersons.add(new Person("John Morgan", 1961, 1996, 30));
+allPersons.add(new Person("Amanda Reyes", 1962, 1982, 92));
+allPersons.add(new Person("Matthew Rodriguez", 1965, 1980, 91));
+allPersons.add(new Person("Charles Jones", 1967, 1982, 6));
+allPersons.add(new Person("Michelle Cooper", 1967, 2004, 38));
+allPersons.add(new Person("Brian Thompson", 1968, 2001, 79));
+allPersons.add(new Person("Jonathan Evans", 1969, 1990, 1));
+allPersons.add(new Person("Andrew Diaz", 1969, 1996, 6));
+allPersons.add(new Person("Stephen Brown", 1970, 1991, 25));
+allPersons.add(new Person("Karen Robinson", 1970, 1989, 49));
+allPersons.add(new Person("Larry Cooper", 1972, 1990, 29));
+allPersons.add(new Person("Thomas Reyes", 1973, 2000, 41));
+allPersons.add(new Person("Donald Jones", 1973, 2003, 45));
+allPersons.add(new Person("Gary Flores", 1975, 2012, 64));
+allPersons.add(new Person("Larry Brown", 1977, 1994, 96));
+allPersons.add(new Person("Paul Perez", 1977, 2002, 95));
+allPersons.add(new Person("Paul Wright", 1977, 2012, 3));
+allPersons.add(new Person("Mary Mitchell", 1977, 2008, 6));
+allPersons.add(new Person("Carol Miller", 1980, 2008, 21));
+allPersons.add(new Person("Brenda Robinson", 1980, 2013, 85));
+allPersons.add(new Person("Gary Robinson", 1980, 2004, 77));
+allPersons.add(new Person("Barbara Williams", 1981, 2012, 94));
+allPersons.add(new Person("Jacob Rodriguez", 1982, 2007, 42));
+allPersons.add(new Person("Angela Moore", 1982, 2015, 40));
+allPersons.add(new Person("David Collins", 1983, 2025, 93));
+allPersons.add(new Person("Emily Mitchell", 1984, 2007, 82));
+allPersons.add(new Person("Carol Gomez", 1987, 2026, 48));
+allPersons.add(new Person("Mary Murphy", 1987, 2015, 28));
+allPersons.add(new Person("Patricia Cook", 1989, 2026, 88));
+allPersons.add(new Person("Eric Scott", 1990, 2013, 32));
+allPersons.add(new Person("Daniel Harris", 1991, 2018, 32));
+allPersons.add(new Person("Anthony Diaz", 1991, 2021, 70));
+allPersons.add(new Person("Anthony White", 1991, 2026, 33));
+allPersons.add(new Person("Eric Jones", 1992, 2026, 81));
+allPersons.add(new Person("Carol Mitchell", 1993, 2011, 19));
+allPersons.add(new Person("Nicole Roberts", 1993, 2021, 78));
+allPersons.add(new Person("Melissa Cruz", 1994, 2016, 100));
+allPersons.add(new Person("Helen Lopez", 1995, 2026, 4));
+allPersons.add(new Person("Anthony Taylor", 1995, 2026, 31));
+allPersons.add(new Person("Robert King", 1997, 2025, 97));
+allPersons.add(new Person("Betty Adams", 1998, 2017, 76));
+allPersons.add(new Person("Donald Martinez", 1998, 2024, 97));
+allPersons.add(new Person("Kevin Garcia", 1999, 2024, 42));
+allPersons.add(new Person("Margaret Turner", 1999, 2026, 79));
+allPersons.add(new Person("Linda Perez", 1999, 2026, 0));
+allPersons.add(new Person("Mark Rodriguez", 2000, 2020, 63));
+allPersons.add(new Person("Karen Jackson", 2002, 2026, 99));
+allPersons.add(new Person("Stephanie Hill", 2004, 2026, 3));
+    }
+    
+    
+    public static void allDetLeadership(){
+        for(Party par: allParties){
+            par.determineLeadership();
+        }
+    }
+    public static void checkForActives(){
+        List<Person> toAdd = new ArrayList<>();
+        for(Person per: allPersons){
+            if(per.withinActiveYears()){
+                toAdd.add(per);
+            }
+        }
+        
+        activePersons.addAll(toAdd);
+    }
+    public static void checkForInactives(){
+        List<Person> toRemove = new ArrayList<>();
+        for(Person per: allPersons){
+            if(!per.withinActiveYears()){
+                toRemove.add(per);
+            }
+        }
+        
+        activePersons.removeAll(toRemove);
+    }
+    
+    public static void assessAffiliations(){
+        for(Person per: activePersons){
+            per.determineParty();
+        }
+    }
+    
+    public static void assessProminence(){
+        for(Person per: activePersons){
+            per.determineProminence();
+        }
+    }
+    
     
     
     
@@ -963,7 +1343,7 @@ public static String[][] mapProgside = {
         int majorvotes = 0;
         for(Party par: candidates){
             if(ordinal <3){
-                System.out.print(par.getName()+ par.ideoDisplay()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
+                System.out.print(par.getStandardB()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
                 majorvotes+= par.getScore();
             }
             ordinal++;
@@ -1063,7 +1443,7 @@ public static String[][] mapProgside = {
             System.out.println("\n\nRound 2");
         for(Party par: candidates){
             
-            System.out.print(par.getName()+ par.ideoDisplay()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
+            System.out.print(par.getStandardB()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
         }
         }
         
@@ -1220,6 +1600,7 @@ public static String[][] mapProgside = {
                 }
                 System.out.println("===============\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
+                System.out.println("Prime Minister: "+ rulingCoalition.getLeader().getChair());
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
                 
@@ -1246,7 +1627,7 @@ public static String[][] mapProgside = {
             }
         }
         electSpeaker();
-        System.out.println("===============\nSpeaker: "+ speaker.getColor()+ speaker.getName()+ RESET+ speaker.ideoDisplay()); 
+        System.out.println("===============\nSpeaker: "+ speaker.getForSpeak()); 
         speaker.incrementRecognition();
         
         
@@ -1636,6 +2017,12 @@ public static void genSatis(){
         //radicalizeVoters();
         checkForNewParties();
         updateRels();
+        checkForActives();
+        checkForInactives();
+        assessAffiliations();
+        assessProminence();
+        allDetLeadership();
+        
         approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
         for(Party par: rulingCoalition.getMemberList()){
             approvalRatingChange*= (ra.nextInt(3))+1;
@@ -1877,7 +2264,7 @@ for (int i = 0; i < rows; i++) {
     
     
     
-}
+
 public static String BLACK = "\u001B[30m";
 public static String lean = "Republic";
 public static void nationalLean(){
@@ -2013,7 +2400,11 @@ public static void seeDominant(){
 	    addGroups();
 	    addParties();
 	    addRegions();
-	    
+	    addPersons();
+	    checkForActives();
+	    assessAffiliations();
+        assessProminence();
+        allDetLeadership();
 		
 		int interval  =4;
 		int electionsToSimulate = 44;
