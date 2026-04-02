@@ -123,6 +123,16 @@ public class Main
             forSpeaker = maxper;
         }
         
+        public int memCount(){
+            List<Person> memberPersons = new ArrayList();
+            for(Person per: activePersons){
+                if(per.getCurrentParty() == this){
+                    memberPersons.add(per);
+                }
+            }
+            return memberPersons.size();
+        }
+        
         public void incrementFail(){failcount++;}
         public int getFailCount(){return failcount;}
         public void resetFail(){failcount=0;}
@@ -586,7 +596,7 @@ public class Main
             int maxnum = Integer.MIN_VALUE;
             
             for(Party par: allParties){
-                int points = proximityWith(par);
+                int points = proximityWith(par)- (par.memCount()*5);
                 if(points> maxnum){
                     maxnum = points;
                     maxpar = par;
@@ -1964,7 +1974,7 @@ public static String[][] mapProgside = {
     
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
-        int tresh = 100/ allParties.size();
+        int tresh = 70/ allParties.size();
         for(Party par: allParties){
             int points = par.getPercent();
             if(rulingCoalition!=null){
@@ -2204,7 +2214,7 @@ public static String[][] mapProgside = {
         }
         President = winner;
         President.incrementRecognition();
-        System.out.println("\n===============\nElected President: "+ President.getColor()+President.getName()+RESET+" "+ President.ideoDisplay());
+        System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+ President.ideoDisplay());
         
     }
     
