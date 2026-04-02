@@ -551,7 +551,7 @@ public class Main
             }
             
             if(maxpar!=null){
-                System.out.println(name+ ": "+maxpar.getColor()+maxpar.getName()+RESET+maxpar.ideoDisplay());
+                System.out.print(name+ ": "+maxpar.getColor()+maxpar.getName()+RESET+maxpar.ideoDisplay() + " |");
                 winPar = maxpar;
             }else{
                 System.out.println("nowinner");
@@ -3149,6 +3149,27 @@ public static void seeDominant(){
         }
     }
     
+    public static void displayMostProminent(){
+        List<Person> mostProminents = new ArrayList<>();
+        for(int i=0; i<10;i++){
+            Person maxper=null;
+            int maxnum=Integer.MIN_VALUE;
+            
+            for(Person per: activePersons){
+                int points = per.getProminence();
+                if(points > maxnum && !mostProminents.contains(per)){
+                    maxnum = points;
+                    maxper = per;
+                }
+            }
+            mostProminents.add(maxper);
+        }
+        System.out.println("\nMost Prominent Politicians of "+ year+ ": ");
+        for(Person per: mostProminents){
+            System.out.print(per+ " | ");
+        }
+    }
+    
 	public static void main(String[] args) {
 	    addGroups();
 	    addParties();
@@ -3190,6 +3211,9 @@ public static void seeDominant(){
     
     visualizeParliament();
     displayRegionResults();
+    assessProminence();
+    displayMostProminent();
+    System.out.println();
     String spectr =  new StringBuilder(String.valueOf(spectrum)).reverse().toString();
     System.out.println("Spectrum: [L] " + spectr + " [R]");
 		    for(ideoGroup gro : allGroups){
