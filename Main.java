@@ -1970,8 +1970,6 @@ public static String[][] mapProgside = {
     public static int startyear=1852;
     public static int year = startyear;
     
-    public static Set<String> allPresidents = new HashSet<>();
-    public static Set<String> allPrimeMinisters = new HashSet<>();
     
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
