@@ -2796,6 +2796,8 @@ public static void nationalState(){
     
     agenda += rulingCoalition.getSize()/20;
     
+    if(!rulingCoalition.getMemberList().contains(President)) agenda-=2;
+    
     stability += rulingCoalition.getSize()/10;
     
     economy += (stability-5);
