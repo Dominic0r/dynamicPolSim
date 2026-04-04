@@ -2000,7 +2000,7 @@ public static String[][] mapProgside = {
             par.resetScore();
         }
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        tresh = 75;
+        tresh = 70+ra.nextInt(20);
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -2106,7 +2106,7 @@ public static String[][] mapProgside = {
         }
         acceptables.clear();
         
-        tresh = 55;
+        tresh = 65+ra.nextInt(25);
         
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
