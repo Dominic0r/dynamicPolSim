@@ -2568,6 +2568,13 @@ public static void checkFails(){
     
 }
 
+public static boolean eCrisis = false;
+public static int eCrisisCdown = 0;
+
+public static boolean eBoom = false;
+public static int eBoomCdown = 0;
+
+
 
 public static void events(){
     boolean eventHappened = false;
@@ -2575,43 +2582,34 @@ public static void events(){
        
         switch(ra.nextInt(8)){
             case 0:
-                System.out.println("Economic Crisis!");
-                approvalRatingChange -= ra.nextInt(5);
-            for(ideoGroup gro : allGroups){
-                if(gro.getIdeology()> 80 || gro.getIdeology()< 20){
-                    
-                    gro.updateSatisfaction(-1*ra.nextInt(25));
+                if(!eBoom){
+                if(!eCrisis){
+                    eCrisis = true;
+                    eCrisisCdown= ra.nextInt(2)+1;
+                }else{
+                    eCrisisCdown+= ra.nextInt(2)+1;
                 }
-                radicalizeVoters();
-            }
+                }
+            
                 break;
             case 1:
-                System.out.println("Economic Boom!");
-                approvalRatingChange += ra.nextInt(5);
-            for(ideoGroup gro : allGroups){
-                
-                if(gro.getIdeology()< 80 || gro.getIdeology()> 20){
-                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
-                    
+                if(!eCrisis){
+                if(!eBoom){
+                    eBoom = true;
+                    eBoomCdown= ra.nextInt(2)+1;
+                }else{
+                    eBoomCdown+= ra.nextInt(2)+1;
                 }
-                moderateVoters();
-            }
+                
+                }
                 break;
             case 2:
                 System.out.println("Labor Strikes!");
-            for(ideoGroup gro : allGroups){
-                if(gro.getIdeology()> 60){
-                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
-                }
-            }
+            leftShift();
                 break;
             case 3:
                 System.out.println("Immigration Crisis!");
-            for(ideoGroup gro : allGroups){
-                if(gro.getIdeology()< 40){
-                    gro.updateSize(ra.nextInt((gro.getSize()/10)+1));
-                }
-            }
+            rightShift();
                 break;
             case 4:
                 double totalRecog = 0;
@@ -2731,6 +2729,46 @@ public static void radicalizeVoters() {
     }
 }
 
+public static void leftShift(){
+    for(ideoGroup gro: allGroups){
+        int defectors = gro.getSize()/50;
+        gro.updateSize(-defectors);
+        
+        ideoGroup target=null;
+        target = findClosestGroup(gro.getIdeology()+10);
+        
+        if(target!=null) target.updateSize(defectors);
+    }
+}
+public static void rightShift(){
+    for(ideoGroup gro: allGroups){
+        int defectors = gro.getSize()/50;
+        gro.updateSize(-defectors);
+        
+        ideoGroup target=null;
+        target = findClosestGroup(gro.getIdeology()-10);
+        
+        if(target!=null) target.updateSize(defectors);
+    }
+}
+
+public static void centerShift(){
+    for(ideoGroup gro: allGroups){
+        int defectors = gro.getSize()/50;
+        gro.updateSize(-defectors);
+        
+        ideoGroup target=null;
+        if(gro.getIdeology()<50){
+            target = findClosestGroup(gro.getIdeology()+10);
+        }else{
+            target = findClosestGroup(gro.getIdeology()-10);
+        }
+        
+        
+        if(target!=null) target.updateSize(defectors);
+    }
+}
+
 public static void updateRels(){
     for(Party par: allParties){
         par.updateRelations();
@@ -2758,11 +2796,40 @@ public static void nationalState(){
     
     agenda += rulingCoalition.getSize()/20;
     
+    stability += rulingCoalition.getSize()/10;
+    
     economy += (stability-5);
     economy += (agenda-5);
+    
+    if(eCrisis){
+        eCrisisCdown--;
+        eCrisis = eCrisisCdown>0;
+        economy--;
+    }
+    
+    if(eBoom){
+        eBoomCdown--;
+        eBoom= eBoomCdown>0;
+        economy++;
+    }
+    
     peoplesApproval += (economy-5);
     peoplesApproval+= (agenda-5);
     
+    if(stability > 6){
+        centerShift();
+    }
+    if(stability<5){
+        leftShift();
+        rightShift();
+    }
+    
+    if(stability<0){
+        stability = 0;
+    }
+    if(stability>10){
+        stability = 10;
+    }
     
     if(peoplesApproval<0){
         peoplesApproval=0;
