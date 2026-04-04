@@ -93,6 +93,11 @@ public class Main
             Person maxper=null;
             for(Person per: memberPersons){
                 int points= per.getProminence();
+                if(per.hasBeenPresidentBefore()){
+                    if(per.noOfTimesBecamePresident() == 1){
+                        points*=100;
+                    }
+                }
                 if(points> maxnum){
                     maxnum = points;
                     maxper = per;
@@ -574,6 +579,9 @@ public class Main
         int prominence;
         Party currentParty;
         
+        boolean hasbeenPresident=false;
+        int prescount=0;
+        
         public Person(String name, int startYear, int endYear, int ideology){
             this.name=name;
             this.startYear=startYear;
@@ -591,16 +599,32 @@ public class Main
             return currentParty;
         }
         
+        public boolean hasBeenPresidentBefore(){return hasbeenPresident;}
+        public int noOfTimesBecamePresident(){return prescount;}
+        
+        public void incrementPrescount(){
+            prescount++;
+        }
+        
+        public void setPresToTrue(){ hasbeenPresident=true;}
+        
         public void determineParty(){
             Party maxpar=null;
             int maxnum = Integer.MIN_VALUE;
             
             for(Party par: allParties){
-                int points = proximityWith(par)- (par.memCount()*5);
+                int points = ((proximityWith(par)/4)*3) + (25/ ((par.memCount()*5)+1));
+                if(par == currentParty){
+                    points += points/2;
+                }
+                if(this == par.getStandardB() || this== par.getChair() || this == par.getForSpeak()){
+                    points += points/2;
+                }
                 if(points> maxnum){
                     maxnum = points;
                     maxpar = par;
                 }
+                
             }
             
             currentParty = maxpar;
@@ -617,6 +641,17 @@ public class Main
                 if(this == currentParty.getStandardB() || this == currentParty.getChair() || this == currentParty.getForSpeak()){
                     prominence += prominence/2;
                 }
+                
+                if(hasbeenPresident){
+                    prominence*=3;
+                    if(prescount==1){
+                        prominence*=10;
+                    }else{
+                        prominence/=10;
+                    }
+                }
+                
+                prominence -= (year-startyear)/5;
             }
             
             
@@ -1945,6 +1980,9 @@ public static String[][] mapProgside = {
             points += (points*par.getRecognition())/2;
             //points -= (points*par.getFatigue())/2;
             
+            if(par == President){
+                points*=5;
+            }
             
             if(points>= tresh){
                 candidates.add(par);
@@ -2152,7 +2190,8 @@ public static String[][] mapProgside = {
         President = winner;
         President.incrementRecognition();
         System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+ President.ideoDisplay());
-        
+        President.getStandardB().setPresToTrue();
+        President.getStandardB().incrementPrescount();
     }
     
     public static int IdeoCheck(int toAdd,Party par){
@@ -2707,6 +2746,169 @@ public static void genSatis(){
     }
     
 }
+
+public static void nationalState(){
+    int economy = ra.nextInt(11);
+    int peoplesApproval = ra.nextInt(11);
+    int stability = ra.nextInt(11);
+    int agenda = ra.nextInt(11);
+    
+    agenda += rulingCoalition.getSize()/20;
+    
+    economy += (stability-5);
+    economy += (agenda-5);
+    peoplesApproval += (economy-5);
+    peoplesApproval+= (agenda-5);
+    
+    
+    if(peoplesApproval<0){
+        peoplesApproval=0;
+    }
+    if(peoplesApproval>10){
+        peoplesApproval=10;
+    }
+    if(economy<0){
+        economy = 0;
+    }
+    if(economy>10){
+        economy = 10;
+    }
+    if(agenda<0){
+        agenda = 0;
+    }
+    if(agenda>10){
+        agenda = 10;
+    }
+    
+    for(Party par: rulingCoalition.getMemberList()){
+        if(peoplesApproval >5){
+            for(int i=0; i< peoplesApproval-5;i++){
+                par.incrementRecognition();
+            }
+        }else{
+            for(int i=0; i< 5-peoplesApproval;i++){
+                par.addFatigue();
+                par.addFatigue();
+            }
+        }
+    }
+    
+    String[] colors = {
+    "\u001B[38;5;196m", // 0: Pure Red
+    "\u001B[38;5;202m", // 1: Red-Orange
+    "\u001B[38;5;208m", // 2: Orange
+    "\u001B[38;5;214m", // 3: Orange-Yellow
+    "\u001B[38;5;220m", // 4: Yellow-Gold
+    "\u001B[38;5;226m", // 5: Pure Yellow
+    "\u001B[38;5;190m", // 6: Yellow-Green (Lime)
+    "\u001B[38;5;154m", // 7: Light Green
+    "\u001B[38;5;118m", // 8: Bright Green
+    "\u001B[38;5;46m",  // 9: Primary Green
+    "\u001B[38;5;34m"   // 10: Deep Success Green
+};
+String reset = "\u001B[0m";
+System.out.println("==========================================================================================");
+    System.out.print(reset+"The Economy is " + colors[economy]);
+    switch(economy){
+        case 0: System.out.println("Collapsing");
+            break;
+        case 1:System.out.println("Depressing");
+            break;
+        case 2:System.out.println("Crashing");
+            break;
+        case 3:System.out.println("Shrinking");
+            break;
+        case 4:System.out.println("Stagnating");
+            break;
+        case 5:System.out.println("Stagnating");
+            break;
+        case 6:System.out.println("Stagnating");
+            break;
+        case 7:System.out.println("Growing");
+            break;
+        case 8:System.out.println("Rising");
+            break;
+        case 9:System.out.println("Expanding");
+            break;
+        case 10:System.out.println("Booming");
+    }
+    
+    System.out.print(reset+"Our Public Approval is " + colors[peoplesApproval]);
+    switch(peoplesApproval){
+        case 0: System.out.println("In Hell");
+            break;
+        case 1:System.out.println("Underwater");
+            break;
+        case 2:System.out.println("Crashing");
+            break;
+        case 3:System.out.println("Dropping");
+            break;
+        case 4:System.out.println("Downward");
+            break;
+        case 5:System.out.println("Steady");
+            break;
+        case 6:System.out.println("Upward");
+            break;
+        case 7:System.out.println("Rising");
+            break;
+        case 8:System.out.println("Flying");
+            break;
+        case 9:System.out.println("Sky High");
+            break;
+        case 10:System.out.println("In Space");
+    }
+    
+    System.out.print(reset+"The Nation is " + colors[stability]);
+    switch(stability){
+        case 0: System.out.println("Burning");
+            break;
+        case 1:System.out.println("In Crisis");
+            break;
+        case 2:System.out.println("Tearing by the seams");
+            break;
+        case 3:System.out.println("Losing it");
+            break;
+        case 4:System.out.println("Pannicking");
+            break;
+        case 5:System.out.println("Quiet");
+            break;
+        case 6:System.out.println("Content");
+            break;
+        case 7:System.out.println("Happy");
+            break;
+        case 8:System.out.println("Peaceful");
+            break;
+        case 9:System.out.println("Orderly");
+            break;
+        case 10:System.out.println("Completely Unified");
+    }
+    
+    System.out.print(reset+"Our Agenda is " + colors[agenda]);
+    switch(agenda){
+        case 0: System.out.println("Ripped to shreds");
+            break;
+        case 1:System.out.println("In the trash bin");
+            break;
+        case 2:System.out.println("Dead in the water");
+            break;
+        case 3:System.out.println("Dead on arrival");
+            break;
+        case 4:System.out.println("On life support");
+            break;
+        case 5:System.out.println("Compromised");
+            break;
+        case 6:System.out.println("realized in the Bare Minimum");
+            break;
+        case 7:System.out.println("Somewhat realized");
+            break;
+        case 8:System.out.println("Partially realized");
+            break;
+        case 9:System.out.println("Mostly realized");
+            break;
+        case 10:System.out.println("Fully realized");
+    }
+    System.out.println(reset+"==========================================================================================");
+}
     
     public static void updateTick(){
         events();
@@ -3100,22 +3302,45 @@ public static void seeDominant(){
     }
     
     public static void displayMostProminent(){
-        List<Person> mostProminents = new ArrayList<>();
-        for(int i=0; i<10;i++){
+        List<Person> governmentFigures = new ArrayList<>();
+        List<Person> oppositionFigures = new ArrayList<>();
+        for(int i=0; i<5;i++){
             Person maxper=null;
             int maxnum=Integer.MIN_VALUE;
             
             for(Person per: activePersons){
                 int points = per.getProminence();
-                if(points > maxnum && !mostProminents.contains(per)){
+                if(points > maxnum && !governmentFigures.contains(per) && rulingCoalition.getMemberList().contains(per.getCurrentParty())){
                     maxnum = points;
                     maxper = per;
                 }
             }
-            mostProminents.add(maxper);
+            
+                governmentFigures.add(maxper);
+            
         }
-        System.out.println("\nMost Prominent Politicians of "+ year+ ": ");
-        for(Person per: mostProminents){
+        
+        for(int i=0; i<5;i++){
+            Person maxper=null;
+            int maxnum=Integer.MIN_VALUE;
+            
+            for(Person per: activePersons){
+                int points = per.getProminence();
+                if(points > maxnum && !oppositionFigures.contains(per) && !rulingCoalition.getMemberList().contains(per.getCurrentParty())){
+                    maxnum = points;
+                    maxper = per;
+                }
+            }
+            
+                oppositionFigures.add(maxper);
+            
+        }
+        System.out.println("Prominent Pro-Government Politicians: ");
+        for(Person per: governmentFigures){
+            System.out.print(per+ " | ");
+        }
+        System.out.println("\nProminent Opposition Politicians: ");
+        for(Person per: oppositionFigures){
             System.out.print(per+ " | ");
         }
     }
@@ -3160,7 +3385,8 @@ public static void seeDominant(){
     }
     
     visualizeParliament();
-    displayRegionResults();
+    nationalState();
+    //displayRegionResults();
     assessProminence();
     displayMostProminent();
     System.out.println();
@@ -3175,6 +3401,7 @@ System.out.println("Establishment Strength: " + String.format("%.2f", totalRecog
 passageRate();
 nationalLean();
 seeDominant();
+
 //DEBUGDisplayAllActive();
 
 		    String upu = sc.nextLine();
