@@ -109,6 +109,9 @@ public class Main
             
             for(Person per: memberPersons){
                 int points= per.getProminence();
+                if(per == chairman){
+                    points *=2;
+                }
                 if(points> maxnum && per!=standardBearer){
                     maxnum = points;
                     maxper = per;
@@ -3337,11 +3340,15 @@ public static void seeDominant(){
         }
         System.out.println("Prominent Pro-Government Politicians: ");
         for(Person per: governmentFigures){
+            if(per !=null){
             System.out.print(per+ " | ");
+            }
         }
         System.out.println("\nProminent Opposition Politicians: ");
         for(Person per: oppositionFigures){
+            if(per!=null){
             System.out.print(per+ " | ");
+            }
         }
     }
     
