@@ -97,7 +97,7 @@ return fname+" "+ lname;
 		do{
 		    for(int i=0; i<10;i++){ // i is ideology. i*10
 		        for(int c=0; c<5;c++){
-		            System.out.println("allPersons.add(new Person(\""+genName()+"\","+(year-ra.nextInt(5))+","+(year+ (ra.nextInt(50)+10))+","+((i*10)+ra.nextInt(8))+"));");
+		            System.out.println("allPersons.add(new Person(\""+genName()+"\","+(year-ra.nextInt(5))+","+(year+ (ra.nextInt(50)+10))+","+((i*10)+ra.nextInt(8))+ ","+ra.nextInt(100)+","+ra.nextInt(100)+","+ra.nextInt(100)+","+ra.nextInt(100)+","+ra.nextInt(100)+"));");
 		        }
 		    }
 		    year+=increment;
