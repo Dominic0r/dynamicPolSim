@@ -635,13 +635,14 @@ public class Main
                     points += points/2;
                     points *= (loyalty/20)+1;
                     
-                    if(pragmatism>50){
-                        points *= ((pragmatism-50)/10)+1;
-                    }else{
-                        points /= ((50-pragmatism)/10)+1;
+                    if(pragmatism<50){
+                        points -= ((50-pragmatism)/10)* (points/20);
                     }
                     
                 }
+                if(pragmatism>50 && currentParty!=null){
+                        points += (points/20)* (currentParty.getPercent()/(((100-pragmatism)/2)+1));
+                    }
                 if(this == par.getStandardB() || this== par.getChair() || this == par.getForSpeak()){
                     points += points/2;
                 }
@@ -2230,7 +2231,7 @@ public static String[][] mapProgside = {
         }
         President = winner;
         President.incrementRecognition();
-        System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+ President.ideoDisplay());
+        System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+ President.ideoDisplay()+"\n===============\n");
         President.getStandardB().setPresToTrue();
         President.getStandardB().incrementPrescount();
     }
@@ -2346,7 +2347,7 @@ public static String[][] mapProgside = {
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
                 
-                if(totGovSeats <50){
+                if(totGovSeats <50 && President!=null){
                     Coalition gov = new Coalition(President);
                     List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(President);
@@ -2377,7 +2378,7 @@ public static String[][] mapProgside = {
                 for(Party par: rulingCoalition.getMemberList()){
                     totGovSeats+= par.getPercent();
                 }
-                System.out.println("===============\nGovernment formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
+                System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
                 System.out.println("Prime Minister: "+ rulingCoalition.getLeader().getChair());
         for(Party par: rulingCoalition.getMemberList()){
@@ -3474,7 +3475,7 @@ public static void seeDominant(){
 		
 		for(int i=0; i<electionsToSimulate;i++){
 		    System.out.println(year+ "=========================");
-		    electPresident();
+		    
 		    election();
 		    electLeadParty();
 		    
@@ -3500,6 +3501,7 @@ public static void seeDominant(){
     
     visualizeParliament();
     nationalState();
+    electPresident();
     //displayRegionResults();
     assessProminence();
     displayMostProminent();
