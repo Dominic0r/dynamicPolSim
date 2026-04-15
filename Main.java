@@ -1759,11 +1759,20 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Revolutionary Conservatives", "New National Conservative Movement", 13, 35, 1976));
         allTotalGroups.add(new ideoGroup("Neo-Fascists", "Nationalist Peoples List", 10, 10, 1980));
         allTotalGroups.add(new ideoGroup("Neoconservatives", "Republican Democratic Party", 16, 39, 1988));
+        allTotalGroups.add(new ideoGroup("Environemntalists", "National Green Movement", 15, 50, 1990));
         
         //21st Century
         allTotalGroups.add(new ideoGroup("Right Wing Populists", "Patriotic Liberty Party", 16, 30, 2008));
         allTotalGroups.add(new ideoGroup("Left Wing Populists", "Democratic Revolutionary Movement", 16, 80, 2010));
         
+    }
+    
+    public static void addActiveGroups(){
+        for(ideoGroup gro:allTotalGroups){
+            if(gro.getActiveYear()< year-ra.nextInt(10)&& !allGroups.contains(gro)){
+                allGroups.add(gro);
+            }
+        }
     }
     
     public static List<Party> allParties = new ArrayList<>();
@@ -3046,6 +3055,7 @@ System.out.println("============================================================
     
     public static void updateTick(){
         events();
+        addActiveGroups();
         checkFails();
         updateGroupSize();
         genSatis();
@@ -3485,6 +3495,7 @@ public static void seeDominant(){
     
 	public static void main(String[] args) {
 	    addGroups();
+	    addActiveGroups();
 	    addParties();
 	    addRegions();
 	    addPersons();
