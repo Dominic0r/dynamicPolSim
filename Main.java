@@ -12,13 +12,15 @@ public class Main
         int satisfaction;
         boolean hasSplintered = false;
         
+        int activeyear = 0;
         
-        public ideoGroup(String name, String splintername, int size, int ideology){
+        public ideoGroup(String name, String splintername, int size, int ideology, int activeyear){
             this.name = name;
             this.splintername = splintername;
             this.size = size;
             this.ideology = ideology;
             this.satisfaction = 100;
+            this.activeyear = activeyear;
         }
         
         public String getSplinterName(){return splintername;}
@@ -26,6 +28,7 @@ public class Main
         public int getSize(){return size;}
         public int getIdeology(){return ideology;}
         public int getSatisfaction(){return satisfaction;}
+        public int getActiveYear(){return activeyear;}
         
         public boolean hasGroupSplintered(){return hasSplintered;}
         public void toggleSplinter(){
@@ -1696,6 +1699,7 @@ public static String[][] mapProgside = {
     
     
     public static List<ideoGroup> allGroups = new ArrayList<>();
+    public static List<ideoGroup> allTotalGroups = new ArrayList<>();
     public static void addGroups(){
         /*allGroups.add(new ideoGroup("Communist",2,95));
         allGroups.add(new ideoGroup("Socialist",10,80));
@@ -1705,12 +1709,32 @@ public static String[][] mapProgside = {
         allGroups.add(new ideoGroup("Nationalist",10,20));
         allGroups.add(new ideoGroup("Fascist",2,5));*/
         //      allGroups.add(new ideoGroup("", "", 20, 60));
+        
+        //starter groups 
+        allTotalGroups.add(new ideoGroup("Conservative Aristocrats", "Peoples Congress for Tradition", 15, 10, 1832));
+        allTotalGroups.add(new ideoGroup("Landed Middle Class", "Nationalist Peoples Assembly", 15, 10, 1832));
+        allTotalGroups.add(new ideoGroup("Rural Peasantry", "Conservative Peoples Party ", 25, 25, 1832));
+        allTotalGroups.add(new ideoGroup("Conservative Clerical Class", "National Purity Party", 5, 8, 1832));
+        allTotalGroups.add(new ideoGroup("Landowning Farmers", "National Independent Congress", 5, 18, 1832));
+        allTotalGroups.add(new ideoGroup("Urban Middle Class", "Peoples Democratic Party", 15, 30, 1832));
+        allTotalGroups.add(new ideoGroup("Reformist Aristocrats", "Democratic Reform Party", 20, 35, 1832));
+        allTotalGroups.add(new ideoGroup("Liberal Intelligentsia", "Liberal Peoples Party", 18, 38, 1832));
+        allTotalGroups.add(new ideoGroup("New Middle Class", "Democratic Action Movement", 25, 43, 1832));
+        allTotalGroups.add(new ideoGroup("Religious Centrists", "National Center Party", 15, 48, 1832));
+        allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 24, 56, 1832));
+        allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 30, 60, 1832));
+        allTotalGroups.add(new ideoGroup("Anti-Conciliators", "Sustained Revolutionary Party", 30, 75, 1832));
+        
+        //Late19th Century
+        allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 5, , 1860));
+        allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 30, 60, 1865));
+        
         // Reactionary Bloc
-    allGroups.add(new ideoGroup("Monarchists", "Peoples Congress for Tradition", 15, 10));
-    allGroups.add(new ideoGroup("Illiberal Republicans", "Nationalist Peoples Assembly", 10, 25));
+    allTotalGroups.add(new ideoGroup("Monarchists", "Peoples Congress for Tradition", 15, 10));
+    allTotalGroups.add(new ideoGroup("Illiberal Republicans", "Nationalist Peoples Assembly", 10, 25));
     
-    allGroups.add(new ideoGroup("Unitary Monarchists", "Restoration Party", 5, 10));
-    allGroups.add(new ideoGroup("Particularists", "National Independent Congress", 5, 12));
+    allTotalGroups.add(new ideoGroup("Unitary Monarchists", "Restoration Party", 5, 10));
+    allTotalGroups.add(new ideoGroup("Particularists", "National Independent Congress", 5, 12));
     
     allGroups.add(new ideoGroup("Aristocratic Conservatives", "Conservative Peoples Party", 15, 20));
     allGroups.add(new ideoGroup("Corporatists", "National Democratic Conservative Party", 15, 17));
