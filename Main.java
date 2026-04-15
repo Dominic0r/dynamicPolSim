@@ -1975,7 +1975,7 @@ public static String[][] mapProgside = {
         }
         
         //seat distribution
-        for(int i=0; i<80;i++){ // simulation of first past the post
+        for(int i=0; i<50;i++){ // simulation of first past the post
             int maxnum =0;
             Party maxpar = null;
             for(Party par: allParties){
@@ -1990,7 +1990,7 @@ public static String[][] mapProgside = {
         }
         
         //dhondt
-        for(int i=0; i<20;i++){
+        for(int i=0; i<50;i++){
             
             int maxnum=-1;
             Party maxpar=null;
