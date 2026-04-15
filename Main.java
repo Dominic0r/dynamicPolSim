@@ -682,7 +682,7 @@ public class Main
                     prominence/= (corruption/10)+1;
                 }
                 
-                prominence -= (year-startyear)/5;
+                prominence -= (prominence/20)* (year-startyear)/5;
             }
             
             
@@ -2378,8 +2378,21 @@ public static String[][] mapProgside = {
         
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
+                if(totGovSeats<50 && President ==null){
+                    Party findLargest = null;
+                    int findlargemax = Integer.MIN_VALUE;
+                    for(Party par: allParties){
+                        if(findlargemax< par.getPercent()){
+                            findlargemax = par.getPercent();
+                            findLargest = par;
+                        }
+                    }
+                    Coalition gov = new Coalition(findLargest);
+                    rulingCoalition=gov;
+                }
                 
                 if(totGovSeats <50 && President!=null){
+                    
                     Coalition gov = new Coalition(President);
                     List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(President);
