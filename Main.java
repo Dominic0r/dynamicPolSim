@@ -1743,8 +1743,16 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 12, 42, 1905));
         allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 17, 60, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
-        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 15, 65, 1918));
-        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 15, 38, 1918));
+        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 65, 1918));
+        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 18, 38, 1918));
+        allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 38, 1923));
+        allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 16, 53, 1927));
+        
+        // Mid 20th Century
+        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 13, 90, 1949));
+        allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
+        allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democratic Party", 23, 58, 1961));
+        
         // Reactionary Bloc
     allGroups.add(new ideoGroup("Monarchists", "Peoples Congress for Tradition", 15, 10));
     allGroups.add(new ideoGroup("Illiberal Republicans", "Nationalist Peoples Assembly", 10, 25));
