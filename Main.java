@@ -1964,7 +1964,8 @@ public static String[][] mapProgside = {
         
         
         
-        int threshhold = 5+ (allParties.size()/2);
+        //int threshhold = 5+ (allParties.size()/2);
+        int threshhold = 5;
         
         List<Party> partiesOverTresh = new ArrayList<>();
         
