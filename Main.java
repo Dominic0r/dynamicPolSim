@@ -1,11 +1,9 @@
- import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-public class Main
+public class Main 
 {
     public static Scanner sc = new Scanner(System.in);
     public static Random ra = new Random();
-
+    
     public static class ideoGroup {
         String name;
         String splintername;
@@ -13,9 +11,9 @@ public class Main
         int ideology;
         int satisfaction;
         boolean hasSplintered = false;
-
+        
         int activeyear = 0;
-
+        
         public ideoGroup(String name, String splintername, int size, int ideology, int activeyear){
             this.name = name;
             this.splintername = splintername;
@@ -24,36 +22,36 @@ public class Main
             this.satisfaction = 100;
             this.activeyear = activeyear;
         }
-
+        
         public String getSplinterName(){return splintername;}
         public String getName(){return name;}
         public int getSize(){return size;}
         public int getIdeology(){return ideology;}
         public int getSatisfaction(){return satisfaction;}
         public int getActiveYear(){return activeyear;}
-
+        
         public boolean hasGroupSplintered(){return hasSplintered;}
         public void toggleSplinter(){
             hasSplintered = true;
         }
-
+        
         public int proximityWith(Party par){
             return 100-Math.abs(par.getIdeology()-ideology);
         }
         public int proximityWith(int num){
             return 100-Math.abs(num-ideology);
         }
-
+        
         public void updateSize(int toAdd){
             size+= toAdd;
         }
-
+        
         public void updateSatisfaction(int toAdd){
             satisfaction += toAdd;
         }
-
+        
     }
-
+    
     public static class Party{
         String name;
         int ideology; // goes from 0 - 100 0- most rightwing, 100 - most left-wing
@@ -67,15 +65,15 @@ public class Main
         String color;
         int delegates = 0;
         Map<Party, Integer> relations = new HashMap<>();
-
-        Person standardBearer; // for president
+        
+        Person standardBearer; // for president 
         Person chairman; // for prime minister
-        Person forSpeaker;
-
-
-
+        Person forSpeaker; 
+        
+        
+        
         double fatigue = 0;
-
+        
         public Party(String name, int ideology, boolean isActive, String color){
             this.name = name;
             this.ideology = ideology;
@@ -83,7 +81,7 @@ public class Main
             this.color = color;
             failcount = 0;
         }
-
+        
         public void determineLeadership(){
             List<Person> memberPersons = new ArrayList();
             for(Person per: activePersons){
@@ -91,9 +89,9 @@ public class Main
                     memberPersons.add(per);
                 }
             }
-
-
-
+            
+            
+            
             int maxnum = Integer.MIN_VALUE;
             Person maxper=null;
             for(Person per: memberPersons){
@@ -110,10 +108,10 @@ public class Main
                     maxper = per;
                 }
             }
-
+            
             standardBearer = maxper;
             maxnum = Integer.MIN_VALUE;
-
+            
             for(Person per: memberPersons){
                 int points= per.getProminence();
                 if(per == chairman){
@@ -125,9 +123,9 @@ public class Main
                 }
             }
             chairman = maxper;
-
+            
             maxnum = Integer.MIN_VALUE;
-
+            
             for(Person per: memberPersons){
                 int points= per.getProminence();
                 if(points> maxnum && per!=standardBearer && per!=chairman){
@@ -137,7 +135,7 @@ public class Main
             }
             forSpeaker = maxper;
         }
-
+        
         public int memCount(){
             List<Person> memberPersons = new ArrayList();
             for(Person per: activePersons){
@@ -147,26 +145,26 @@ public class Main
             }
             return memberPersons.size();
         }
-
+        
         public void incrementFail(){failcount++;}
         public int getFailCount(){return failcount;}
         public void resetFail(){failcount=0;}
-
+        
         public String getColor(){
             return color;
         }
-
+        
         public String getName(){return name;}
         public int getIdeology(){return ideology;}
         public boolean isPartyActive(){return isActive;}
         public int getScore(){return score;}
         public int getPopularity(){return popularity;}
         public int getPercent(){return percent;}
-
+        
         public int proximityWith(int num){
             return 100-Math.abs(num-ideology);
         }
-
+        
         public void updateRelations(){
             if(relations == null){
                 for(Party par: allParties){
@@ -184,7 +182,7 @@ public class Main
                     toRemove.add(par);
                 }
             }
-
+            
             for(Party par: toRemove){
                 relations.remove(par);
             }
@@ -198,7 +196,7 @@ public class Main
                     }
                 }
             }
-
+            
             if(LOTO == this){
                 for(Party par: allParties){
                     if(rulingCoalition.getMemberList().contains(par)){
@@ -206,14 +204,14 @@ public class Main
                     }
                 }
             }
-
+            
             for(Party par: allParties){
                 if(this.proximityWith(par)>=80){
                     relations.put(par, relations.get(par)+ 20);
                 }else if (this.proximityWith(par) <= 20 ){
                     relations.put(par, relations.get(par)- 20);
                 }
-
+                
                 if(this.getIdeology()>25 && this.getIdeology()<75){
                     if(par.getIdeology()<25 && par.getIdeology()>75){
                         relations.put(par, relations.get(par)-25);
@@ -224,11 +222,11 @@ public class Main
                     }
                 }
             }
-
-
-
-
-
+            
+            
+            
+            
+            
             if(!rulingCoalition.getMemberList().contains(this)){
                 for(Party par: rulingCoalition.getMemberList()){
                     if(par!=this){
@@ -240,7 +238,7 @@ public class Main
                     }
                 }
             }
-
+            
             for(Party par: allParties){
                     if(par!=this){
                         if(this.relationWith(par)<50){
@@ -255,8 +253,8 @@ public class Main
                         }
                     }
                 }
-
-
+            
+            
             for(Party par: relations.keySet()){
                 if(relations.get(par)>100){
                     relations.put(par, 100);
@@ -265,9 +263,9 @@ public class Main
                     relations.put(par, 0);
                 }
             }
-
+            
         }
-
+        
         public int relationWith(Party par){
             int retVal = 0;
             if(relations.containsKey(par)){
@@ -275,31 +273,31 @@ public class Main
             }
             return retVal;
         }
-
+        
         public int getDelegates(){
             return delegates;
         }
-
+        
         public void resetDel(){
             delegates = 0;
         }
-
+        
         public void addNoOfDels(int toAdd){
             delegates+=toAdd;
         }
-
+        
         public void addDelegates(){
             delegates++;
         }
-
+        
         public String ideoDisplay(){
             return RESET+" ("+getDynamicColor(this.ideology)+")";
         }
-
+        
         public double getFatigue(){
             return fatigue;
         }
-
+        
         public void addFatigue(){
             fatigue +=0.01;
         }
@@ -308,41 +306,41 @@ public class Main
             fatigue -= 0.01;
             }
         }
-
+        
         public double getRecognition(){return recognition;}
         public void setRecog(double newVal){
             recognition = newVal;
         }
-
+        
         public void incrementRecognition(){
             recognition+=0.02;
         }
-
+        
         public void setPercent(int newVal){
             percent = newVal;
         }
-
+        
         public int proximityWith(ideoGroup gro){
             return 100-Math.abs(gro.getIdeology()-ideology);
         }
-
+        
         public int proximityWith(Party par){
             return 100-Math.abs(par.getIdeology()-ideology);
         }
-
+        
         public void resetScore(){ score = 0;}
         public void addToScore(int toAdd){
             score+= toAdd;
         }
-
+        
         public void setApproval(int newVal){
             popularity = newVal;
         }
-
+        
         public void updateApproval(int newVal){
             popularity += newVal;
         }
-
+        
         public void resetElectionData(){
             score = 0;
             demographics.clear();
@@ -350,11 +348,11 @@ public class Main
         public void recordVotes(ideoGroup gro, int amt){
             demographics.put(gro, amt);
         }
-
+        
         public void addVotes(int toAdd){
             score+= toAdd;
         }
-
+        
         public Person getStandardB(){
             return standardBearer;
         }
@@ -364,17 +362,17 @@ public class Main
         public Person getForSpeak(){
             return forSpeaker;
         }
-
+        
         public void ideoDriftOld(){
             if(score == 0) return;
             double weightedIdeologySum = 0;
             for(Map.Entry<ideoGroup,Integer> entry : demographics.entrySet()){
                 ideoGroup gro = entry.getKey();
                 int votesGot = entry.getValue();
-
+                
                 weightedIdeologySum += (gro.getIdeology()*votesGot);
             }
-
+            
             int targetIdeo = (int) (weightedIdeologySum / score);
             int driftspeed = 5;
             if(this.ideology < targetIdeo) this.ideology+= driftspeed;
@@ -386,8 +384,8 @@ public class Main
                 this.ideology = 0;
             }
         }
-
-
+        
+        
         public void ideoDrift(){
             if(score == 0) return;
             double weightedIdeologySum = 0;
@@ -401,18 +399,18 @@ public class Main
                     maxnum = entry.getValue();
                 }
             }
-
+            
             int targetIdeo = maxGroup.getIdeology();
             int driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-
+            
             if(ra.nextInt(10)<5){
                 if(this.ideology < targetIdeo) this.ideology+= driftspeed;
                 if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             }
-
-
+            
+            
             this.ideology += ra.nextInt(1)-ra.nextInt(1);
-
+            
             int minsat = 1000;
             ideoGroup minGroup = null;
             for(ideoGroup gro : allGroups){
@@ -423,24 +421,24 @@ public class Main
             }
             targetIdeo = minGroup.getIdeology();
             driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-
+            
             if(ra.nextInt(10)<5){
                 if(this.ideology < targetIdeo) this.ideology+= driftspeed;
                 if(this.ideology> targetIdeo) this.ideology-= driftspeed;
             }
-
-
+            
+            
             int avgideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
                 double totalWeightedIdeology = 0;
                 int totalSeats = 0;
-
+            
                 for (Party par : rulingCoalition.getMemberList()) {
-                    int seats = par.getPercent();
+                    int seats = par.getPercent(); 
                     totalWeightedIdeology += (par.getIdeology() * seats);
                     totalSeats += seats;
                 }
-
+            
                 if (totalSeats > 0) {
                     avgideo =(int) (totalWeightedIdeology / totalSeats);
                 }
@@ -449,13 +447,13 @@ public class Main
                 if(this.ideology < avgideo) this.ideology+= driftspeed/2;
                 if(this.ideology> avgideo) this.ideology-= driftspeed/2;
             }
-
+            
             if(ra.nextInt(10)<5){
                 if(this.ideology>75) this.ideology++;
                 if(this.ideology<25) this.ideology--;
             }
-
-
+            
+            
             Party maxpar=null;
             Party minpar=null;
             int maxrel=Integer.MIN_VALUE;
@@ -465,7 +463,7 @@ public class Main
                     maxrel = relations.get(par);
                     maxpar = par;
                 }
-
+                
                 if(relations.get(par)<minrel){
                     minrel = relations.get(par);
                     minpar=par;
@@ -477,14 +475,14 @@ public class Main
                 }else{
                     this.ideology++;
                 }
-
+                
                 if(this.ideology > minpar.getIdeology()){
                     this.ideology++;
                 }else{
                     this.ideology--;
                 }
             }
-
+            
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -493,30 +491,30 @@ public class Main
             }
         }
     }
-
+    
     public static class Coalition{
         Party leader;
         int size;
         List<Party> members = new ArrayList<>();
-
+        
         public Coalition(Party leader){
             this.leader = leader;
             size = leader.getPercent();
             members.add(leader);
         }
-
+        
         public Party getLeader(){return leader;}
-
+        
         public int getSize(){ return size;}
-
+        
         public void addSize(int toAdd){
             size+=toAdd;
         }
-
+        
         public void resetList(){
             members.clear();
         }
-
+        
         public boolean invitation(Party other){
             if(leader.proximityWith(other)> 50){
                 return true;
@@ -524,30 +522,30 @@ public class Main
                 return false;
             }
         }
-
+        
         public void addParty(Party toAdd){
             members.add(toAdd);
         }
-
+        
         public boolean containsParty(Party par){
             return members.contains(par);
         }
-
+        
         public List<Party> getMemberList(){
             return members;
         }
     }
-
+    
     public static class Region{
         String name;
         int ideology;
         Party winPar=null;
-
+        
         public Region(String name, int ideology){
             this.name=name;
             this.ideology=ideology;
         }
-
+        
         public void displayWinner(){
             Party maxpar=null;
             int maxnum=Integer.MIN_VALUE;
@@ -557,14 +555,14 @@ public class Main
                 if(par.getPercent()>0){
                 divider = (Math.abs(par.getIdeology()-ideology)/10)+1;
                 curscore = (par.getScore()/divider);
-
+                
                 if(curscore>maxnum){
                     maxnum=curscore;
                     maxpar = par;
                 }
                 }
             }
-
+            
             if(maxpar!=null){
                 System.out.print(name+ ": "+maxpar.getColor()+maxpar.getName()+RESET+maxpar.ideoDisplay() + " |");
                 winPar = maxpar;
@@ -572,32 +570,32 @@ public class Main
                 System.out.println("nowinner");
             }
         }
-
+        
         public String getName(){
             return name;
         }
-
+        
         public Party getWinner(){
             return winPar;
         }
     }
-
+    
     public static class Person{
         String name;
         int startYear, endYear;
         int ideology;
         int prominence;
         Party currentParty;
-
-        int loyalty;
+        
+        int loyalty; 
         int ambition; // adds 5 points for every 10
         int charisma; // multiplies for every 20+1
         int corruption; // random chance to just get nuked in prominence
         int pragmatism; // low pragmatism incurrs larger penalties for the distance between a person and their aprty's ideology;
-
+        
         boolean hasbeenPresident=false;
         int prescount=0;
-
+        
         public Person(String name, int startYear, int endYear, int ideology, int loyalty, int ambition, int charisma, int corruption, int pragmatism){
             this.name=name;
             this.startYear=startYear;
@@ -608,7 +606,7 @@ public class Main
             this.charisma = charisma;
             this.corruption = corruption;
             this.pragmatism = pragmatism;
-
+            
         }
         public int proximityWith(Party par){
             return 100-Math.abs(par.getIdeology()-ideology);
@@ -616,34 +614,34 @@ public class Main
         public int proximityWith(int num){
             return 100-Math.abs(num-ideology);
         }
-
+        
         public Party getCurrentParty(){
             return currentParty;
         }
-
+        
         public boolean hasBeenPresidentBefore(){return hasbeenPresident;}
         public int noOfTimesBecamePresident(){return prescount;}
-
+        
         public void incrementPrescount(){
             prescount++;
         }
-
+        
         public void setPresToTrue(){ hasbeenPresident=true;}
-
+        
         public void determineParty(){
             Party maxpar=null;
             int maxnum = Integer.MIN_VALUE;
-
+            
             for(Party par: allParties){
                 int points = ((proximityWith(par)/4)*3) + (25/ ((par.memCount()*5)+1));
                 if(par == currentParty){
                     points += points/2;
                     points *= (loyalty/20)+1;
-
+                    
                     if(pragmatism<50){
                         points -= ((50-pragmatism)/10)* (points/20);
                     }
-
+                    
                 }
                 if(pragmatism>50 && currentParty!=null){
                         points += (points/20)* (currentParty.getPercent()/(((100-pragmatism)/2)+1));
@@ -651,67 +649,67 @@ public class Main
                 if(this == par.getStandardB() || this== par.getChair() || this == par.getForSpeak()){
                     points += points/2;
                 }
-
-
-
+                
+                
+                
                 if(points> maxnum){
                     maxnum = points;
                     maxpar = par;
                 }
-
+                
             }
-
+            
             currentParty = maxpar;
         }
-
+        
         public void determineProminence(){
-
+            
             if(currentParty!=null){
-
+                
                 prominence = currentParty.getPercent()/2;
                 prominence+= proximityWith(currentParty)/2;
                 prominence+= ra.nextInt(15);
-
+                
                 if(this == currentParty.getStandardB() || this == currentParty.getChair() || this == currentParty.getForSpeak()){
                     prominence += prominence/2;
                 }
-
-
-
+                
+                
+                
                 prominence += (ambition/10)*5;
                 prominence*= charisma/20;
                 if(ra.nextInt(100)<corruption){
                     prominence/= (corruption/10)+1;
                 }
-
+                
                 prominence -= (prominence/20)* (year-startyear)/5;
             }
-
-
-
+            
+            
+            
         }
-
+        
         public boolean withinActiveYears(){
             return year>=startYear && year<=endYear;
         }
-
+        
         public int getProminence(){
             return prominence;
         }
-
+        
         public String getName(){
             return name;
         }
-
+        
         @Override
         public String toString(){
             return name + " - " + currentParty.getColor()+ currentParty.getName()+ RESET+ currentParty.ideoDisplay();
         }
     }
-
+    
     public static List<Person> allPersons = new ArrayList<>();
     public static List<Person> activePersons = new ArrayList<>();
-
+    
     public static void addPersons(){
         // format: allPersons.add(new Person("",startyear, endyear, ideology));
         allPersons.add(new Person("James Caldwell",1846,1884,6,91,54,89,13,70));
@@ -1615,8 +1613,8 @@ allPersons.add(new Person("Franklin George",2018,2032,92,63,30,79,61,67));
 allPersons.add(new Person("Harry Hubbard",2018,2035,90,59,13,93,90,40));
 allPersons.add(new Person("Zachary R. Holland",2019,2031,95,91,12,69,18,39));
     }
-
-
+    
+    
     public static void allDetLeadership(){
         for(Party par: allParties){
             par.determineLeadership();
@@ -1629,7 +1627,7 @@ allPersons.add(new Person("Zachary R. Holland",2019,2031,95,91,12,69,18,39));
                 toAdd.add(per);
             }
         }
-
+        
         activePersons.addAll(toAdd);
     }
     public static void checkForInactives(){
@@ -1639,25 +1637,25 @@ allPersons.add(new Person("Zachary R. Holland",2019,2031,95,91,12,69,18,39));
                 toRemove.add(per);
             }
         }
-
+        
         activePersons.removeAll(toRemove);
     }
-
+    
     public static void assessAffiliations(){
         for(Person per: activePersons){
             per.determineParty();
         }
     }
-
+    
     public static void assessProminence(){
         for(Person per: activePersons){
             per.determineProminence();
         }
     }
-
-
-
-
+    
+    
+    
+    
 public static String[][] mapProgside = {
     {"-","-","N","N","N","N","N","N","N","-","-","-"},
     {"-","N","N","N","N","N","N","N","N","E","E","-"},
@@ -1668,9 +1666,9 @@ public static String[][] mapProgside = {
     {"-","-","W","W","S","S","S","-","-","-","-","-"},
     {"-","-","-","S","S","S","S","S","S","-","-","-"},
     {"-","-","-","S","S","S","S","S","S","S","-","-"}
-
-
-
+    
+    
+    
 };
     public static String[][] mapUserSide = {
         {"","","","","","","","","","",},
@@ -1684,11 +1682,11 @@ public static String[][] mapProgside = {
         {"","","","","","","","","","",},
         {"","","","","","","","","","",}
     };
-
+    
     public static Coalition rulingCoalition;
-
+    
     public static int approvalRatingChange;
-
+    
     public static List<Region> allRegions = new ArrayList<>();
     public static void addRegions(){
         allRegions.add(new Region("Capital",55));
@@ -1697,9 +1695,9 @@ public static String[][] mapProgside = {
         allRegions.add(new Region("Eastern",40));
         allRegions.add(new Region("Western",65));
     }
-
-
-
+    
+    
+    
     public static List<ideoGroup> allGroups = new ArrayList<>();
     public static List<ideoGroup> allTotalGroups = new ArrayList<>();
     public static void addGroups(){
@@ -1711,8 +1709,8 @@ public static String[][] mapProgside = {
         allGroups.add(new ideoGroup("Nationalist",10,20));
         allGroups.add(new ideoGroup("Fascist",2,5));*/
         //      allGroups.add(new ideoGroup("", "", 20, 60));
-
-        //starter groups
+        
+        //starter groups 
         allTotalGroups.add(new ideoGroup("Conservative Aristocrats", "Peoples Congress for Tradition", 15, 10, 1832));
         allTotalGroups.add(new ideoGroup("Landed Middle Class", "Nationalist Peoples Assembly", 15, 10, 1832));
         allTotalGroups.add(new ideoGroup("Rural Peasantry", "Conservative Peoples Party ", 25, 25, 1832));
@@ -1726,20 +1724,20 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 24, 56, 1832));
         allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 30, 60, 1832));
         allTotalGroups.add(new ideoGroup("Anti-Conciliators", "Sustained Revolution Movement", 30, 75, 1832));
-
+        
         //Mid 19th Century
         allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 5, 16, 1860));
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 30, 65, 1865));
         allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 17, 1874));
         allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 20, 60, 1876));
-
+        
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 10, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
         allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("New Middle Class", "Democratic Unity Party", 18, 55, 1894));
-
+        
         //Early 20th Century
         allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 68, 1902));
         allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 12, 42, 1905));
@@ -1749,26 +1747,26 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 18, 38, 1918));
         allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 38, 1923));
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 16, 53, 1927));
-
+        
         // Mid 20th Century
         allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 13, 90, 1949));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
         allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 23, 58, 1961));
         allTotalGroups.add(new ideoGroup("Religious Socialists", "Holy Movement of Workers", 13, 68, 1965));
-
+        
         // Late 20th Century
         allTotalGroups.add(new ideoGroup("Neoliberals", "Liberal Democratic Party", 16, 40, 1970));
         allTotalGroups.add(new ideoGroup("Revolutionary Conservatives", "New National Conservative Movement", 13, 35, 1976));
         allTotalGroups.add(new ideoGroup("Neo-Fascists", "Nationalist Peoples List", 10, 10, 1980));
         allTotalGroups.add(new ideoGroup("Neoconservatives", "Republican Democratic Party", 16, 39, 1988));
         allTotalGroups.add(new ideoGroup("Environemntalists", "National Green Movement", 15, 50, 1990));
-
+        
         //21st Century
         allTotalGroups.add(new ideoGroup("Right Wing Populists", "Patriotic Liberty Party", 16, 30, 2008));
         allTotalGroups.add(new ideoGroup("Left Wing Populists", "Democratic Revolutionary Movement", 16, 80, 2010));
-
+        
     }
-
+    
     public static void addActiveGroups(){
         for(ideoGroup gro:allTotalGroups){
             if(gro.getActiveYear()< year-ra.nextInt(10)&& !allGroups.contains(gro)){
@@ -1776,9 +1774,9 @@ public static String[][] mapProgside = {
             }
         }
     }
-
+    
     public static List<Party> allParties = new ArrayList<>();
-
+    
     public static void addParties(){
         //allParties.add(new Party("Socialist Party", 85,true));
         //allParties.add(new Party("Democratic Party", 65, true));
@@ -1788,7 +1786,7 @@ public static String[][] mapProgside = {
         //allParties.add(new Party("Moderate Conservative Party", 45, true));     // Republican
     //allParties.add(new Party("Republican Party", 50, true));     // Republican
    // allParties.add(new Party("Left Republican Party", 85, true)); // Revolutionary
-
+    
     int diceroll = (ra.nextInt(15))/3;
     // roll far right unity
     if(diceroll == 4){
@@ -1801,23 +1799,23 @@ public static String[][] mapProgside = {
         allParties.add(new Party("National Representation Party", 25, true, assignColor(25)));
         allParties.add(new Party("Peasants Republican Party", 35, true, assignColor(35)));
     }else{
-
+        
     }
     diceroll = (ra.nextInt(15))/3;
     if(diceroll == 4){
-        allParties.add(new Party("National Republican Party", 50, true, assignColor(50)));
+        allParties.add(new Party("National Republican Party", 50, true, assignColor(50)));  
     }else if(diceroll == 3){
-        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));
-        allParties.add(new Party("National Party", 48, true, assignColor(48)));
+        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
     }else if(diceroll == 2){
-       allParties.add(new Party("Republican Party", 50, true, assignColor(50)));
-        allParties.add(new Party("National Party", 48, true, assignColor(48)));
-        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));
+       allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
+        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));  
     }else{
-        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));
-        allParties.add(new Party("National Party", 48, true, assignColor(48)));
-        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));
-        allParties.add(new Party("Conservative Republican Party", 40, true, assignColor(40)));
+        allParties.add(new Party("Republican Party", 50, true, assignColor(50)));  
+        allParties.add(new Party("National Party", 48, true, assignColor(48)));  
+        allParties.add(new Party("Peoples Party", 52, true, assignColor(52)));  
+        allParties.add(new Party("Conservative Republican Party", 40, true, assignColor(40)));  
     }
     // Left-wing opposition unity
     diceroll = (ra.nextInt(15))/3;
@@ -1836,10 +1834,10 @@ public static String[][] mapProgside = {
         allParties.add(new Party("Revolutionary Vanguard Party", 85, true, assignColor(85)));
         allParties.add(new Party("Peoples Reform Council", 90, true, assignColor(90)));
     }
-
-
+    
+    
     }
-
+    
     public static void updateGroupSize(){
         int changeby = 0;
         for(ideoGroup gro: allGroups){
@@ -1859,16 +1857,16 @@ public static String[][] mapProgside = {
                     }
                 }
             }
-
+            
             gro.updateSize(ra.nextInt(changeby+1));
         }
     }
-
+    
     public static void election(){
         for(Party par: allParties){
             par.resetElectionData();
         }
-
+        
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
         int tresh = 60+ ra.nextInt(30);
         for(ideoGroup gro: allGroups){
@@ -1882,7 +1880,7 @@ public static String[][] mapProgside = {
                 }
             }
         }
-
+        
         for (ideoGroup gro : allGroups) {
     boolean hasvoted = false;
     int maxProximity = 0;
@@ -1892,7 +1890,7 @@ public static String[][] mapProgside = {
     // 1. Determine who is eligible and find the best match
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
-
+        
         // Track the highest proximity even if they don't vote
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
@@ -1913,14 +1911,14 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue
+            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
             votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
-
+            
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
-
+            
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
-
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
@@ -1928,17 +1926,17 @@ public static String[][] mapProgside = {
 
     // 3. Calculate Satisfaction
     // If maxProximity is low, satischange will be more negative
-    int satischange = -1 * (5 - (maxProximity / 20));
-
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
     if (!hasvoted) {
         // Penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
-
+    
     satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange);
 }
-
+        
         // set percentages
         int totalVotes = 0;
         for(Party par: allParties){
@@ -1952,31 +1950,31 @@ public static String[][] mapProgside = {
                 par.incrementRecognition();
                 par.addFatigue();
             }
-
+            
         }
         // proportional
-
+        
         Map<Party,Integer> percents = new HashMap<>();
         for(Party par: allParties){
-
+            
             int pctg = (int) (par.getScore()*100)/ totalVotes;
             percents.put(par, pctg);
-
+            
         }
-
-
-
+        
+        
+        
         //int threshhold = 5+ (allParties.size()/2);
         int threshhold = 5;
-
+        
         List<Party> partiesOverTresh = new ArrayList<>();
-
+        
         for(Party par: allParties){
             if(percents.get(par)>threshhold){
                 partiesOverTresh.add(par);
             }
         }
-
+        
         //seat distribution
         for(int i=0; i<50;i++){ // simulation of first past the post
             int maxnum =0;
@@ -1989,12 +1987,12 @@ public static String[][] mapProgside = {
                 }
             }
             //if (totalVotes <= 0) return;
-            maxpar.setPercent(maxpar.getPercent()+1);
+            maxpar.setPercent(maxpar.getPercent()+1); 
         }
-
+        
         //dhondt
         for(int i=0; i<50;i++){
-
+            
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: partiesOverTresh){
@@ -2002,28 +2000,28 @@ public static String[][] mapProgside = {
                     if(parscore>maxnum){
                         maxnum=parscore;
                         maxpar = par;
-
+                        
                     }
-
-
+                
+                
             }
             if(maxpar!=null){
             maxpar.setPercent(maxpar.getPercent()+1);
             }
         }
-
-
+        
+        
     }
-
+    
     public static int startyear=1852;
     public static int year = startyear;
-
-
+    
+    
     public static void electPresident(){
         List<Party> candidates = new ArrayList<>();
         Party largestPar = null;
         int mnum = Integer.MIN_VALUE;
-
+        
         for(Party par: allParties){
             if(par.getPercent()>mnum){
                 mnum = par.getPercent();
@@ -2034,11 +2032,11 @@ public static String[][] mapProgside = {
         int tresh = (100-mnum)/ allParties.size();
         for(Party par: allParties){
             int points = par.getPercent();
-
+            
             if(points == 0 && year==startyear){
                 points += ra.nextInt(100);
             }
-
+            
             if(rulingCoalition!=null){
                 if(rulingCoalition.getMemberList().contains(par)){
                     if(rulingCoalition.getLeader()!= par){
@@ -2047,27 +2045,27 @@ public static String[][] mapProgside = {
                         points*=2;
                     }
                 }
-
-
+                
+                
             }
-
+            
             //points+= ra.nextInt((100-par.getPercent())+1);
             points += (points*par.getRecognition())/2;
             //points -= (points*par.getFatigue())/2;
-
+            
             if(par == President){
                 points*=5;
             }
-
+            
             if(points>= tresh){
                 candidates.add(par);
             }
         }
-
-
+        
+        
         int winvotes = 0;
         Party winner = null;
-
+        
         for(Party par: candidates){
             par.resetScore();
         }
@@ -2084,9 +2082,9 @@ public static String[][] mapProgside = {
                 }
             }
         }
-
-
-
+        
+        
+        
         for (ideoGroup gro : allGroups) {
     boolean hasvoted = false;
     int maxProximity = 0;
@@ -2096,7 +2094,7 @@ public static String[][] mapProgside = {
     // 1. Determine who is eligible and find the best match
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
-
+        
         // Track the highest proximity even if they don't vote
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
@@ -2117,11 +2115,11 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue
+            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
-
+            
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
-
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
@@ -2129,19 +2127,19 @@ public static String[][] mapProgside = {
 
     // 3. Calculate Satisfaction
     // If maxProximity is low, satischange will be more negative
-    int satischange = -1 * (5 - (maxProximity / 20));
-
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
     if (!hasvoted) {
         // Penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
-
+    
     satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/3);
 }
-
-
-
+        
+        
+        
         int totvotes = 0;
         for(Party par: candidates){
             if(par.getScore()> winvotes){
@@ -2174,14 +2172,14 @@ public static String[][] mapProgside = {
                 }
             }
             candidates.removeAll(toDelete);
-
+            
             for(Party par: candidates){
             par.resetScore();
         }
         acceptables.clear();
-
+        
         tresh = 65+ra.nextInt(25);
-
+        
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -2193,7 +2191,7 @@ public static String[][] mapProgside = {
                 }
             }
         }
-
+        
         for (ideoGroup gro : allGroups) {
     boolean hasvoted = false;
     int maxProximity = 0;
@@ -2203,7 +2201,7 @@ public static String[][] mapProgside = {
     // 1. Determine who is eligible and find the best match
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
-
+        
         // Track the highest proximity even if they don't vote
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
@@ -2224,7 +2222,7 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue
+            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             par.addVotes(votesFromThisGroup);
@@ -2234,13 +2232,13 @@ public static String[][] mapProgside = {
 
     // 3. Calculate Satisfaction
     // If maxProximity is low, satischange will be more negative
-    int satischange = -1 * (5 - (maxProximity / 20));
-
+    int satischange = -1 * (5 - (maxProximity / 20)); 
+    
     if (!hasvoted) {
         // Penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
-
+    
     satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/2);
 }
@@ -2253,14 +2251,14 @@ public static String[][] mapProgside = {
             }
             totvotes+= par.getScore();
             }
-
+            
             System.out.println("\n\nRound 2");
         for(Party par: candidates){
-
+            
             System.out.print(par.getStandardB()+" ["+((par.getScore()*100)/totvotes)+"%] | ");
         }
         }
-
+        
         for(Party par: candidates){
             par.incrementRecognition();
         }
@@ -2270,7 +2268,7 @@ public static String[][] mapProgside = {
         President.getStandardB().setPresToTrue();
         President.getStandardB().incrementPrescount();
     }
-
+    
     public static int IdeoCheck(int toAdd,Party par){
         int lefttresh = 70, righttresh = 30;
         int divileft = (Math.abs(100-par.getIdeology()))/2;
@@ -2303,21 +2301,21 @@ public static String[][] mapProgside = {
                             }
                         }
                     }
-
+                    
                     return toAdd;
     }
-
-
+    
+    
     public static Party President = null;
     public static void electLeadParty(){
-
+        
         int tries = 0;
         boolean got50 = false;
         List<Party> potLeaders = new ArrayList<>(allParties);
-        potLeaders.sort(Comparator.comparingInt(p ->
+        potLeaders.sort(Comparator.comparingInt(p -> 
                 100-p.getPercent()
                 ));
-
+                
             int partiesInParliament = 0;
             for(Party par: allParties){
                 if(par.getPercent()>0){
@@ -2325,9 +2323,9 @@ public static String[][] mapProgside = {
                 }
             }
         for(int i=0; i<potLeaders.size();i++){
-
+            
         Party winner = potLeaders.get(tries);
-
+        
             Coalition gov = new Coalition(winner);
             int totalSeats = winner.getPercent();
             if(totalSeats>50){
@@ -2336,8 +2334,8 @@ public static String[][] mapProgside = {
             }else{
                 List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(winner);
-                potentialPartners.sort(Comparator.comparingInt((Party p)->
-
+                potentialPartners.sort(Comparator.comparingInt((Party p)-> 
+                
     ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) + (p.getPercent()/5) // Higher relations, closer ideology preferred
                 ).reversed());
                 int down = 0;
@@ -2351,34 +2349,34 @@ public static String[][] mapProgside = {
                     if(winner.relationWith(par)< 50){
                         tresh += (50-winner.relationWith(par))*5;
                     }
-
+                    
                     if(winner.relationWith(par)>= 90){
                         tresh -= (winner.relationWith(par)-5)*5;
                     }
-
+                    
                     if(partiesInParliament<5){
                         tresh -= 3* (5-partiesInParliament);
                     }
-
+                    
                     if(partiesInParliament<5){
                         tresh -= 3* (5-partiesInParliament);
                     }
                     if(winner.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
-
+                        
                     }
                     down++;
-
+                    
                 }
                 rulingCoalition = gov;
-
+             
             }
             if(got50) break;
             tries++;
-
+            
         }
-
+        
         int totGovSeats = 0;
                 for(Party pra: rulingCoalition.getMemberList())  totGovSeats+=pra.getPercent();
                 if(totGovSeats<50 && President ==null){
@@ -2393,13 +2391,13 @@ public static String[][] mapProgside = {
                     Coalition gov = new Coalition(findLargest);
                     rulingCoalition=gov;
                 }
-
+                
                 if(totGovSeats <50 && President!=null){
-
+                    
                     Coalition gov = new Coalition(President);
                     List<Party> potentialPartners = new ArrayList<>(allParties);
                 potentialPartners.remove(President);
-                potentialPartners.sort(Comparator.comparingInt(p ->
+                potentialPartners.sort(Comparator.comparingInt(p -> 
                 Math.abs(p.getIdeology() - President.getIdeology())
                 ));
                 int down = 0;
@@ -2411,14 +2409,14 @@ public static String[][] mapProgside = {
                     tresh += Math.abs(President.getIdeology()-50)/4;
                     tresh -= down*3;
                     tresh += par.getPercent()/5;
-
+                    
                     if(President.proximityWith(par)>tresh){
                         gov.addParty(par);
                         totalSeats+=par.getPercent();
-
+                        
                     }
                     down++;
-
+                    
                 }
                 rulingCoalition = gov;
                 }
@@ -2431,19 +2429,19 @@ public static String[][] mapProgside = {
                 System.out.println("Prime Minister: "+ rulingCoalition.getLeader().getChair());
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
-
-
+                
+                
             System.out.print(par.getColor()+"o"+ RESET+ " - "+ par.getName() + par.ideoDisplay()+ " ["+par.getPercent()+"%]");
-
+            
             if(par == rulingCoalition.getLeader()){
                 System.out.println(" - Leader");
             }else{
                 System.out.println();
             }
-
+            
             //par.incrementRecognition();
             }
-
+            
         }
         LOTO = null;
         Party maxpar = null;
@@ -2455,10 +2453,10 @@ public static String[][] mapProgside = {
             }
         }
         electSpeaker();
-        System.out.println("===============\nSpeaker: "+ speaker.getForSpeak());
+        System.out.println("===============\nSpeaker: "+ speaker.getForSpeak()); 
         speaker.incrementRecognition();
-
-
+        
+        
         LOTO = maxpar;
         if(LOTO !=null){
             System.out.println("===============\nLargest Opposition Party: "+ LOTO.getColor()+LOTO.getName() +RESET+LOTO.ideoDisplay()+" ["+ LOTO.getPercent()+"%]");
@@ -2471,30 +2469,30 @@ public static String[][] mapProgside = {
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-
+                
                 for(int i=0; i<totGovSeats/20;i++){
                     par.addFatigue();
                 }
-
+                
             }
             if(par == rulingCoalition.getLeader()){
-
-
+                
+                
                 if(par.getPercent()> 50){
                     for(int i=0; i< par.getPercent()/10;i++){
                         par.addFatigue();
                     }
                 }
             }
-
-
+            
+            
         }
         }
-
+        
     }
     public static Party LOTO;
-
-
+    
+    
     public static Party speaker;
     public static void electSpeaker(){
         Map<Party, Integer> candidates = new HashMap<>();
@@ -2503,18 +2501,18 @@ public static String[][] mapProgside = {
                 candidates.put(par, par.getPercent());
             }
         }
-
+        
         Party winner = null;
         int winseats = 0;
-
+        
         Party loser = null;
         int loseSeats = 1000;
-
+        
         do{
             for(Party par: candidates.keySet()){
                 candidates.put(par, par.getPercent());
             }
-
+            
             for(Party par: allParties){
                 if(!candidates.keySet().contains(par) && par.getPercent()> 0){
                     int maxres = -100;
@@ -2534,7 +2532,7 @@ public static String[][] mapProgside = {
                     candidates.put(maxpar, cseats+par.getPercent());
                 }
             }
-
+            
             loseSeats = 1000;
             for(Party par: candidates.keySet()){
                 if(candidates.get(par) < loseSeats){
@@ -2545,7 +2543,7 @@ public static String[][] mapProgside = {
             if(candidates.size() >1){
                 candidates.remove(loser);
             }
-
+            
             winseats = -1;
             for(Party par: candidates.keySet()){
                 //System.out.println(candidates.get(par));
@@ -2554,20 +2552,20 @@ public static String[][] mapProgside = {
                     winner = par;
                 }
             }
-
+            
         }while(winseats<=50);
-
+        
         speaker = winner;
-
+        
     }
-
-
+    
+    
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
-
+        
         if (gro.getSatisfaction() < 100/allParties.size()) {
-
-
+            
+            
             boolean alreadyRepresented = false;
             for (Party par : allParties) {
                 if (Math.abs(par.getIdeology() - gro.getIdeology()) < 10) {
@@ -2576,14 +2574,14 @@ public static String[][] mapProgside = {
                 }
             }
 
-
+            
             if (!alreadyRepresented&& !gro.hasGroupSplintered()) {
                 String newName = gro.getSplinterName();
                 allParties.add(new Party(newName, gro.getIdeology(), true, assignColor(gro.getIdeology())));
                 System.out.println("!!! NEW PARTY FORMED: " + newName + " !!!");
                 gro.toggleSplinter();
-
-                gro.updateSatisfaction(40);
+                
+                gro.updateSatisfaction(40); 
             }
         }
     }
@@ -2592,21 +2590,21 @@ public static String[][] mapProgside = {
 public static String assignColor(int ideo){
     int r = 0, g = 0, b = 0;
     int partyId = ra.nextInt(500);
-
-    if (ideo < 25) {
+    
+    if (ideo < 25) {        
         r = 20; g = 20; b = 150;
-    } else if (ideo < 40) {
+    } else if (ideo < 40) { 
         r = 50; g = 100; b = 255;
-    } else if (ideo < 55) {
+    } else if (ideo < 55) { 
         r = 255; g = 215; b = 0;
-    } else if (ideo < 75) {
-        r = 255; g = 90; b = 50;
-    } else {
+    } else if (ideo < 75) { 
+        r = 255; g = 90; b = 50; 
+    } else {                
         r = 200; g = 0; b = 0;
     }
 
-    int variance = (partyId * 12345) % (ra.nextInt(200)+1);
-
+    int variance = (partyId * 12345) % (ra.nextInt(200)+1); 
+    
     r = Math.max(0, Math.min(255, r + (partyId % 3 == 0 ? variance : -variance)));
     g = Math.max(0, Math.min(255, g + (partyId % 3 == 1 ? variance : -variance)));
     b = Math.max(0, Math.min(255, b + (partyId % 3 == 2 ? variance : -variance)));
@@ -2619,16 +2617,16 @@ public static String detIdeo(Party par){
     int ideo = par.getIdeology()/20;
     switch(ideo){
         case 0: return  "Right-Wing";
-
+            
         case 1: return "Center-Right";
-
+            
         case 2:return "Centrist";
-
+            
         case 3: return "Center-Left";
-
+            
         case 4: return "Left-Wing";
         case 5: return "Left-Wing";
-
+        
     }
     return"";
 }
@@ -2642,17 +2640,17 @@ public static void checkFails(){
         }else{
             par.resetFail();
         }
-
+        
         if(par.getFailCount()>=5){
-
+            
             toRemove.add(par);
             System.out.println(par.getName()+ " Removed!");
         }
     }
-
+    
     allParties.removeAll(toRemove);
-
-
+    
+    
 }
 
 public static boolean eCrisis = false;
@@ -2666,7 +2664,7 @@ public static int eBoomCdown = 0;
 public static void events(){
     boolean eventHappened = false;
     if(ra.nextInt(10)<5){
-
+       
         switch(ra.nextInt(8)){
             case 0:
                 if(!eBoom){
@@ -2677,7 +2675,7 @@ public static void events(){
                     eCrisisCdown+= ra.nextInt(2)+1;
                 }
                 }
-
+            
                 break;
             case 1:
                 if(!eCrisis){
@@ -2687,7 +2685,7 @@ public static void events(){
                 }else{
                     eBoomCdown+= ra.nextInt(2)+1;
                 }
-
+                
                 }
                 break;
             case 2:
@@ -2704,20 +2702,20 @@ for(Party p : allParties) totalRecog += p.getRecognition();
 if(totalRecog > 0.5){
                 System.out.println("Populist Wave!");
                 for(Party par : allParties) {
-
+       
         if (par.getRecognition() > 0.1) {
-            par.setRecog(par.getRecognition()/10);
+            par.setRecog(par.getRecognition()/10); 
             for(int i=0; i<par.getPercent()/2;i++){
                 par.addFatigue();
             }
         } else {
-
-
+            
+            
         }
-
-
+        
+        
     }
-
+   
     for(Party member : rulingCoalition.getMemberList()) {
         for(ideoGroup gro : allGroups) {
             if(gro.proximityWith(member) > 70) {
@@ -2725,11 +2723,11 @@ if(totalRecog > 0.5){
             }
         }
     }
-
+    
         }
-
+        
             break;
-
+            
             case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
@@ -2743,21 +2741,21 @@ if(totalRecog > 0.5){
                     }
             break;
             case 6:
-                targetpar = allParties.get(ra.nextInt(allParties.size()));
+                targetpar = allParties.get(ra.nextInt(allParties.size())); 
                 int supSeats = 0;
                 int tresh = 75;
                 for(Party par : allParties){
                     supSeats+= (par.getPercent()*par.proximityWith(targetpar))/100;
-
+                    
                 }
-
+                
                 if(supSeats<50){
                     System.out.println("Landmark bill by "+ targetpar.getName());
                     targetpar.incrementRecognition();
                 }
                 break;
             default:
-
+            
         }
     }
 }
@@ -2777,19 +2775,19 @@ public static ideoGroup findClosestGroup(int toFind){
 
 public static void moderateVoters() {
     for (ideoGroup gro : allGroups) {
-        // if satisfaction high
+        // if satisfaction high 
         if (gro.getSatisfaction() > 70) {
             int moderates = gro.getSize() / 15; // move toward center
             gro.updateSize(-moderates);
-
+            
             ideoGroup target=null;
-
+            
             if (gro.getIdeology() > 60) {
                 target = findClosestGroup(gro.getIdeology() - 15);
             } else if(gro.getIdeology()<40) {
                 target = findClosestGroup(gro.getIdeology() + 15);
             }
-
+            
             if (target != null) target.updateSize(moderates);
         }
     }
@@ -2797,12 +2795,12 @@ public static void moderateVoters() {
 
 public static void radicalizeVoters() {
     for (ideoGroup gro : allGroups) {
-
+      
         if (gro.getSatisfaction() < 25) {
             int defectors = gro.getSize() / 20; // 5% leave
             gro.updateSize(-defectors);
-
-
+            
+            
             ideoGroup target = null;
             if(gro.getIdeology()<60 && gro.getIdeology()> 40){
                 if (gro.getIdeology() < 50) {
@@ -2820,10 +2818,10 @@ public static void leftShift(){
     for(ideoGroup gro: allGroups){
         int defectors = gro.getSize()/50;
         gro.updateSize(-defectors);
-
+        
         ideoGroup target=null;
         target = findClosestGroup(gro.getIdeology()+10);
-
+        
         if(target!=null) target.updateSize(defectors);
     }
 }
@@ -2831,10 +2829,10 @@ public static void rightShift(){
     for(ideoGroup gro: allGroups){
         int defectors = gro.getSize()/50;
         gro.updateSize(-defectors);
-
+        
         ideoGroup target=null;
         target = findClosestGroup(gro.getIdeology()-10);
-
+        
         if(target!=null) target.updateSize(defectors);
     }
 }
@@ -2843,15 +2841,15 @@ public static void centerShift(){
     for(ideoGroup gro: allGroups){
         int defectors = gro.getSize()/50;
         gro.updateSize(-defectors);
-
+        
         ideoGroup target=null;
         if(gro.getIdeology()<50){
             target = findClosestGroup(gro.getIdeology()+10);
         }else{
             target = findClosestGroup(gro.getIdeology()-10);
         }
-
-
+        
+        
         if(target!=null) target.updateSize(defectors);
     }
 }
@@ -2869,10 +2867,10 @@ public static void genSatis(){
             int toRem = (ra.nextInt(10)*(4-numOfPars))*-1;
             gro.updateSatisfaction(toRem);
         }
-
-
+        
+        
     }
-
+    
 }
 
 public static void nationalState(){
@@ -2880,31 +2878,31 @@ public static void nationalState(){
     int peoplesApproval = ra.nextInt(11);
     int stability = ra.nextInt(11);
     int agenda = ra.nextInt(11);
-
+    
     agenda += rulingCoalition.getSize()/20;
-
+    
     if(!rulingCoalition.getMemberList().contains(President)) agenda-=2;
-
+    
     stability += rulingCoalition.getSize()/10;
-
+    
     economy += (stability-5);
     economy += (agenda-5);
-
+    
     if(eCrisis){
         eCrisisCdown--;
         eCrisis = eCrisisCdown>0;
         economy--;
     }
-
+    
     if(eBoom){
         eBoomCdown--;
         eBoom= eBoomCdown>0;
         economy++;
     }
-
+    
     peoplesApproval += (economy-5);
     peoplesApproval+= (agenda-5);
-
+    
     if(stability > 6){
         centerShift();
     }
@@ -2912,14 +2910,14 @@ public static void nationalState(){
         leftShift();
         rightShift();
     }
-
+    
     if(stability<0){
         stability = 0;
     }
     if(stability>10){
         stability = 10;
     }
-
+    
     if(peoplesApproval<0){
         peoplesApproval=0;
     }
@@ -2938,7 +2936,7 @@ public static void nationalState(){
     if(agenda>10){
         agenda = 10;
     }
-
+    
     for(Party par: rulingCoalition.getMemberList()){
         if(peoplesApproval >5){
             for(int i=0; i< peoplesApproval-5;i++){
@@ -2951,7 +2949,7 @@ public static void nationalState(){
             }
         }
     }
-
+    
     String[] colors = {
     "\u001B[38;5;196m", // 0: Pure Red
     "\u001B[38;5;202m", // 1: Red-Orange
@@ -2991,7 +2989,7 @@ System.out.println("============================================================
             break;
         case 10:System.out.println("Booming");
     }
-
+    
     System.out.print(reset+"Our Public Approval is " + colors[peoplesApproval]);
     switch(peoplesApproval){
         case 0: System.out.println("In Hell");
@@ -3016,7 +3014,7 @@ System.out.println("============================================================
             break;
         case 10:System.out.println("In Space");
     }
-
+    
     System.out.print(reset+"The Nation is " + colors[stability]);
     switch(stability){
         case 0: System.out.println("Burning");
@@ -3041,7 +3039,7 @@ System.out.println("============================================================
             break;
         case 10:System.out.println("Completely Unified");
     }
-
+    
     System.out.print(reset+"Our Agenda is " + colors[agenda]);
     switch(agenda){
         case 0: System.out.println("Ripped to shreds");
@@ -3068,7 +3066,7 @@ System.out.println("============================================================
     }
     System.out.println(reset+"==========================================================================================");
 }
-
+    
     public static void updateTick(){
         events();
         addActiveGroups();
@@ -3083,19 +3081,19 @@ System.out.println("============================================================
         assessAffiliations();
         assessProminence();
         allDetLeadership();
-
+        
         approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
         for(Party par: rulingCoalition.getMemberList()){
             approvalRatingChange*= (ra.nextInt(3))+1;
             par.updateApproval(approvalRatingChange);
-
+            
             par.ideoDrift();
         }
-
+        
         Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
     }
-
-
+    
+    
     public static class Archive{
         String name;
         int start, end;
@@ -3104,17 +3102,17 @@ System.out.println("============================================================
             this.start = start;
             this.end = end;
         }
-
+        
         @Override
         public String toString(){
             return name + " "+start+"-"+end;
         }
     }
-
-
+    
+    
     public static List<Archive> leaderArchive = new ArrayList<>();
-
-    //color set
+    
+    //color set 
     public static int NAVYBLUE = 18;
     public static int BLUE = 27;
     public static int ORANGE = 214;
@@ -3123,19 +3121,19 @@ System.out.println("============================================================
     public static int RED = 196;
     public static int DARKRED = 88;
     public static int GREEN = 10;
-
+    
     public static String getDynamicColor(int ideo) {
     int colorCode;
     String ideoname;
     // RIGHT-WING: Blue/Navy spectrum
     if (ideo < 20){ colorCode = NAVYBLUE; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
     }else if (ideo < 35){ colorCode = BLUE; ideoname= "Right-Wing";  // Royal Blue (Conservative)
-
+    
     // CENTER: Yellow/Gold/Orange spectrum
     }else if (ideo < 45){ colorCode = ORANGE; ideoname = "Center-Right"; // Orange-Yellow (Liberal/Center-Right)
     }else if (ideo < 55){ colorCode = YELLOW; ideoname = "Centrist"; // Bright Yellow (Pure Centrist)
     }else if (ideo < 65){ colorCode = LIGHTRED; ideoname = "Center-Left";// Light Red (Center-Left/Green)
-
+    
     // LEFT-WING: Red/Crimson spectrum
     //else if (ideo < 80) colorCode = 203; // Light Red (Social Democrat)
     }else if (ideo < 80){ colorCode = RED; ideoname = "Left-Wing"; // Pure Red (Socialist)
@@ -3146,12 +3144,12 @@ System.out.println("============================================================
 public static final String RESET = "\u001B[0m";
 public static final String RESETBG = "\u001B[0m";
 public static final String MEMBERBG = "\u001B[47m";
-
+    
     public static void visualizeParliamentOld() {
     Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
 
     System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
-
+    
     List<String> allSeats = new ArrayList<>();
     List<String> oppoSeats = new ArrayList<>();
     for (Party par : allParties) {
@@ -3165,23 +3163,23 @@ public static final String MEMBERBG = "\u001B[47m";
         }
     }
 
-
+    
     while (allSeats.size() < 100) allSeats.add("·");
 
     for (int i = 0; i < allSeats.size(); i++) {
         System.out.print(allSeats.get(i) + " ");
-        if ((i + 1) % 10 == 0) System.out.println();
+        if ((i + 1) % 10 == 0) System.out.println(); 
     }
     System.out.println("\n");
 for (int i = 0; i < oppoSeats.size(); i++) {
         System.out.print(oppoSeats.get(i) + " ");
-        if ((i + 1) % 10 == 0) System.out.println();
+        if ((i + 1) % 10 == 0) System.out.println(); 
     }
     System.out.println("-------------------------------------");
-
+    
     for (Party par : allParties) {
         if (par.getPercent() > 0) {
-            System.out.print(getDynamicColor(par.getIdeology()) + "o " + RESET
+            System.out.print(getDynamicColor(par.getIdeology()) + "o " + RESET 
                 + par.getName() + " [" + par.getPercent() + "%]  ");
         }
     }
@@ -3201,22 +3199,22 @@ public static void visualizeParliament() {
     while (allSeats.size() < 100) allSeats.add("·");
 
     int rows = 10;
-    int cols = 40;
+    int cols = 40; 
     String[][] canvas = new String[rows][cols];
     for (String[] row : canvas) Arrays.fill(row, " ");
 
     int seatIndex = 0;
-    int totalSteps = 20;
-    int rings = 5;
+    int totalSteps = 20; 
+    int rings = 5;      
 
-
+    
     for (int s = 0; s < totalSteps; s++) {
         double angle = (s * (Math.PI / (totalSteps - 1)));
 
         for (int ring = 0; ring < rings; ring++) {
             if (seatIndex >= allSeats.size()) break;
 
-            double r = 10.0 - (ring * 1.3);
+            double r = 10.0 - (ring * 1.3); 
 
             int x = (int) Math.round(cols / 2.0 + (r * Math.cos(angle) * 1.575));
             int y = (int) Math.round(rows - 1 - (r * Math.sin(angle))*0.855);
@@ -3227,8 +3225,8 @@ public static void visualizeParliament() {
             seatIndex++;
         }
     }
-
-
+    
+    
 
     System.out.println("\n      --- THE NATIONAL ASSEMBLY ---");
     for (int i = 0; i < rows; i++) {
@@ -3242,7 +3240,7 @@ public static void visualizeParliament() {
     for (int i = allParties.size() - 1; i >= 0; i--) {
         Party par = allParties.get(i);
         if (par.getPercent() > 0) {
-            System.out.print(par.getColor() + "o " + RESET
+            System.out.print(par.getColor() + "o " + RESET 
                 + par.getName() + " [" + par.getPercent() + "%]  ");
         }
     }
@@ -3257,11 +3255,11 @@ public static void passageRate(){
     while(i>0){
         supseats=0;
         for(Party par: allParties){
-
+            
             supseats+= ((par.proximityWith(i)-20)*par.getPercent())/100;
-
+            
         }
-
+        
         if(supseats>50){
             plots[index] = "\u001B[38;5;"+GREEN+ "moo"+RESET;
         }else{
@@ -3271,13 +3269,13 @@ public static void passageRate(){
         index++;
         //System.out.println(supseats);
     }
-
+    
     System.out.print("Bill Passage Rate:");
     for(int p=0; p<20;p++){
         System.out.print(plots[p]);
     }
     System.out.println("");
-
+    
 }
 
 public static void displayRegionResults(){
@@ -3300,14 +3298,14 @@ public static void displayRegionResults(){
             Capital = reg;
         }
     }
-
+    
     /*int rows = mapProgside.length; WIP MAP SYSTEM
 int cols = mapProgside[0].length;
 
 for (int i = 0; i < rows; i++) {
     for (int c = 0; c < cols; c++) {
         String tile = mapProgside[i][c].toUpperCase();
-
+        
         // Determine the color/symbol based on the ID
         String displayChar = switch (tile) {
             case "N" -> North.getWinner().getColor() + "o" + RESET;
@@ -3322,9 +3320,9 @@ for (int i = 0; i < rows; i++) {
     }
     System.out.println(); // cleaner than System.out.print("\n")*/
 }
-
-
-
+    
+    
+    
 
 public static String BLACK = "\u001B[30m";
 public static String lean = "Republic";
@@ -3349,7 +3347,7 @@ public static void nationalLean(){
             republic += republic/2;
         }
     }
-
+     
             if(President.getIdeology() <= 25){
                     reaction+= reaction/3;
                 } else if(President.getIdeology()>=75 ){
@@ -3364,7 +3362,7 @@ public static void nationalLean(){
                 }else{
                     republic += republic/5;
                 }
-
+        
     int leftistseats =0, rightistseats=0;
     for(Party par: allParties){
         if(par.getIdeology()<=35){
@@ -3373,14 +3371,14 @@ public static void nationalLean(){
             leftistseats+=par.getPercent();
         }
     }
-
+    
     if(rightistseats>= 50){
         reaction+= (reaction/5)* (((rightistseats-50)/10)+1);
     }
     if(leftistseats>= 50){
         revolution+=(revolution/5)* (((leftistseats-50)/10)+1);
     }
-
+    
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
         System.out.println("\u001B[38;5;18m Reaction \u001B[0m");
@@ -3400,7 +3398,7 @@ public static void nationalLean(){
 public static void seeDominant(){
     int maxnum=0;
     Party maxpar = null;
-    // Dominant on right
+    // Dominant on right 
     for(Party par: allParties){
         if(par.getIdeology()<=35){
             if(par.getPercent()> maxnum){
@@ -3409,9 +3407,9 @@ public static void seeDominant(){
             }
         }
     }
-
+    
     System.out.print("Largest Party on the Right: ");
-
+    
     if(maxpar != null){
         System.out.println(maxpar.getColor()+ maxpar.getName() + RESET+ maxpar.ideoDisplay());
     }else{
@@ -3419,7 +3417,7 @@ public static void seeDominant(){
     }
     maxnum = 0;
     maxpar = null;
-    // Dominant on center
+    // Dominant on center 
     for(Party par: allParties){
         if(par.getIdeology()>35 && par.getIdeology()<65){
             if(par.getPercent()> maxnum){
@@ -3428,7 +3426,7 @@ public static void seeDominant(){
             }
         }
     }
-
+    
     System.out.print("Largest Party on the Center: ");
     if(maxpar != null){
         System.out.println(maxpar.getColor()+ maxpar.getName()+RESET+ maxpar.ideoDisplay());
@@ -3437,7 +3435,7 @@ public static void seeDominant(){
     }
     maxnum = 0;
     maxpar = null;
-    // Dominant on left
+    // Dominant on left 
     for(Party par: allParties){
         if(par.getIdeology()>= 65){
             if(par.getPercent()> maxnum){
@@ -3446,7 +3444,7 @@ public static void seeDominant(){
             }
         }
     }
-
+    
     System.out.print("Largest Party on the Left: ");
     if(maxpar != null){
         System.out.println(maxpar.getColor()+ maxpar.getName()+RESET+ maxpar.ideoDisplay());
@@ -3454,20 +3452,20 @@ public static void seeDominant(){
         System.out.println("None");
     }
 }
-
+    
     public static void DEBUGDisplayAllActive(){
         for(Person per: activePersons){
             System.out.println(per);
         }
     }
-
+    
     public static void displayMostProminent(){
         List<Person> governmentFigures = new ArrayList<>();
         List<Person> oppositionFigures = new ArrayList<>();
         for(int i=0; i<5;i++){
             Person maxper=null;
             int maxnum=Integer.MIN_VALUE;
-
+            
             for(Person per: activePersons){
                 int points = per.getProminence();
                 if(points > maxnum && !governmentFigures.contains(per) && rulingCoalition.getMemberList().contains(per.getCurrentParty())){
@@ -3475,15 +3473,15 @@ public static void seeDominant(){
                     maxper = per;
                 }
             }
-
+            
                 governmentFigures.add(maxper);
-
+            
         }
-
+        
         for(int i=0; i<5;i++){
             Person maxper=null;
             int maxnum=Integer.MIN_VALUE;
-
+            
             for(Person per: activePersons){
                 int points = per.getProminence();
                 if(points > maxnum && !oppositionFigures.contains(per) && !rulingCoalition.getMemberList().contains(per.getCurrentParty())){
@@ -3491,9 +3489,9 @@ public static void seeDominant(){
                     maxper = per;
                 }
             }
-
+            
                 oppositionFigures.add(maxper);
-
+            
         }
         System.out.println("Prominent Pro-Government Politicians: ");
         for(Person per: governmentFigures){
@@ -3508,421 +3506,13 @@ public static void seeDominant(){
             }
         }
     }
+    
+    
+   
 
 
-
-
-public class HTMLExporter {
-
-    public static void exportYearToHTML(int year) {
-        String filename = "Overview.html";
-
-        try (FileWriter writer = new FileWriter(filename)) {
-            writer.write(generateHTMLContent(year));
-            System.out.println("✓ HTML report generated: " + filename);
-        } catch (IOException e) {
-            System.err.println("Error writing HTML file: " + e.getMessage());
-        }
-    }
-
-    private static String generateHTMLContent(int year) {
-        StringBuilder html = new StringBuilder();
-
-        // HTML Header
-        html.append("<!DOCTYPE html>\n");
-        html.append("<html lang=\"en\">\n");
-        html.append("<head>\n");
-        html.append("    <meta charset=\"UTF-8\">\n");
-        html.append("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n");
-        html.append("    <title>Year ").append(year).append(" Political Overview</title>\n");
-        html.append(getStyles());
-        html.append("</head>\n");
-        html.append("<body>\n");
-
-        // Title
-        html.append("    <div class=\"container\">\n");
-        html.append("        <h1>Political Overview - ").append(year).append("</h1>\n");
-        html.append("<div class=\"dashboard-grid\">\n");
-html.append(getGovernmentSection());
-html.append(getParliamentSection());
-html.append("</div>\n");
-
-        // Party Details
-        html.append(getPartyDetailsSection());
-
-        // Demographic Information
-        html.append(getDemographicsSection());
-
-        // National Statistics
-        html.append(getStatisticsSection());
-
-        html.append("    </div>\n");
-        html.append("</body>\n");
-        html.append("</html>\n");
-
-        return html.toString();
-    }
-
-    private static String getStyles() {
-    return """
-        <style>
-            :root {
-                --bg-paper: #e9e4d4;
-                --border-dark: #2c2c2c;
-                --accent-blue: #225a9b;
-                --header-font: 'Georgia', serif;
-            }
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-
-            body {
-                font-family: 'Segoe UI', Arial, sans-serif;
-                background-color: #bcc6cc;
-                padding: 15px;
-                color: #1a1a1a;
-            }
-
-            .container {
-                max-width: 1000px;
-                margin: 0 auto;
-                background: var(--bg-paper);
-                border: 2px solid var(--border-dark);
-                box-shadow: 6px 6px 0px rgba(0,0,0,0.2);
-                padding: 25px;
-            }
-
-            h1 {
-                font-family: var(--header-font);
-                text-transform: uppercase;
-                text-align: center;
-                border-bottom: 4px double var(--border-dark);
-                padding-bottom: 10px;
-                margin-bottom: 20px;
-            }
-
-            .dashboard-grid {
-                display: grid;
-                grid-template-columns: 1fr 1.2fr; /* Asymmetric for better fit */
-                gap: 20px;
-                margin-bottom: 20px;
-            }
-
-            .section {
-                border: 1px solid var(--border-dark);
-                background: rgba(255,255,255,0.4);
-                padding: 15px;
-                position: relative;
-            }
-
-            h2 {
-                font-family: var(--header-font);
-                font-size: 1em;
-                background: var(--border-dark);
-                color: white;
-                padding: 4px 12px;
-                margin: -15px -15px 15px -15px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-
-            /* --- Parliament Hemicycle Styles --- */
-            .parliament-section {
-                grid-column: 1 / -1; /* Spans full width of the grid */
-                text-align: center;
-                padding-bottom: 0;
-            }
-
-            .parliament-container {
-                position: relative;
-                width: 320px;
-                height: 170px; /* Cut off bottom of circle */
-                margin: 20px auto 0 auto;
-                overflow: hidden;
-            }
-
-            .seat {
-                position: absolute;
-                width: 12px;
-                height: 12px;
-                border-radius: 50%;
-                border: 1px solid rgba(0,0,0,0.5);
-                transform: translate(-50%, -50%); /* Centers the dot on the X,Y coord */
-                transition: transform 0.2s;
-            }
-
-            .seat:hover {
-                transform: translate(-50%, -50%) scale(1.3);
-                z-index: 10;
-            }
-
-            /* --- Table & Data Styles --- */
-            .party-table {
-                width: 100%;
-                border-collapse: collapse;
-                font-size: 0.85em;
-                background: white;
-            }
-
-            .party-table th { background: #d3cdb8; border: 1px solid var(--border-dark); padding: 6px; }
-            .party-table td { border: 1px solid var(--border-dark); padding: 6px; }
-
-            .ideology-bar {
-                height: 10px;
-                background: #eee;
-                border: 1px solid #666;
-                width: 80px;
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            .stat-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 10px;
-            }
-
-            .stat-box {
-                border: 1px solid var(--border-dark);
-                padding: 10px;
-                text-align: center;
-                background: white;
-            }
-        </style>
-        """;
-}
-
-    private static String getGovernmentSection() {
-        StringBuilder html = new StringBuilder();
-        html.append("        <div class=\"section\">\n");
-        html.append("            <h2>Government</h2>\n");
-
-        if (Main.rulingCoalition != null) {
-            Main.Party leader = Main.rulingCoalition.getLeader();
-
-            html.append("            <div class=\"government-seal\">\n");
-            html.append("                <h3>").append(leader.getName()).append("</h3>\n");
-            html.append("                <p>Leading the Government</p>\n");
-            html.append("            </div>\n");
-
-            html.append("            <div class=\"government-info\">\n");
-
-            if (leader.getChair() != null) {
-                html.append("                <div class=\"info-card\">\n");
-                html.append("                    <h4>Prime Minister</h4>\n");
-                html.append("                    <p>").append(leader.getChair().getName()).append("</p>\n");
-                html.append("                </div>\n");
-            }
-
-            if (Main.President != null) {
-                html.append("                <div class=\"info-card\">\n");
-                html.append("                    <h4>President</h4>\n");
-                html.append("                    <p>").append(Main.President.getStandardB().getName()).append("</p>\n");
-                html.append("                </div>\n");
-            }
-
-            if (Main.speaker != null) {
-                html.append("                <div class=\"info-card\">\n");
-                html.append("                    <h4>Speaker</h4>\n");
-                html.append("                    <p>").append(Main.speaker.getForSpeak().getName()).append("</p>\n");
-                html.append("                </div>\n");
-            }
-
-            html.append("            </div>\n");
-
-            html.append("            <h3>Coalition Members</h3>\n");
-            html.append("            <div class=\"coalition-members\">\n");
-            for (Main.Party p : Main.rulingCoalition.getMemberList()) {
-                html.append("                <div class=\"coalition-badge\" style=\"background: ").append(getRGBColor(p.getIdeology())).append(";\">\n");
-                html.append("                    ").append(p.getName()).append(" - ").append(p.getPercent()).append("%\n");
-                html.append("                </div>\n");
-            }
-            html.append("            </div>\n");
-        }
-
-        html.append("        </div>\n");
-        return html.toString();
-    }
-
-    private static String getParliamentSection() {
-    StringBuilder html = new StringBuilder();
-    html.append("<div class=\"section parliament-section\">\n");
-    html.append("    <h2>Parliamentary Composition</h2>\n");
-    html.append("    <div class=\"parliament-container\">\n");
-
-    // 1. Sort parties from Left (0) to Right (100)
-    List<Main.Party> sortedParties = new ArrayList<>(Main.allParties);
-    sortedParties.sort(Comparator.comparingInt(Main.Party::getIdeology).reversed());
-
-    // 2. Create the "Global" list of colors based on sorted ideology
-    List<String> allSeatColors = new ArrayList<>();
-    for (Main.Party p : sortedParties) {
-        String color = getRGBColor(p.getIdeology());
-        for (int i = 0; i < p.getPercent(); i++) {
-            allSeatColors.add(color);
-        }
-    }
-    // Pad to 100 if necessary
-    while (allSeatColors.size() < 100) allSeatColors.add("#ccc");
-
-    // 3. Define the Rows (Inner to Outer)
-    int[] rowCounts = {15, 20, 28, 37};
-    double[] rowRadii = {70.0, 95.0, 120.0, 145.0};
-    double centerX = 160.0;
-    double centerY = 160.0;
-
-    int colorIndex = 0;
-
-    // We want the gradient to sweep left-to-right.
-    // To do this, we must map our sorted colors to the angles, not just the rows.
-    for (int r = 0; r < rowCounts.length; r++) {
-        int seatsInRow = rowCounts[r];
-        double radius = rowRadii[r];
-
-        for (int s = 0; s < seatsInRow; s++) {
-            if (colorIndex >= allSeatColors.size()) break;
-
-            // ANGLE CALCULATION:
-            // Math.PI is 180 degrees (Left side).
-            // 2 * Math.PI would be a full circle.
-            // We want to go from PI (Left) to 2*PI (Right).
-            double angle = Math.PI + ((double) s / (seatsInRow - 1)) * Math.PI;
-
-            // X and Y coordinates
-            double x = centerX + radius * Math.cos(angle);
-            double y = centerY + radius * Math.sin(angle);
-
-            // Here is the trick: To get a true gradient, the seats at the
-            // "Start" of EVERY row must be the Left-wing colors.
-            // So we pick colors based on their relative position in the row.
-
-            // Calculate which color from our sorted list fits this "horizontal" position
-            double horizontalPercent = (double) s / (seatsInRow - 1);
-            int colorToPick = (int) (horizontalPercent * (allSeatColors.size() - 1));
-            String color = allSeatColors.get(colorToPick);
-
-            html.append(String.format(
-                "        <div class=\"seat\" style=\"left: %.2fpx; top: %.2fpx; background: %s;\"></div>\n",
-                x, y, color));
-        }
-    }
-
-    html.append("    </div>\n");
-    html.append("</div>\n");
-    return html.toString();
-}
-
-    private static String getPartyDetailsSection() {
-        StringBuilder html = new StringBuilder();
-        html.append("        <div class=\"section\">\n");
-        html.append("            <h2>Parties</h2>\n");
-        html.append("            <table class=\"party-table\">\n");
-        html.append("                <thead>\n");
-        html.append("                    <tr>\n");
-        html.append("                        <th>Party</th>\n");
-        html.append("                        <th>Seats</th>\n");
-        html.append("                        <th>Ideology</th>\n");
-        html.append("                        <th>Recognition</th>\n");
-        html.append("                    </tr>\n");
-        html.append("                </thead>\n");
-        html.append("                <tbody>\n");
-
-        for (Main.Party party : Main.allParties) {
-            if (party.getPercent() > 0) {
-                html.append("                    <tr>\n");
-                html.append("                        <td><div class=\"party-name\"><span class=\"party-color-dot\" style=\"background: ").append(getRGBColor(party.getIdeology())).append(";\"></span>").append(party.getName()).append("</div></td>\n");
-                html.append("                        <td>").append(party.getPercent()).append("%</td>\n");
-                html.append("                        <td><div class=\"ideology-bar\"><div class=\"ideology-fill\" style=\"width: ").append(party.getIdeology()).append("%; background: ").append(getRGBColor(party.getIdeology())).append(";\"></div></div>").append(party.getIdeology()).append("/100</td>\n");
-                html.append("                        <td>").append(String.format("%.2f", party.getRecognition())).append("</td>\n");
-                html.append("                    </tr>\n");
-            }
-        }
-
-        html.append("                </tbody>\n");
-        html.append("            </table>\n");
-        html.append("        </div>\n");
-        return html.toString();
-    }
-
-    private static String getDemographicsSection() {
-        StringBuilder html = new StringBuilder();
-        html.append("        <div class=\"section\">\n");
-        html.append("            <h2>Demographic Groups</h2>\n");
-        html.append("            <table class=\"party-table\">\n");
-        html.append("                <thead>\n");
-        html.append("                    <tr>\n");
-        html.append("                        <th>Group</th>\n");
-        html.append("                        <th>Size</th>\n");
-        html.append("                        <th>Ideology</th>\n");
-        html.append("                        <th>Satisfaction</th>\n");
-        html.append("                    </tr>\n");
-        html.append("                </thead>\n");
-        html.append("                <tbody>\n");
-
-        for (Main.ideoGroup group : Main.allGroups) {
-            html.append("                    <tr>\n");
-            html.append("                        <td>").append(group.getName()).append("</td>\n");
-            html.append("                        <td>").append(group.getSize()).append("</td>\n");
-            html.append("                        <td><div class=\"ideology-bar\"><div class=\"ideology-fill\" style=\"width: ").append(group.getIdeology()).append("%; background: ").append(getRGBColor(group.getIdeology())).append(";\"></div></div>").append(group.getIdeology()).append("/100</td>\n");
-            html.append("                        <td>").append(group.getSatisfaction()).append("/100</td>\n");
-            html.append("                    </tr>\n");
-        }
-
-        html.append("                </tbody>\n");
-        html.append("            </table>\n");
-        html.append("        </div>\n");
-        return html.toString();
-    }
-
-    private static String getStatisticsSection() {
-        StringBuilder html = new StringBuilder();
-        html.append("        <div class=\"section\">\n");
-        html.append("            <h2>Overview</h2>\n");
-        html.append("            <div class=\"stat-grid\">\n");
-
-        html.append("                <div class=\"stat-box\">\n");
-        html.append("                    <div class=\"stat-label\">Total Parties</div>\n");
-        html.append("                    <div class=\"stat-value\">").append(Main.allParties.size()).append("</div>\n");
-        html.append("                </div>\n");
-
-        html.append("                <div class=\"stat-box\">\n");
-        html.append("                    <div class=\"stat-label\">Coalition Parties</div>\n");
-        html.append("                    <div class=\"stat-value\">").append(Main.rulingCoalition != null ? Main.rulingCoalition.getMemberList().size() : 0).append("</div>\n");
-        html.append("                </div>\n");
-
-        html.append("                <div class=\"stat-box\">\n");
-        html.append("                    <div class=\"stat-label\">Active Political Figures</div>\n");
-        html.append("                    <div class=\"stat-value\">").append(Main.activePersons.size()).append("</div>\n");
-        html.append("                </div>\n");
-
-        html.append("                <div class=\"stat-box\">\n");
-        html.append("                    <div class=\"stat-label\">Demographic Groups</div>\n");
-        html.append("                    <div class=\"stat-value\">").append(Main.allGroups.size()).append("</div>\n");
-        html.append("                </div>\n");
-
-        html.append("            </div>\n");
-        html.append("        </div>\n");
-        return html.toString();
-    }
-
-    private static String getRGBColor(int ideology) {
-        int r, g, b;
-
-        if (ideology < 20) {
-            r = 26; g = 52; b = 144;
-        } else if (ideology < 40) {
-            r = 80; g = 150; b = 255;
-        } else if (ideology < 55) {
-            r = 255; g = 215; b = 0;
-        } else if (ideology < 75) {
-            r = 255; g = 140; b = 80;
-        } else {
-            r = 196; g = 0; b = 0;
-        }
-
-        return String.format("rgb(%d, %d, %d)", r, g, b);
-    }
-}
-
-
+    
+    
 	public static void main(String[] args) {
 	    addGroups();
 	    addActiveGroups();
@@ -3933,20 +3523,19 @@ html.append("</div>\n");
 	    assessAffiliations();
         assessProminence();
         allDetLeadership();
-
+		
 		int interval  =4;
 		int electionsToSimulate = 44;
-
+		
 		for(int i=0; i<electionsToSimulate;i++){
 		    System.out.println(year+ "=========================");
-
+		    
 		    election();
 		    electLeadParty();
-		    HTMLExporter.exportYearToHTML(year);
-
-
+		    
+		    
 		    //System.out.println("Winner: "+ rulingCoalition.getLeader().getName());
-
+		    
 		    /*for(Party par: allParties){
 		        System.out.println(par.getName()+ " "+ par.getPercent()+"%");
 		        System.out.println("Ideology: "+ detIdeo(par));
@@ -3954,7 +3543,7 @@ html.append("</div>\n");
 		        System.out.println("====================");
 		    }
 		    System.out.println("\n");*/
-
+		    
 		    char[] spectrum = new char[21];
     Arrays.fill(spectrum, '-');
     for (Party p : allParties) {
@@ -3962,7 +3551,7 @@ html.append("</div>\n");
         if (p.getPercent() > 20) spectrum[index] = 'X'; // maj Party
         else if (p.getPercent() > 5) spectrum[index] = 'o'; // min Party
     }
-
+    
     visualizeParliament();
     nationalState();
     electPresident();
@@ -3985,13 +3574,13 @@ seeDominant();
 //DEBUGDisplayAllActive();
 
 		    String upu = sc.nextLine();
-
+		    
 		    updateTick();
 		    year+=interval;
-
+		    
 		}
-
-
-
+		
+		       
+		
 	}
 }
