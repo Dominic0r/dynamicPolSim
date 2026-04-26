@@ -359,6 +359,7 @@ public class Main
             return standardBearer;
         }
         public Person getChair(){
+            
             return chairman;
         }
         public Person getForSpeak(){
@@ -601,7 +602,7 @@ public class Main
         public Person(String name, int startYear, int endYear, int ideology, int loyalty, int ambition, int charisma, int corruption, int pragmatism){
             this.name=name;
             this.startYear=startYear;
-            this.endYear=endYear;
+            this.endYear=endYear-10;
             this.ideology=ideology;
             this.loyalty= loyalty;
             this.ambition=ambition;
@@ -635,7 +636,7 @@ public class Main
             int maxnum = Integer.MIN_VALUE;
             
             for(Party par: allParties){
-                int points = ((proximityWith(par)/4)*3) + (25/ ((par.memCount()*5)+1));
+                int points = ((proximityWith(par)/4)*3);
                 if(par == currentParty){
                     points += points/2;
                     points *= (loyalty/20)+1;
@@ -651,7 +652,7 @@ public class Main
                 if(this == par.getStandardB() || this== par.getChair() || this == par.getForSpeak()){
                     points += points/2;
                 }
-                
+                points -= par.memCount()*(points/20);
                 
                 
                 if(points> maxnum){
