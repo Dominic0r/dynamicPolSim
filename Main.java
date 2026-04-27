@@ -1725,6 +1725,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Religious Centrists", "National Center Party", 15, 48, 1832));
         allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 24, 56, 1832));
         allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 30, 60, 1832));
+        allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 30, 70, 1832));
         allTotalGroups.add(new ideoGroup("Anti-Conciliators", "Sustained Revolution Movement", 30, 75, 1832));
         
         //Mid 19th Century
@@ -1824,8 +1825,7 @@ public static String[][] mapProgside = {
     if(diceroll == 4){
         allParties.add(new Party("Democratic Popular Front", 60, true, assignColor(55)));
     }else if(diceroll == 3){
-        allParties.add(new Party("Radical Republican Party", 60, true, assignColor(60)));
-        allParties.add(new Party("National Alliance of Labor", 65, true, assignColor(65)));
+        allParties.add(new Party("Unified Revolutionary Movement", 85, true, assignColor(85)));
     }else if(diceroll == 2){
        allParties.add(new Party("Radical Republican Party", 65, true, assignColor(65)));
         allParties.add(new Party("National Workers Party", 75, true, assignColor(75)));
@@ -1919,7 +1919,9 @@ public static String[][] mapProgside = {
             
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
             
+            if(par.getChair()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
+            }
             if(par.memCount()==0){
                 votesFromThisGroup/=1000;
             }
@@ -2122,8 +2124,9 @@ public static String[][] mapProgside = {
             // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             
+            if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
-            
+            }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
@@ -2228,7 +2231,9 @@ public static String[][] mapProgside = {
 
             // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+            if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
+            }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
