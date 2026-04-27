@@ -1771,7 +1771,7 @@ public static String[][] mapProgside = {
     
     public static void addActiveGroups(){
         for(ideoGroup gro:allTotalGroups){
-            if(gro.getActiveYear()< year-ra.nextInt(10)&& !allGroups.contains(gro)){
+            if(gro.getActiveYear()< year&& !allGroups.contains(gro)){
                 allGroups.add(gro);
             }
         }
