@@ -652,7 +652,6 @@ public class Main
                 if(this == par.getStandardB() || this== par.getChair() || this == par.getForSpeak()){
                     points += points/2;
                 }
-                points -= par.memCount()*(points/20);
                 
                 
                 if(points> maxnum){
@@ -1921,7 +1920,9 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
             
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
-            
+            if(par.memCount()==0){
+                votesFromThisGroup/=1000;
+            }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
