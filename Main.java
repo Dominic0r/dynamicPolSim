@@ -1845,17 +1845,17 @@ public static String[][] mapProgside = {
         for(ideoGroup gro: allGroups){
             changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
             if(lean.equalsIgnoreCase("Republic")){
-                if(gro.getIdeology()>70 || gro.getIdeology()<20){
-                changeby/=2;
+                if(gro.getIdeology()>65 || gro.getIdeology()<35){
+                changeby-=changeby/4;
                 }
             }else{
                 if(lean.equalsIgnoreCase("Reaction")){
-                    if(gro.getIdeology()>20){
-                        changeby/=2;
+                    if(gro.getIdeology()>35){
+                        changeby-=changeby/4;
                     }
                 }else{
-                    if(gro.getIdeology()<70){
-                        changeby/=2;
+                    if(gro.getIdeology()<65){
+                        changeby-=changeby/4;
                     }
                 }
             }
@@ -2281,7 +2281,7 @@ public static String[][] mapProgside = {
     public static int IdeoCheck(int toAdd,Party par){
         int lefttresh = 70, righttresh = 30;
         int divileft = (Math.abs(100-par.getIdeology()))/2;
-        int diviright = (Math.abs(0-par.getIdeology()))/20;
+        int diviright = (Math.abs(0-par.getIdeology()))/2;
         int divicenter =(Math.abs(50-par.getIdeology()))/2;
         if(lean.equalsIgnoreCase("Republic")){
                         if(par.getIdeology()>lefttresh && par.getIdeology()< righttresh){
@@ -2299,14 +2299,14 @@ public static String[][] mapProgside = {
                                 toAdd/=diviright;
                             }
                         }
-                    }else{
+                    }else if(lean.equalsIgnoreCase("Revolution")){
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=divileft;
                         }else{
                             if(par.getIdeology()<righttresh){
                                 toAdd/=divileft;
                             }else{
-                                toAdd*=(100-divileft)/10;
+                                toAdd*=(100-divileft)/5;
                             }
                         }
                     }
@@ -3402,8 +3402,40 @@ public static void nationalLean(){
         System.out.println("\u001B[38;5;226m Republic \u001B[0m");
         lean = "Republic";
     }
+    String spectrum ="";
+    int reactpercent=0, republicpercent=0, revpercent=0;
+    reaction*=100;
+    revolution*=100;
+    republic*=100;
+    for(int i=0;i< 100; i++){
+        if(reaction/(reactpercent+1)> republic/(republicpercent+1) && reaction/(reactpercent+1) >= revolution/(revpercent+1)){
+            reactpercent++;
+        }else if(republic/(republicpercent+1)>= reaction/(reactpercent+1) && republic/(republicpercent+1)>= revolution/(revpercent+1)){
+            republicpercent++;
+        }
+        else if(revolution/(revpercent+1)> reaction/(reactpercent+1) && revolution/(revpercent+1)> republic/(republicpercent+1)){
+            revpercent++;
+        }
+        
+    }
+    spectrum+="\u001B[38;5;88m";
+    for(int i=0; i<revpercent;i++){
+        spectrum+="|";
+    }
+    spectrum+="\u001B[38;5;226m";
+    for(int i=0; i<republicpercent;i++){
+        spectrum+="|";
+    }
+    spectrum+="\u001B[38;5;18m";
+    for(int i=0;i<reactpercent;i++){
+        spectrum+="|";
+    }
+    
+        spectrum+="\u001B[0m";
+        
+    
+    System.out.println(spectrum);
 }
-
 public static void seeDominant(){
     int maxnum=0;
     Party maxpar = null;
