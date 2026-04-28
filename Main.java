@@ -3347,26 +3347,26 @@ public static void nationalLean(){
             republic += gro.getSize();
         }
     }
-    if(rulingCoalition.getMemberList().size() == 1 && rulingCoalition.getLeader().getPercent()>= 65){
-    if(rulingCoalition.getLeader().getIdeology() <= 30){
+    if(rulingCoalition.getMemberList().size() == 1){
+    if(rulingCoalition.getLeader().getIdeology() <= 35){
             reaction+= reaction/2;
-        } else if(rulingCoalition.getLeader().getIdeology()>=70 ){
+        } else if(rulingCoalition.getLeader().getIdeology()>=65 ){
             revolution+=revolution/2;
         }else{
             republic += republic/2;
         }
     }
      
-            if(President.getIdeology() <= 25){
+            if(President.getIdeology() <= 35){
                     reaction+= reaction/3;
-                } else if(President.getIdeology()>=75 ){
+                } else if(President.getIdeology()>=65 ){
                     revolution+=revolution/3;
                 }else{
                     republic += republic/3;
                 }
-        if(speaker.getIdeology() <= 25){
+        if(speaker.getIdeology() <= 35){
                     reaction+= reaction/5;
-                } else if(speaker.getIdeology()>=75 ){
+                } else if(speaker.getIdeology()>=65 ){
                     revolution+=revolution/5;
                 }else{
                     republic += republic/5;
