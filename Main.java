@@ -2303,10 +2303,11 @@ public static String[][] mapProgside = {
                         if(par.getIdeology()>righttresh && par.getIdeology()< lefttresh){
                             toAdd/=divileft;
                         }else{
-                            if(par.getIdeology()<righttresh){
-                                toAdd/=divileft;
+                            if(par.getIdeology()<lefttresh){
+                                toAdd*=(divileft-100)/5;
+                                
                             }else{
-                                toAdd*=(100-divileft)/5;
+                                toAdd/=divileft;
                             }
                         }
                     }
@@ -3387,6 +3388,7 @@ public static void nationalLean(){
     if(leftistseats>= 50){
         revolution+=(revolution/5)* (((leftistseats-50)/10)+1);
     }
+    republic += republic/2;
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
