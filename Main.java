@@ -46,6 +46,9 @@ public class Main
         
         public void updateSize(int toAdd){
             size+= toAdd;
+            if(size<1){
+                size =1;
+            }
         }
         
         public void updateSatisfaction(int toAdd){
@@ -1934,8 +1937,8 @@ public static String[][] mapProgside = {
             
             
             
-            par.addVotes(votesFromThisGroup);
-            par.recordVotes(gro, votesFromThisGroup);
+            par.addVotes(votesFromThisGroup+1);
+            par.recordVotes(gro, votesFromThisGroup+1);
         }
     }
 
