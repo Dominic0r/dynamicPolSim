@@ -82,6 +82,7 @@ public class Main
             this.isActive = isActive;
             this.color = color;
             failcount = 0;
+            popularity = 100;
         }
         
         public void determineLeadership(){
@@ -341,6 +342,12 @@ public class Main
         
         public void updateApproval(int newVal){
             popularity += newVal;
+            if(popularity>100){
+                popularity=100;
+            }
+            if(popularity<0){
+                popularity=0;
+            }
         }
         
         public void resetElectionData(){
@@ -1915,16 +1922,21 @@ public static String[][] mapProgside = {
 
             // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
-            votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
+            //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
+            
+            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             
             if(par.getChair()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
             }
+            
             if(par.memCount()==0){
                 votesFromThisGroup/=1000;
             }
+            
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup);
         }
@@ -2123,7 +2135,7 @@ public static String[][] mapProgside = {
 
             // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
-            
+            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
@@ -2231,6 +2243,7 @@ public static String[][] mapProgside = {
 
             // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
@@ -3076,7 +3089,36 @@ System.out.println("============================================================
     }
     System.out.println(reset+"==========================================================================================");
 }
+
+public static void updateBasedOnLean(){
+    int distance =0;
     
+    for(Party par: allParties){
+        distance=0;
+        if(lean.equalsIgnoreCase("Reaction")){
+            if(par.getIdeology()>35){
+                distance = (par.getIdeology()-35);
+                par.setApproval(par.getPopularity()/10);
+            }else{
+                par.decreaseFatigue();
+            }
+        }else if(lean.equalsIgnoreCase("Revolution")){
+            if(par.getIdeology()<65){
+                distance = (65-par.getIdeology());
+                par.setApproval(par.getPopularity()/10);
+            }else{
+                par.decreaseFatigue();
+            }
+        }
+        for(int i=0; i<distance;i++){
+            par.addFatigue();
+        }
+    }
+    
+    
+    
+}
+
     public static void updateTick(){
         events();
         addActiveGroups();
@@ -3091,14 +3133,33 @@ System.out.println("============================================================
         assessAffiliations();
         assessProminence();
         allDetLeadership();
+        updateBasedOnLean();
         
-        approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
         for(Party par: rulingCoalition.getMemberList()){
+            
             approvalRatingChange*= (ra.nextInt(3))+1;
             par.updateApproval(approvalRatingChange);
             
             par.ideoDrift();
         }
+        
+        for(Party par: allParties){
+            if(rulingCoalition.getMemberList().contains(par)){
+                approvalRatingChange = ra.nextInt(5)-ra.nextInt(10);
+                approvalRatingChange*= (ra.nextInt(3))+1;
+                par.updateApproval(approvalRatingChange);
+                
+                par.ideoDrift();
+            }else{
+                approvalRatingChange = ra.nextInt(10)-ra.nextInt(5);
+                approvalRatingChange*= (ra.nextInt(3))+1;
+                par.updateApproval(approvalRatingChange);
+                
+                par.ideoDrift();
+            }
+        }
+        
+        
         
         Collections.sort(allParties, Comparator.comparingInt(Party::getIdeology));
     }
