@@ -1899,31 +1899,28 @@ public static String[][] mapProgside = {
     double totalAppealScore = 0;
     Map<Party, Double> partyAppeals = new HashMap<>();
 
-    // 1. Determine who is eligible and find the best match
+    // Groups determine what parties best align with their ideology
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
         
-        // Track the highest proximity even if they don't vote
+       
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
         }
 
         if (currentProx > tresh) {
-            // Factor in proximity and recognition
             double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
-            hasvoted = true; // They found at least one acceptable party
+            hasvoted = true; 
         }
     }
 
-    // 2. Distribute votes only if there are acceptable parties
     if (hasvoted) {
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
             //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             
@@ -1942,12 +1939,11 @@ public static String[][] mapProgside = {
         }
     }
 
-    // 3. Calculate Satisfaction
-    // If maxProximity is low, satischange will be more negative
+    // satisfaction calculation
     int satischange = -1 * (5 - (maxProximity / 20)); 
     
     if (!hasvoted) {
-        // Penalty for having no one to vote for
+        // penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
     
@@ -2109,31 +2105,26 @@ public static String[][] mapProgside = {
     double totalAppealScore = 0;
     Map<Party, Double> partyAppeals = new HashMap<>();
 
-    // 1. Determine who is eligible and find the best match
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
         
-        // Track the highest proximity even if they don't vote
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
         }
 
         if (currentProx > tresh) {
-            // Factor in proximity and recognition
             double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
-            hasvoted = true; // They found at least one acceptable party
+            hasvoted = true; 
         }
     }
 
-    // 2. Distribute votes only if there are acceptable parties
     if (hasvoted) {
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par.getStandardB()!=null){
@@ -2144,12 +2135,9 @@ public static String[][] mapProgside = {
         }
     }
 
-    // 3. Calculate Satisfaction
-    // If maxProximity is low, satischange will be more negative
     int satischange = -1 * (5 - (maxProximity / 20)); 
     
     if (!hasvoted) {
-        // Penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
     
@@ -2217,31 +2205,26 @@ public static String[][] mapProgside = {
     double totalAppealScore = 0;
     Map<Party, Double> partyAppeals = new HashMap<>();
 
-    // 1. Determine who is eligible and find the best match
     for (Party par : allParties) {
         int currentProx = gro.proximityWith(par);
         
-        // Track the highest proximity even if they don't vote
         if (currentProx > maxProximity) {
             maxProximity = currentProx;
         }
 
         if (currentProx > tresh) {
-            // Factor in proximity and recognition
             double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
-            hasvoted = true; // They found at least one acceptable party
+            hasvoted = true; 
         }
     }
 
-    // 2. Distribute votes only if there are acceptable parties
     if (hasvoted) {
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            // Apply fatigue 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par.getStandardB()!=null){
@@ -2252,12 +2235,9 @@ public static String[][] mapProgside = {
         }
     }
 
-    // 3. Calculate Satisfaction
-    // If maxProximity is low, satischange will be more negative
     int satischange = -1 * (5 - (maxProximity / 20)); 
     
     if (!hasvoted) {
-        // Penalty for having no one to vote for
         satischange -= ra.nextInt(10);
     }
     
