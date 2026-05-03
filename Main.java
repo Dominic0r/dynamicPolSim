@@ -1932,9 +1932,6 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
             }
             
-            if(par.memCount()==0){
-                votesFromThisGroup/=1000;
-            }
             
             
             par.addVotes(votesFromThisGroup);
@@ -1975,7 +1972,7 @@ public static String[][] mapProgside = {
         Map<Party,Integer> percents = new HashMap<>();
         for(Party par: allParties){
             
-            int pctg = (int) (par.getScore()*100)/ totalVotes;
+            int pctg = (int) (par.getScore()*100)/ (totalVotes+1);
             percents.put(par, pctg);
             
         }
@@ -3118,7 +3115,13 @@ public static void updateBasedOnLean(){
     
     
 }
-
+public static void checkNullLeadership(){
+    for(Party par: allParties){
+        if(par.getChair()==null|| par.getStandardB()==null || par.getForSpeak()==null){
+            par.setApproval(0);
+        }
+    }
+}
     public static void updateTick(){
         events();
         addActiveGroups();
@@ -3134,6 +3137,7 @@ public static void updateBasedOnLean(){
         assessProminence();
         allDetLeadership();
         updateBasedOnLean();
+        checkNullLeadership();
         
         for(Party par: rulingCoalition.getMemberList()){
             
