@@ -345,8 +345,8 @@ public class Main
             if(popularity>100){
                 popularity=100;
             }
-            if(popularity<0){
-                popularity=0;
+            if(popularity<1){
+                popularity=1;
             }
         }
         
@@ -2446,7 +2446,7 @@ public static String[][] mapProgside = {
                 }
                 System.out.println("Government formed by "+ rulingCoalition.getLeader().getColor()+ rulingCoalition.getLeader().getName()+ RESET + rulingCoalition.getLeader().ideoDisplay());
                 System.out.println("Seats held by Government: "+ totGovSeats+"%");
-                System.out.println("Prime Minister: "+ rulingCoalition.getLeader().getChair());
+                System.out.println("Prime Minister: "+ rulingCoalition.getLeader().getChair()); 
         for(Party par: rulingCoalition.getMemberList()){
             if(par.getPercent()>0){
                 
@@ -2461,7 +2461,6 @@ public static String[][] mapProgside = {
             
             //par.incrementRecognition();
             }
-            
         }
         LOTO = null;
         Party maxpar = null;
@@ -2573,7 +2572,7 @@ public static String[][] mapProgside = {
                 }
             }
             
-        }while(winseats<=50);
+        }while(winseats<50);
         
         speaker = winner;
         
@@ -3106,6 +3105,13 @@ public static void updateBasedOnLean(){
             }else{
                 par.decreaseFatigue();
             }
+        }else if(lean.equalsIgnoreCase("Republic")){
+            if(par.getIdeology()>75|| par.getIdeology()<25){
+                distance = (65-par.getIdeology())/5;
+                par.setApproval(par.getPopularity()/5);
+            }else{
+                par.decreaseFatigue();
+            }
         }
         for(int i=0; i<distance;i++){
             par.addFatigue();
@@ -3138,14 +3144,6 @@ public static void checkNullLeadership(){
         allDetLeadership();
         updateBasedOnLean();
         checkNullLeadership();
-        
-        for(Party par: rulingCoalition.getMemberList()){
-            
-            approvalRatingChange*= (ra.nextInt(3))+1;
-            par.updateApproval(approvalRatingChange);
-            
-            par.ideoDrift();
-        }
         
         for(Party par: allParties){
             if(rulingCoalition.getMemberList().contains(par)){
