@@ -2147,7 +2147,7 @@ public static String[][] mapProgside = {
         
         
         
-        int totvotes = 0;
+        int totvotes = 1;
         for(Party par: candidates){
             if(par.getScore()> winvotes){
                 winvotes = par.getScore();
@@ -2245,7 +2245,7 @@ public static String[][] mapProgside = {
     gro.updateSatisfaction(satischange/2);
 }
             winvotes = 0;
-            totvotes=0;
+            totvotes=1;
             for(Party par: candidates){
             if(par.getScore()> winvotes){
                 winvotes = par.getScore();
@@ -3090,8 +3090,8 @@ public static void updateBasedOnLean(){
             }
         }else if(lean.equalsIgnoreCase("Republic")){
             if(par.getIdeology()>75|| par.getIdeology()<25){
-                distance = (65-par.getIdeology())/5;
-                par.setApproval(par.getPopularity()/5);
+                distance = (65-par.getIdeology())/10;
+                par.setApproval(par.getPopularity()/3);
             }else{
                 par.decreaseFatigue();
             }
