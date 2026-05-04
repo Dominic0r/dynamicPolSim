@@ -3429,10 +3429,10 @@ public static void nationalLean(){
     }
     
     if(rightistseats>= 50){
-        reaction+= (reaction/5)* (((rightistseats-50)/10)+1);
+        reaction+= (reaction/10)* (((rightistseats-50)/10)+1);
     }
     if(leftistseats>= 50){
-        revolution+=(revolution/5)* (((leftistseats-50)/10)+1);
+        revolution+=(revolution/10)* (((leftistseats-50)/10)+1);
     }
     republic += republic/2;
     
