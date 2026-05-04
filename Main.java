@@ -1991,7 +1991,7 @@ public static String[][] mapProgside = {
         
         //seat distribution
         for(int i=0; i<50;i++){ // simulation of first past the post
-            int maxnum =0;
+            int maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
                 int curscore = par.getScore()/ (ra.nextInt(3)+1);
@@ -2010,7 +2010,7 @@ public static String[][] mapProgside = {
             int maxnum=-1;
             Party maxpar=null;
             for(Party par: partiesOverTresh){
-                    int parscore = par.getScore()/(par.getPercent()+1);
+                    int parscore = ((par.getScore()*50)/(par.getPercent()+1))+1;
                     if(parscore>maxnum){
                         maxnum=parscore;
                         maxpar = par;
