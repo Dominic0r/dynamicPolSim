@@ -3091,7 +3091,7 @@ public static void updateBasedOnLean(){
         }else if(lean.equalsIgnoreCase("Republic")){
             if(par.getIdeology()>75|| par.getIdeology()<25){
                 distance = (65-par.getIdeology())/10;
-                par.setApproval(par.getPopularity()/3);
+                par.setApproval(par.getPopularity()/2);
             }else{
                 par.decreaseFatigue();
             }
