@@ -2706,8 +2706,8 @@ if(totalRecog > 0.5){
                 for(Party par : allParties) {
        
         if (par.getRecognition() > 0.1) {
-            par.setRecog(par.getRecognition()/10); 
-            for(int i=0; i<par.getPercent()/2;i++){
+            par.setRecog(par.getRecognition()/5); 
+            for(int i=0; i<par.getPercent()/5;i++){
                 par.addFatigue();
             }
         } else {
@@ -2818,7 +2818,7 @@ public static void radicalizeVoters() {
 
 public static void leftShift(){
     for(ideoGroup gro: allGroups){
-        int defectors = gro.getSize()/50;
+        int defectors = gro.getSize()/100;
         gro.updateSize(-defectors);
         
         ideoGroup target=null;
@@ -2829,7 +2829,7 @@ public static void leftShift(){
 }
 public static void rightShift(){
     for(ideoGroup gro: allGroups){
-        int defectors = gro.getSize()/50;
+        int defectors = gro.getSize()/100;
         gro.updateSize(-defectors);
         
         ideoGroup target=null;
