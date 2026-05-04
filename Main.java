@@ -3642,7 +3642,7 @@ public static void seeDominant(){
     }
     
     visualizeParliament();
-    nationalState();
+    
     electPresident();
     //displayRegionResults();
     assessProminence();
