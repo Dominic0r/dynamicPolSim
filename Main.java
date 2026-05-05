@@ -719,32 +719,166 @@ public class Main
         }
     }
     
-    public static class Agenda{
-        int ideology;
+    public static class Policy{
         String name;
-        
-        public Agenda(String name, int ideology){
+        int position;
+        public Policy(String name){
             this.name = name;
-            this.ideology=ideology;
+            this.position=50;
+        }
+        
+        public int getPosition(){
+            return position;
+        }
+        
+        public String getName(){
+            return name;
+        }
+        
+        public void updatePos(int toAdd){
+            position+=toAdd;
+            if(position>100){
+                position=100;
+            }
+            if(position<0){
+                position=0;
+            }
+            
+        }
+        
+        @Override
+        public String toString(){
+            String pos="<";
+            for(int i=0; i<20;i++){
+                if(i!=position/5){
+                    pos+="-";
+                }else{
+                    pos+="o";
+                }
+            }
+            pos+=">";
+            int maxsize=-1;
+            
+            for(Policy pol: allPolicies){
+                if(pol.getName().length() > maxsize){
+                    maxsize = pol.getName().length();
+                }
+            }
+            
+            maxsize -= this.name.length();
+            maxsize++;
+            String space ="";
+            for(int i=0; i<maxsize;i++){
+                space+=" ";
+            }
+            
+            return name+space+pos;
+        }
+        
+    }
+    
+    public static List<Policy> allPolicies = new ArrayList<>();
+    
+    public static void addPolicies(){
+        allPolicies.add(new Policy("Labor Laws"));
+        allPolicies.add(new Policy("Agricultural Laws"));
+        allPolicies.add(new Policy("Education"));
+        allPolicies.add(new Policy("State Pensions"));
+        allPolicies.add(new Policy("Healthcare"));
+        allPolicies.add(new Policy("Criminal Justice"));
+        allPolicies.add(new Policy("Immigration"));
+        allPolicies.add(new Policy("Land Reform"));
+    }
+    
+    public static void displayPolicies(){
+        for(Policy pol: allPolicies){
+            System.out.println(pol);
         }
     }
     
-    public static List<allAgendas> = new ArrayList<>();
-    
-    public static void addAgendas(){
-        allAgendas.add(new Agenda("Healthcare Expansion",60));
-        allAgendas.add(new Agenda("Healthcare Rescinding",40));
+    public static void choosePolicy(){
+        int maxPrio=Integer.MIN_VALUE;
+        Policy maxPol = null;
         
-        allAgendas.add(new Agenda("Education Expansion",55));
-        allAgendas.add(new Agenda("Education Rescinding",45));
+        for(Policy pol: allPolicies){
+            int points=0;
+            points += 100-rulingCoalition.getLeader().proximityWith(pol.getPosition());
+            points += ra.nextInt(50);
+            
+            
+            if(points > maxPrio){
+                maxPrio = points;
+                maxPol= pol;
+            }
+        }
         
-        allAgendas.add(new Agenda("Tax Increases",65));
-        allAgendas.add(new Agenda("Tax Reform",50));
+        int confidence =(rulingCoalition.getSize()/5);
+        if(President!= rulingCoalition.getLeader()){
+            confidence/=2;
+        }
+        int moveBy = 2*confidence;
+        if(rulingCoalition.getLeader().proximityWith(maxPol.getPosition())>90){
+            moveBy=0;
+        }
+        int goal =0;
+        if(rulingCoalition.getLeader().getIdeology()> maxPol.getPosition()){
+            goal = maxPol.getPosition()+moveBy;
+        }else{
+            goal = maxPol.getPosition()-moveBy;
+        }
         
-        allAgendas.add(new Agenda("Social Security Expansion",55));
-        allAgendas.add(new Agenda("Social Security Reform",40));
+        if(goal > 100){
+            goal = 100;
+        }
+        if(goal < 0){
+            goal = 0;
+        }
         
         
+        System.out.println("==============================");
+        System.out.println("Landmark Policy: "+ maxPol.getName()+ " | "+ maxPol.getPosition()+" >> "+ goal);
+        int yesVotes =0;
+        for(Party par: allParties){
+            if(par.getPercent()>0){
+                int divider = 100;
+                if(rulingCoalition.getMemberList().contains(par)){
+                    divider-=50;
+                }else{
+                    divider+=50;
+                }
+                
+                if(par == LOTO){
+                    divider+=50;
+                }
+                
+                
+                divider -= par.relationWith(rulingCoalition.getLeader())/2;
+                
+                int genDistance = (100-par.proximityWith(rulingCoalition.getLeader()))/10;
+                divider*=genDistance;
+                
+                if(par.proximityWith(rulingCoalition.getLeader()) <50){
+                    divider*=10;
+                }
+                
+                int votesToAdd = (par.getPercent()*par.proximityWith(goal))/(divider+1);
+                if(votesToAdd > par.getPercent()){
+                    votesToAdd = par.getPercent();
+                }
+                System.out.println(par.getColor()+ par.getName() + RESET+ par.ideoDisplay() + " - "+votesToAdd+" / "+ par.getPercent());
+                
+                yesVotes += votesToAdd;
+            }
+        }
+        System.out.println("Total: "+ yesVotes+" / 100 (51 needed to pass)");
+        if(yesVotes >50){
+            System.out.println("Succesful Vote!");
+            maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+        }else{
+            System.out.println("Vote Failed!");
+        }
+        
+        System.out.println("==============================");
         
     }
     
@@ -3117,13 +3251,6 @@ public static void updateBasedOnLean(){
             }else{
                 par.decreaseFatigue();
             }
-        }else if(lean.equalsIgnoreCase("Republic")){
-            if(par.getIdeology()>75|| par.getIdeology()<25){
-                distance = (65-par.getIdeology())/10;
-                par.setApproval(par.getPopularity()/2);
-            }else{
-                par.decreaseFatigue();
-            }
         }
         for(int i=0; i<distance;i++){
             par.addFatigue();
@@ -3637,6 +3764,7 @@ public static void seeDominant(){
 	    addParties();
 	    addRegions();
 	    addPersons();
+	    addPolicies();
 	    checkForActives();
 	    assessAffiliations();
         assessProminence();
@@ -3673,6 +3801,9 @@ public static void seeDominant(){
     visualizeParliament();
     
     electPresident();
+    
+    choosePolicy();
+    displayPolicies();
     //displayRegionResults();
     assessProminence();
     displayMostProminent();
