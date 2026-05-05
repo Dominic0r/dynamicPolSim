@@ -719,6 +719,35 @@ public class Main
         }
     }
     
+    public static class Agenda{
+        int ideology;
+        String name;
+        
+        public Agenda(String name, int ideology){
+            this.name = name;
+            this.ideology=ideology;
+        }
+    }
+    
+    public static List<allAgendas> = new ArrayList<>();
+    
+    public static void addAgendas(){
+        allAgendas.add(new Agenda("Healthcare Expansion",60));
+        allAgendas.add(new Agenda("Healthcare Rescinding",40));
+        
+        allAgendas.add(new Agenda("Education Expansion",55));
+        allAgendas.add(new Agenda("Education Rescinding",45));
+        
+        allAgendas.add(new Agenda("Tax Increases",65));
+        allAgendas.add(new Agenda("Tax Reform",50));
+        
+        allAgendas.add(new Agenda("Social Security Expansion",55));
+        allAgendas.add(new Agenda("Social Security Reform",40));
+        
+        
+        
+    }
+    
     public static List<Person> allPersons = new ArrayList<>();
     public static List<Person> activePersons = new ArrayList<>();
     
