@@ -823,6 +823,8 @@ public class Main
         allPolicies.add(new Policy("Criminal Justice"));
         allPolicies.add(new Policy("Immigration"));
         allPolicies.add(new Policy("Land Reform"));
+        allPolicies.add(new Policy("Taxes"));
+        allPolicies.add(new Policy("Foreign Trade"));
     }
     
     public static void displayPolicies(){
@@ -905,7 +907,9 @@ public class Main
             goal = 0;
         }
         
-        
+        if(moveBy==0){
+            return;
+        }
         System.out.println("==============================");
         System.out.println("Landmark Policy: "+ maxPol.getName()+ " | "+ maxPol.getPosition()+" >> "+ goal);
         int yesVotes =0;
@@ -3881,7 +3885,7 @@ public static void seeDominant(){
 		    double totalRecog = 0;
 for(Party p : allParties) totalRecog += p.getRecognition();
 System.out.println("Establishment Strength: " + String.format("%.2f", totalRecog));
-passageRate();
+//passageRate();
 nationalLean();
 seeDominant();
 
