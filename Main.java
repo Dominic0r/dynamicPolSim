@@ -883,10 +883,19 @@ public class Main
         }
         int goal =0;
         if(rulingCoalition.getLeader().getIdeology()> maxPol.getPosition()){
+            if(rulingCoalition.getLeader().getIdeology()< 50){
+                moveBy=0;
+            }
             goal = maxPol.getPosition()+moveBy;
+            
         }else{
+            if(rulingCoalition.getLeader().getIdeology()> 50){
+                moveBy=0;
+            }
             goal = maxPol.getPosition()-moveBy;
+            
         }
+        
         
         if(goal > 100){
             goal = 100;
