@@ -825,11 +825,13 @@ public class Main
         allPolicies.add(new Policy("Land Reform"));
         allPolicies.add(new Policy("Taxes"));
         allPolicies.add(new Policy("Foreign Trade"));
+        allPolicies.add(new Policy("Minority Rights"));
+        allPolicies.add(new Policy("Environmental Laws"));
     }
     
     public static void displayPolicies(){
         int counter = 0;
-        int perrow=2;
+        int perrow=3;
         for(Policy pol: allPolicies){
             counter++;
             System.out.print(pol);
@@ -838,6 +840,9 @@ public class Main
                 System.out.println();
             }else{
                 System.out.print(" | ");
+                if(pol == allPolicies.get(allPolicies.size()-1)){
+                    System.out.println();
+                }
             }
         }
     }
