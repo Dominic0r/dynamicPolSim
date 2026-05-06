@@ -746,17 +746,52 @@ public class Main
             
         }
         
+        /*
+        // RIGHT-WING: Blue/Navy spectrum
+    if (ideo < 20){ colorCode = NAVYBLUE; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
+    }else if (ideo < 35){ colorCode = BLUE; ideoname= "Right-Wing";  // Royal Blue (Conservative)
+    
+    // CENTER: Yellow/Gold/Orange spectrum
+    }else if (ideo < 45){ colorCode = ORANGE; ideoname = "Center-Right"; // Orange-Yellow (Liberal/Center-Right)
+    }else if (ideo < 55){ colorCode = YELLOW; ideoname = "Centrist"; // Bright Yellow (Pure Centrist)
+    }else if (ideo < 65){ colorCode = LIGHTRED; ideoname = "Center-Left";// Light Red (Center-Left/Green)
+    
+    // LEFT-WING: Red/Crimson spectrum
+    //else if (ideo < 80) colorCode = 203; // Light Red (Social Democrat)
+    }else if (ideo < 80){ colorCode = RED; ideoname = "Left-Wing"; // Pure Red (Socialist)
+    }else{ colorCode = DARKRED; ideoname = "Far-Left";                // Dark Crimson (Communist/Far-Left)
+    }
+        */
         @Override
         public String toString(){
-            String pos="<";
-            for(int i=0; i<20;i++){
+            String pos="[L]";
+            for(int i=20; i>0;i--){
+                pos+="\u001B[38;5;";
+                if(i<4){
+                    pos+=NAVYBLUE;
+                }else if(i<7){
+                    pos+=BLUE;
+                }else if(i<9){
+                    pos+=ORANGE;
+                }else if(i<11){
+                    pos+=YELLOW;
+                }else if(i<13){
+                    pos+=LIGHTRED;
+                }else if(i<16){
+                    pos+=RED;
+                }else{
+                    pos+=DARKRED;
+                }
+                pos+="m";
                 if(i!=position/5){
+                    
                     pos+="-";
                 }else{
                     pos+="o";
                 }
+                pos+=RESET;
             }
-            pos+=">";
+            pos+="[R]";
             int maxsize=-1;
             
             for(Policy pol: allPolicies){
@@ -791,8 +826,34 @@ public class Main
     }
     
     public static void displayPolicies(){
+        int counter = 0;
+        int perrow=2;
         for(Policy pol: allPolicies){
-            System.out.println(pol);
+            counter++;
+            System.out.print(pol);
+            if(perrow== counter){
+                counter=0;
+                System.out.println();
+            }else{
+                System.out.print(" | ");
+            }
+        }
+    }
+    
+    public static void shouldChangePolicy(){
+        int refDesire = 0;
+        int addByRef = 100/allPolicies.size();
+        for(Policy pol : allPolicies){
+            if(rulingCoalition.getLeader().proximityWith(pol.getPosition()) < 90){
+                refDesire+=addByRef;
+                if(!lean.equalsIgnoreCase("Republic")){
+                    refDesire*=5;
+                }
+            }
+        }
+        
+        if(refDesire>50){
+            choosePolicy();
         }
     }
     
@@ -816,7 +877,7 @@ public class Main
         if(President!= rulingCoalition.getLeader()){
             confidence/=2;
         }
-        int moveBy = 2*confidence;
+        int moveBy = 3*confidence;
         if(rulingCoalition.getLeader().proximityWith(maxPol.getPosition())>90){
             moveBy=0;
         }
@@ -842,7 +903,7 @@ public class Main
             if(par.getPercent()>0){
                 int divider = 100;
                 if(rulingCoalition.getMemberList().contains(par)){
-                    divider-=50;
+                   
                 }else{
                     divider+=50;
                 }
@@ -878,7 +939,7 @@ public class Main
             System.out.println("Vote Failed!");
         }
         
-        System.out.println("==============================");
+        
         
     }
     
@@ -3802,7 +3863,7 @@ public static void seeDominant(){
     
     electPresident();
     
-    choosePolicy();
+    shouldChangePolicy();
     displayPolicies();
     //displayRegionResults();
     assessProminence();
