@@ -740,8 +740,8 @@ public class Main
             if(position>100){
                 position=100;
             }
-            if(position<0){
-                position=0;
+            if(position<1){
+                position=1;
             }
             
         }
