@@ -3553,12 +3553,6 @@ public static void passageRate(){
         //System.out.println(supseats);
     }
     
-    System.out.print("Bill Passage Rate:");
-    for(int p=0; p<20;p++){
-        System.out.print(plots[p]);
-    }
-    System.out.println("");
-    
 }
 
 public static void displayRegionResults(){
