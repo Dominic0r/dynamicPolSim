@@ -846,11 +846,12 @@ public class Main
         for(Policy pol : allPolicies){
             if(rulingCoalition.getLeader().proximityWith(pol.getPosition()) < 90){
                 refDesire+=addByRef;
-                if(!lean.equalsIgnoreCase("Republic")){
-                    refDesire*=5;
-                }
+                
             }
         }
+        if(!lean.equalsIgnoreCase("Republic") && (refDesire/addByRef)>3){
+                    refDesire*=5;
+                }
         
         if(refDesire>50){
             choosePolicy();
