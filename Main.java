@@ -815,7 +815,7 @@ public class Main
     public static List<Policy> allPolicies = new ArrayList<>();
     
     public static void addPolicies(){
-        allPolicies.add(new Policy("Labor Laws"));
+        /*allPolicies.add(new Policy("Labor Laws"));
         allPolicies.add(new Policy("Agricultural Laws"));
         allPolicies.add(new Policy("Education"));
         allPolicies.add(new Policy("State Pensions"));
@@ -826,12 +826,21 @@ public class Main
         allPolicies.add(new Policy("Taxes"));
         allPolicies.add(new Policy("Foreign Trade"));
         allPolicies.add(new Policy("Minority Rights"));
-        allPolicies.add(new Policy("Environmental Laws"));
+        allPolicies.add(new Policy("Environmental Laws"));*/
+        allPolicies.add(new Policy("Labor"));
+        allPolicies.add(new Policy("Fiscal Laws"));
+        allPolicies.add(new Policy("State Services"));
+        allPolicies.add(new Policy("Criminal Justice"));
+        allPolicies.add(new Policy("Foreign Policy"));
+        allPolicies.add(new Policy("Industrial Laws"));
+        allPolicies.add(new Policy("Land Reform"));
+        allPolicies.add(new Policy("Rural Laws"));
+        
     }
     
     public static void displayPolicies(){
         int counter = 0;
-        int perrow=3;
+        int perrow=2;
         for(Policy pol: allPolicies){
             counter++;
             System.out.print(pol);
@@ -3059,27 +3068,31 @@ public static void radicalizeVoters() {
     }
 }
 
-public static void leftShift(){
-    for(ideoGroup gro: allGroups){
-        int defectors = gro.getSize()/100;
-        gro.updateSize(-defectors);
+public static void shiftVoters(int magnitude) {
+    Map<ideoGroup, Integer> changes = new HashMap<>();
+    
+    for (ideoGroup gro : allGroups) {
+        int defectors = gro.getSize() / 100;
         
-        ideoGroup target=null;
-        target = findClosestGroup(gro.getIdeology()+10);
+        changes.put(gro, changes.getOrDefault(gro, 0) - defectors);
         
-        if(target!=null) target.updateSize(defectors);
+        ideoGroup target = findClosestGroup(gro.getIdeology() + magnitude);
+        
+        if (target != null) {
+            changes.put(target, changes.getOrDefault(target, 0) + defectors);
+        }
+    }
+
+    for (Map.Entry<ideoGroup, Integer> entry : changes.entrySet()) {
+        entry.getKey().updateSize(entry.getValue());
     }
 }
+
+public static void leftShift(){
+    shiftVoters(10);
+}
 public static void rightShift(){
-    for(ideoGroup gro: allGroups){
-        int defectors = gro.getSize()/100;
-        gro.updateSize(-defectors);
-        
-        ideoGroup target=null;
-        target = findClosestGroup(gro.getIdeology()-10);
-        
-        if(target!=null) target.updateSize(defectors);
-    }
+    shiftVoters(-10);
 }
 
 public static void centerShift(){
