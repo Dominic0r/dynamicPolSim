@@ -992,7 +992,7 @@ public class Main
                         for(int i=0; i<5;i++){
                             President.addFatigue();
                         }
-                    }
+                    
                 }
                 
             }else{
