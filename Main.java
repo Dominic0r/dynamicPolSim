@@ -1100,31 +1100,40 @@ public class Main
                 passedLegandEx = true;
             }
             if(lean.equalsIgnoreCase("Republic")){
-                if(passedLegandEx && ra.nextInt(50)< moveBy){
-                    System.out.println("A legal challenge against the bill has been presented");
-                int SCapprove = 0;
-                
-                for(SCJustice jus : supremeCourt){
-                    int poi = 100- (Math.abs(jus.getIdeology()-goal));
-                    int tresh = 30;
-                    tresh += jus.getBias();
-                    tresh += jus.getCons()+moveBy;
-                    if(poi > tresh){
-                        SCapprove++;
-                    }
+                    if(passedLegandEx){
+                        if(ra.nextInt(50)< moveBy){
+                            System.out.println("A legal challenge against the bill has been presented");
+                            int SCapprove = 0;
+                            
+                            for(SCJustice jus : supremeCourt){
+                                int poi = 100- (Math.abs(jus.getIdeology()-goal));
+                                int tresh = 30;
+                                tresh += jus.getBias();
+                                tresh += jus.getCons()+moveBy;
+                                if(poi > tresh){
+                                    SCapprove++;
+                                }
+                            }
+                            System.out.println("Supreme Court votes "+ SCapprove+ " (Yes) - "+ (SCsize-SCapprove)+ "(No)" );
+                            if(SCapprove> SCsize/2){
+                                maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+                            
+                                for(Party par: rulingCoalition.getMemberList()){
+                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                                }
+                            }else{
+                                System.out.println("The Supreme Court has ruled the bill unconstitutional and thus blocked its passing");
+                                
+                            }
+                        }else{
+                            maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+                            
+                                for(Party par: rulingCoalition.getMemberList()){
+                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                                }
+                        }
+                        
                 }
-                System.out.println("Supreme Court votes "+ SCapprove+ " (Yes) - "+ (SCsize-SCapprove)+ "(No)" );
-                if(SCapprove> SCsize/2){
-                    maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
-                
-                    for(Party par: rulingCoalition.getMemberList()){
-                        par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
-                    }
-                }else{
-                    System.out.println("The Supreme Court has ruled the bill unconstitutional and thus blocked its passing");
-                    
-                }
-            }
             }else{
                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                 
@@ -3819,11 +3828,11 @@ public static void nationalLean(){
     }
     if(rulingCoalition.getMemberList().size() == 1){
     if(rulingCoalition.getLeader().getIdeology() <= 35){
-            reaction+= reaction/2;
+            reaction+= reaction/4;
         } else if(rulingCoalition.getLeader().getIdeology()>=65 ){
-            revolution+=revolution/2;
+            revolution+=revolution/4;
         }else{
-            republic += republic/2;
+            republic += republic/4;
         }
     }
      
