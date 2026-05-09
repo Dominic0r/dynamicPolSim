@@ -976,18 +976,32 @@ public class Main
             
             int presdif = 100- (Math.abs(President.getIdeology()-goal));
             if(presdif < bias){
-                System.out.println("The President has vetoed the bill");
-                President.setApproval(President.getPopularity()- (President.getPopularity()/5));
-                for(int i=0; i<5;i++){
-                    President.addFatigue();
+                if(yesVotes<75){
+                    System.out.println("The President has vetoed the bill");
+                    President.setApproval(President.getPopularity()- (President.getPopularity()/5));
+                    for(int i=0; i<5;i++){
+                        President.addFatigue();
+                    }
+                }else{
+                    System.out.println("The President has vetoed the bill, but the veto is overruled by a supermajority"){
+                        maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+            
+                        for(Party par: rulingCoalition.getMemberList()){
+                            par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                        }
+                        for(int i=0; i<5;i++){
+                            President.addFatigue();
+                        }
+                    }
                 }
+                
             }else{
                 System.out.println("The President has approved the bill");
                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
             
-            for(Party par: rulingCoalition.getMemberList()){
-                par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
-            }
+                for(Party par: rulingCoalition.getMemberList()){
+                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                }
             }
             
             
