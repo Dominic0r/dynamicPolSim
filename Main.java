@@ -821,9 +821,9 @@ public class Main
             int bias;
             int conservatism;
             
-            public SCJustice(int ideology, int timeleft){
+            public SCJustice(int ideology){
                 this.ideology=ideology;
-                this.timeleft=timeleft;
+                this.timeleft=ra.nextInt(8)+5;
                 bias = ra.nextInt(5);
                 conservatism = ra.nextInt(5);
             }
@@ -870,13 +870,13 @@ public class Main
             int speakerideo = speaker.getIdeology()*speakerwei;
             
             int finalideo = (presideo+pmideo+speakerideo)/(preswei+pmwei+speakerwei);
-            supremeCourt.add(new SCJustice(finalideo, ra.nextInt(7)+3));
+            supremeCourt.add(new SCJustice(finalideo));
             
         }
         
         public static void initSetup(){
             for(int i=0; i<SCsize;i++){
-                supremeCourt.add(new SCJustice(50, ra.nextInt(7)+3));
+                supremeCourt.add(new SCJustice(50));
             }
         }
         
@@ -889,28 +889,36 @@ public class Main
         }
         
         public static void displaySC(){
+            String sccomp = "[";
             int left=0,right=0,center=0;
             for(SCJustice jus: supremeCourt){
                 if(jus.getIdeology()<65 && jus.getIdeology()>35){
+                    sccomp+="\u001B[38;5;226m";
                     center++;
                 }else{
                     if(jus.getIdeology()<=35){
+                        sccomp+="\u001B[38;5;18m";
                         right++;
                     }else{
+                        sccomp+="\u001B[38;5;88m";
                         left++;
                     }
                 }
+                sccomp+= "o"+RESET;
             }
+            sccomp+="]";
+            
             //System.out.println("DEBUG SC Real Size"+ supremeCourt.size());
             if(center> SCsize/2){
-                System.out.println("The Supreme Court remains unbiased");
+                System.out.print("The Supreme Court remains \u001B[38;5;226munbiased"+RESET);
             }else if(left > SCsize/2){
-                System.out.println("The Supreme Court leans left");
+                System.out.print("The Supreme Court leans \u001B[38;5;88mleft"+RESET);
             }else if(right > SCsize/2){
-                System.out.println("The Supreme Court leans right");
+                System.out.print("The Supreme Court leans \u001B[38;5;18mright"+RESET);
             }else{
-                System.out.println("The Supreme Court is divided");
+                System.out.print("The Supreme Court is divided");
             }
+            System.out.println(" "+sccomp);
         }
     
     public static List<Policy> allPolicies = new ArrayList<>();
@@ -1099,10 +1107,21 @@ public class Main
                 
                 passedLegandEx = true;
             }
+            int chalfactor = ra.nextInt(50);
+            for(SCJustice jus : supremeCourt){
+                if(100-Math.abs(jus.getIdeology()-goal)< 30){
+                    chalfactor-=2;
+                }
+                chalfactor-= jus.getBias()/20;
+                chalfactor-= (jus.getCons()+moveBy)/20;
+            }
             if(lean.equalsIgnoreCase("Republic")){
                     if(passedLegandEx){
-                        if(ra.nextInt(50)< moveBy){
+                        if(chalfactor< moveBy){
+                            //System.out.println("DEBUG chalfactor: "+ chalfactor);
                             System.out.println("A legal challenge against the bill has been presented");
+                            String yeavotes ="[", novotes="[";
+                            
                             int SCapprove = 0;
                             
                             for(SCJustice jus : supremeCourt){
@@ -1112,9 +1131,38 @@ public class Main
                                 tresh += jus.getCons()+moveBy;
                                 if(poi > tresh){
                                     SCapprove++;
+                                    
+                                    
+                                    if(jus.getIdeology()<65 && jus.getIdeology()>35){
+                                        yeavotes+="\u001B[38;5;226m";
+                                    }else{
+                                        if(jus.getIdeology()<=35){
+                                            yeavotes+="\u001B[38;5;18m";
+                                        }else{
+                                            yeavotes+="\u001B[38;5;88m";
+                                        }
+                                    }
+                                    yeavotes+="o"+RESET;
+                                    
+                                }else{
+                                    if(jus.getIdeology()<65 && jus.getIdeology()>35){
+                                        novotes+="\u001B[38;5;226m";
+                                    }else{
+                                        if(jus.getIdeology()<=35){
+                                            novotes+="\u001B[38;5;18m";
+                                        }else{
+                                            novotes+="\u001B[38;5;88m";
+                                        }
+                                        
+                                    }
+                                    novotes+="o"+RESET;
                                 }
                             }
-                            System.out.println("Supreme Court votes "+ SCapprove+ " (Yes) - "+ (SCsize-SCapprove)+ "(No)" );
+                            yeavotes+="]";
+                            novotes+="]";
+                            System.out.println("Supreme Court votes ");
+                            System.out.println("Yea - "+SCapprove+ " "+ yeavotes);
+                            System.out.println("Nay - "+(SCsize-SCapprove) + " "+ novotes);
                             if(SCapprove> SCsize/2){
                                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                             
@@ -3828,27 +3876,27 @@ public static void nationalLean(){
     }
     if(rulingCoalition.getMemberList().size() == 1){
     if(rulingCoalition.getLeader().getIdeology() <= 35){
-            reaction+= reaction/4;
+            reaction+= reaction/8;
         } else if(rulingCoalition.getLeader().getIdeology()>=65 ){
-            revolution+=revolution/4;
+            revolution+=revolution/8;
         }else{
-            republic += republic/4;
+            republic += republic/8;
         }
     }
      
             if(President.getIdeology() <= 35){
-                    reaction+= reaction/3;
+                    reaction+= reaction/6;
                 } else if(President.getIdeology()>=65 ){
-                    revolution+=revolution/3;
+                    revolution+=revolution/6;
                 }else{
-                    republic += republic/3;
+                    republic += republic/6;
                 }
         if(speaker.getIdeology() <= 35){
-                    reaction+= reaction/5;
+                    reaction+= reaction/10;
                 } else if(speaker.getIdeology()>=65 ){
-                    revolution+=revolution/5;
+                    revolution+=revolution/10;
                 }else{
-                    republic += republic/5;
+                    republic += republic/10;
                 }
         
     int leftistseats =0, rightistseats=0;
