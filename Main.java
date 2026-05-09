@@ -825,6 +825,9 @@ public class Main
                 this.ideology=ideology;
                 this.timeleft=ra.nextInt(8)+5;
                 bias = ra.nextInt(5);
+                if(ideology<35 || ideology>65){
+                    bias += ra.nextInt(5);
+                }
                 conservatism = ra.nextInt(5);
             }
             public int getIdeology(){ return ideology;}
@@ -1111,8 +1114,13 @@ public class Main
             for(SCJustice jus : supremeCourt){
                 if(100-Math.abs(jus.getIdeology()-goal)< 30){
                     chalfactor-=2;
+                    
                 }
-                chalfactor-= jus.getBias()/20;
+                if(100-Math.abs(jus.getIdeology()-goal) >50){
+                    chalfactor+=jus.getBias()/20;
+                }else{
+                    chalfactor -= jus.getBias()/20;
+                }
                 chalfactor-= (jus.getCons()+moveBy)/20;
             }
             if(lean.equalsIgnoreCase("Republic")){
@@ -1126,8 +1134,13 @@ public class Main
                             
                             for(SCJustice jus : supremeCourt){
                                 int poi = 100- (Math.abs(jus.getIdeology()-goal));
-                                int tresh = 30;
-                                tresh += jus.getBias();
+                                int tresh = 50;
+                                
+                                if(poi >50){
+                                    tresh-=jus.getBias();
+                                }else{
+                                    tresh += jus.getBias();
+                                }
                                 tresh += jus.getCons()+moveBy;
                                 if(poi > tresh){
                                     SCapprove++;
