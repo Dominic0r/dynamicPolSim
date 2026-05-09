@@ -1100,7 +1100,8 @@ public class Main
                 passedLegandEx = true;
             }
             if(lean.equalsIgnoreCase("Republic")){
-                if(passedLegandEx){
+                if(passedLegandEx && ra.nextInt(50)< moveBy){
+                    System.out.println("A legal challenge against the bill has been presented");
                 int SCapprove = 0;
                 
                 for(SCJustice jus : supremeCourt){
