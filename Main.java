@@ -983,7 +983,7 @@ public class Main
                         President.addFatigue();
                     }
                 }else{
-                    System.out.println("The President has vetoed the bill, but the veto is overruled by a supermajority"){
+                    System.out.println("The President has vetoed the bill, but the veto is overruled by a supermajority");
                         maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
             
                         for(Party par: rulingCoalition.getMemberList()){
