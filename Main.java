@@ -826,7 +826,7 @@ public class Main
                 this.timeleft=ra.nextInt(8)+5;
                 bias = ra.nextInt(5);
                 if(ideology<35 || ideology>65){
-                    bias += ra.nextInt(5);
+                    bias += ra.nextInt(3)+2;
                 }
                 conservatism = ra.nextInt(5);
             }
@@ -1116,7 +1116,7 @@ public class Main
                     chalfactor-=2;
                     
                 }
-                if(100-Math.abs(jus.getIdeology()-goal) >50){
+                if(100-Math.abs(jus.getIdeology()-goal) >80){
                     chalfactor+=jus.getBias()/20;
                 }else{
                     chalfactor -= jus.getBias()/20;
@@ -1136,7 +1136,7 @@ public class Main
                                 int poi = 100- (Math.abs(jus.getIdeology()-goal));
                                 int tresh = 50;
                                 
-                                if(poi >50){
+                                if(poi >80){
                                     tresh-=jus.getBias();
                                 }else{
                                     tresh += jus.getBias();
