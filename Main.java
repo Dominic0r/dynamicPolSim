@@ -962,9 +962,43 @@ public class Main
         System.out.println("Total: "+ yesVotes+" / 100 (51 needed to pass)");
         if(yesVotes >50){
             System.out.println("Succesful Vote!");
-            maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+            int bias = 40+ Math.abs(President.getIdeology()-50);
+            
+            if(President!=rulingCoalition.getLeader()){
+                if(President.relationWith(rulingCoalition.getLeader())< 50){
+                    bias+=bias/2;
+                }else{
+                    bias-=bias/4;
+                }
+            }else{
+                bias =0;
+            }
+            
+            int presdif = 100- (Math.abs(President.getIdeology()-goal));
+            if(presdif < bias){
+                System.out.println("The President has vetoed the bill");
+                President.setApproval(President.getPopularity()- (President.getPopularity()/5));
+                for(int i=0; i<5;i++){
+                    President.addFatigue();
+                }
+            }else{
+                System.out.println("The President has approved the bill");
+                maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+            
+            for(Party par: rulingCoalition.getMemberList()){
+                par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+            }
+            }
+            
+            
         }else{
             System.out.println("Vote Failed!");
+            for(Party par: rulingCoalition.getMemberList()){
+                par.setApproval(par.getPopularity()- (par.getPopularity()/4));
+                for(int i=0; i<5;i++){
+                    par.addFatigue();
+                }
+            }
         }
         
         
