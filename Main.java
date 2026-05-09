@@ -432,6 +432,7 @@ public class Main
                     minGroup = gro;
                 }
             }
+            
             targetIdeo = minGroup.getIdeology();
             driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
             
@@ -746,6 +747,8 @@ public class Main
             
         }
         
+        
+        
         /*
         // RIGHT-WING: Blue/Navy spectrum
     if (ideo < 20){ colorCode = NAVYBLUE; ideoname = "Far-Right";       // Navy Blue (Reactionary/Far-Right)
@@ -811,6 +814,104 @@ public class Main
         }
         
     }
+    
+    public static class SCJustice{
+            int ideology;
+            int timeleft;
+            int bias;
+            int conservatism;
+            
+            public SCJustice(int ideology, int timeleft){
+                this.ideology=ideology;
+                this.timeleft=timeleft;
+                bias = ra.nextInt(5);
+                conservatism = ra.nextInt(5);
+            }
+            public int getIdeology(){ return ideology;}
+            public int getTimeLeft(){ return ideology;}
+            public int getBias(){return bias*10;}
+            public int getCons(){return conservatism*5;}
+            public void countDown(){ timeleft--;}
+            public boolean hasRunOut(){
+                return timeleft==0;
+            }
+        }
+        
+        public static List<SCJustice> supremeCourt = new ArrayList<>();
+        public static int SCsize = 9;
+        public static void SCJCountdown(){
+            for(SCJustice jus : supremeCourt){
+                jus.countDown();
+            }
+        }
+        
+        public static void checkSCCCdown(){
+            List<SCJustice> toRemove = new ArrayList<>();
+            for(SCJustice jus : supremeCourt){
+                if(jus.hasRunOut()){
+                    toRemove.add(jus);
+                }
+            }
+            supremeCourt.removeAll(toRemove);
+        }
+        public static boolean checkVacancies(){
+            return supremeCourt.size()>=SCsize;
+        }
+        
+        public static void fillVacancies(){
+            int ideology=0;
+            int preswei = 3;
+            int presideo = President.getIdeology()*preswei;
+            
+            int pmwei = 1;
+            int pmideo = rulingCoalition.getLeader().getIdeology()*pmwei;
+            
+            int speakerwei = 2;
+            int speakerideo = speaker.getIdeology()*speakerwei;
+            
+            int finalideo = (presideo+pmideo+speakerideo)/(preswei+pmwei+speakerwei);
+            supremeCourt.add(new SCJustice(finalideo, ra.nextInt(7)+3));
+            
+        }
+        
+        public static void initSetup(){
+            for(int i=0; i<SCsize;i++){
+                supremeCourt.add(new SCJustice(50, ra.nextInt(7)+3));
+            }
+        }
+        
+        public static void SCCheck(){
+            if(!checkVacancies()){
+                do{
+                    fillVacancies();
+                }while(!checkVacancies());
+            }
+        }
+        
+        public static void displaySC(){
+            int left=0,right=0,center=0;
+            for(SCJustice jus: supremeCourt){
+                if(jus.getIdeology()<65 && jus.getIdeology()>35){
+                    center++;
+                }else{
+                    if(jus.getIdeology()<=35){
+                        right++;
+                    }else{
+                        left++;
+                    }
+                }
+            }
+            //System.out.println("DEBUG SC Real Size"+ supremeCourt.size());
+            if(center> SCsize/2){
+                System.out.println("The Supreme Court remains unbiased");
+            }else if(left > SCsize/2){
+                System.out.println("The Supreme Court leans left");
+            }else if(right > SCsize/2){
+                System.out.println("The Supreme Court leans right");
+            }else{
+                System.out.println("The Supreme Court is divided");
+            }
+        }
     
     public static List<Policy> allPolicies = new ArrayList<>();
     
@@ -961,6 +1062,7 @@ public class Main
         }
         System.out.println("Total: "+ yesVotes+" / 100 (51 needed to pass)");
         if(yesVotes >50){
+            boolean passedLegandEx = false;
             System.out.println("Succesful Vote!");
             int bias = 40+ Math.abs(President.getIdeology()-50);
             
@@ -984,27 +1086,51 @@ public class Main
                     }
                 }else{
                     System.out.println("The President has vetoed the bill, but the veto is overruled by a supermajority");
-                        maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
-            
-                        for(Party par: rulingCoalition.getMemberList()){
-                            par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
-                        }
+                        
                         for(int i=0; i<5;i++){
                             President.addFatigue();
                         }
+                        passedLegandEx = true;
                     
                 }
                 
             }else{
                 System.out.println("The President has approved the bill");
-                maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
-            
-                for(Party par: rulingCoalition.getMemberList()){
-                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                
+                passedLegandEx = true;
+            }
+            if(lean.equalsIgnoreCase("Republic")){
+                if(passedLegandEx){
+                int SCapprove = 0;
+                
+                for(SCJustice jus : supremeCourt){
+                    int poi = 100- (Math.abs(jus.getIdeology()-goal));
+                    int tresh = 30;
+                    tresh += jus.getBias();
+                    tresh += jus.getCons()+moveBy;
+                    if(poi > tresh){
+                        SCapprove++;
+                    }
+                }
+                System.out.println("Supreme Court votes "+ SCapprove+ " (Yes) - "+ (SCsize-SCapprove)+ "(No)" );
+                if(SCapprove> SCsize/2){
+                    maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+                
+                    for(Party par: rulingCoalition.getMemberList()){
+                        par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                    }
+                }else{
+                    System.out.println("The Supreme Court has ruled the bill unconstitutional and thus blocked its passing");
+                    
                 }
             }
-            
-            
+            }else{
+                maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
+                
+                    for(Party par: rulingCoalition.getMemberList()){
+                        par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                    }
+            }
         }else{
             System.out.println("Vote Failed!");
             for(Party par: rulingCoalition.getMemberList()){
@@ -1014,6 +1140,7 @@ public class Main
                 }
             }
         }
+        
         
         
         
@@ -3424,6 +3551,10 @@ public static void checkNullLeadership(){
         allDetLeadership();
         updateBasedOnLean();
         checkNullLeadership();
+        SCJCountdown();
+        checkSCCCdown();
+        checkVacancies();
+        SCCheck();
         
         for(Party par: allParties){
             if(rulingCoalition.getMemberList().contains(par)){
@@ -3904,6 +4035,7 @@ public static void seeDominant(){
 	    assessAffiliations();
         assessProminence();
         allDetLeadership();
+        initSetup();
 		
 		int interval  =4;
 		int electionsToSimulate = 44;
@@ -3939,6 +4071,7 @@ public static void seeDominant(){
     
     shouldChangePolicy();
     displayPolicies();
+    displaySC();
     //displayRegionResults();
     assessProminence();
     displayMostProminent();
