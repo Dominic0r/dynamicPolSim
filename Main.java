@@ -121,7 +121,7 @@ public class Main
             for(Person per: memberPersons){
                 int points= per.getProminence();
                 if(per == chairman){
-                    points *=2;
+                    points *=100;
                 }
                 if(points> maxnum && per!=standardBearer){
                     maxnum = points;
@@ -695,7 +695,7 @@ public class Main
                     prominence/= (corruption/10)+1;
                 }
                 
-                prominence -= (prominence/20)* (year-startyear)/5;
+                prominence -= (prominence/20)* ((year-startyear)/5);
             }
             
             
@@ -2534,46 +2534,79 @@ public static String[][] mapProgside = {
         Party largestPar = null;
         int mnum = Integer.MIN_VALUE;
         
-        for(Party par: allParties){
-            if(par.getPercent()>mnum){
-                mnum = par.getPercent();
-                largestPar = par;
-            }
-        }
-        if(largestPar == null) mnum=10;
-        int tresh = (100-mnum)/ allParties.size();
-        for(Party par: allParties){
-            int points = par.getPercent();
-            
-            if(points == 0 && year==startyear){
-                points += ra.nextInt(100);
-            }
-            
-            if(rulingCoalition!=null){
-                if(rulingCoalition.getMemberList().contains(par)){
-                    if(rulingCoalition.getLeader()!= par){
-                        points/=2;
-                    }else{
-                        points*=2;
-                    }
+        if(year !=1852){
+            // governemnt primaries
+        if(rulingCoalition.getMemberList().size()==1){
+            candidates.add(rulingCoalition.getLeader());
+        }else{
+            for(Party par: rulingCoalition.getMemberList()){
+                int points = 0;
+                points += par.getPercent()*3;
+                if(par.getStandardB()!=null){
+                points += par.getStandardB().getProminence()*2;
+                }else{
+                    points =0;
                 }
                 
-                
+                if(points >= mnum){
+                    mnum = points;
+                    largestPar = par;
+                }
             }
             
-            //points+= ra.nextInt((100-par.getPercent())+1);
-            points += (points*par.getRecognition())/2;
-            //points -= (points*par.getFatigue())/2;
+            candidates.add(largestPar);
             
-            if(par == President){
-                points*=5;
-            }
-            
-            if(points>= tresh){
-                candidates.add(par);
+            for(Party par : rulingCoalition.getMemberList()){
+                if(par!= largestPar){
+                    if(par.relationWith(largestPar) < 30){
+                        candidates.add(par);
+                    }
+                }
             }
         }
         
+        //opposition primaries
+        
+        mnum = Integer.MIN_VALUE;
+        
+            for(Party par: allParties){
+                if(!rulingCoalition.getMemberList().contains(par)){
+                    int points = 0;
+                points += par.getPercent()*3;
+                if(par.getStandardB()!=null){
+                points += par.getStandardB().getProminence()*2;
+                }else{
+                    points =0;
+                }
+                    if(points >= mnum){
+                        mnum = points;
+                        largestPar = par;
+                    }
+                }
+            }
+            
+            candidates.add(largestPar);
+            
+            for(Party par : allParties){
+                if(!rulingCoalition.getMemberList().contains(par)){
+                    if(par!= largestPar){
+                        if(par.relationWith(largestPar) < 30){
+                            candidates.add(par);
+                        }
+                    }
+                }
+                
+            }
+        }else{
+            for(Party par: allParties){
+                if(ra.nextInt(10)<5){
+                    candidates.add(par);
+                }
+            }
+        }
+        
+        
+        int tresh=0;
         
         int winvotes = 0;
         Party winner = null;
