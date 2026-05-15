@@ -836,8 +836,8 @@ public class Main
                 
                 int alignswithpres = (President==null)?0 :President.proximityWith(avgpol)/20;
                 conservatism = ra.nextInt(5)+ alignswithpres;
-                if(alignswithpres<3 && President!=null){
-                    conservatism*=2;
+                if(alignswithpres<2 && President!=null){
+                    conservatism/=2;
                 }
             }
             public int getIdeology(){ return ideology;}
@@ -1154,7 +1154,7 @@ public class Main
                             int SCapprove = 0;
                             
                             for(SCJustice jus : supremeCourt){
-                                int poi = jus.getCons()*2;
+                                int poi = (50-jus.getCons())*2;
                                 int tresh = 50;
                                 
                                 int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
