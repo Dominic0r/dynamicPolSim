@@ -828,7 +828,17 @@ public class Main
                 if(ideology<35 || ideology>65){
                     bias += ra.nextInt(3)+2;
                 }
-                conservatism = ra.nextInt(5);
+                int avgpol=0;
+                for(Policy pol: allPolicies){
+                    avgpol = pol.getPosition();
+                }
+                avgpol /= allPolicies.size();
+                
+                int alignswithpres = (President==null)?0 :President.proximityWith(avgpol)/20;
+                conservatism = ra.nextInt(5)+ alignswithpres;
+                if(alignswithpres<3 && President!=null){
+                    conservatism*=2;
+                }
             }
             public int getIdeology(){ return ideology;}
             public int getTimeLeft(){ return ideology;}
@@ -922,6 +932,19 @@ public class Main
                 System.out.print("The Supreme Court is divided");
             }
             System.out.println(" "+sccomp);
+            int reformism=0; // 0 most radical, 50 most conservative; 50*9 = 460 max conservatism
+            for(SCJustice jus: supremeCourt){
+                reformism+=jus.getCons();
+            }
+            
+            if(reformism<150){
+                System.out.print("The Supreme Court leans towards reformism");
+            }else if(reformism>=150 && reformism< 300){
+                System.out.print("The Supreme Court is neutral on reforms");
+            }else{
+                System.out.print("The Supreme Court leans towards conservatism");
+            }
+            System.out.println("("+ reformism+")");
         }
     
     public static List<Policy> allPolicies = new ArrayList<>();
@@ -1112,16 +1135,14 @@ public class Main
             }
             int chalfactor = ra.nextInt(50);
             for(SCJustice jus : supremeCourt){
-                if(100-Math.abs(jus.getIdeology()-goal)< 30){
-                    chalfactor-=2;
-                    
-                }
-                if(100-Math.abs(jus.getIdeology()-goal) >80){
-                    chalfactor+=jus.getBias()/20;
-                }else{
-                    chalfactor -= jus.getBias()/20;
-                }
-                chalfactor-= (jus.getCons()+moveBy)/20;
+                
+                int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
+                int initposDistFromJus = Math.abs(jus.getIdeology()-maxPol.getPosition());
+                
+                chalfactor-= goalDistFromJus- initposDistFromJus;
+                
+                
+                chalfactor-= (jus.getCons()/20)*Math.abs(goal-maxPol.getPosition());
             }
             if(lean.equalsIgnoreCase("Republic")){
                     if(passedLegandEx){
@@ -1133,15 +1154,12 @@ public class Main
                             int SCapprove = 0;
                             
                             for(SCJustice jus : supremeCourt){
-                                int poi = 100- (Math.abs(jus.getIdeology()-goal));
+                                int poi = jus.getCons()*2;
                                 int tresh = 50;
                                 
-                                if(poi >80){
-                                    tresh-=jus.getBias();
-                                }else{
-                                    tresh += jus.getBias();
-                                }
-                                tresh += jus.getCons()+moveBy;
+                                int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
+                int initposDistFromJus = Math.abs(jus.getIdeology()-maxPol.getPosition());
+                                tresh += goalDistFromJus- initposDistFromJus;
                                 if(poi > tresh){
                                     SCapprove++;
                                     
@@ -1177,13 +1195,14 @@ public class Main
                             System.out.println("Yea - "+SCapprove+ " "+ yeavotes);
                             System.out.println("Nay - "+(SCsize-SCapprove) + " "+ novotes);
                             if(SCapprove> SCsize/2){
+                                System.out.println("The Supreme Court has ruled the policy change constitutional in a "+ SCapprove+ " - "+(SCsize-SCapprove) + " ruling, allowing it to move forward");
                                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                             
                                 for(Party par: rulingCoalition.getMemberList()){
                                     par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
                                 }
                             }else{
-                                System.out.println("The Supreme Court has ruled the bill unconstitutional and thus blocked its passing");
+                                System.out.println("The Supreme Court has ruled the policy change unconstitutional in a "+ SCapprove+ " - "+(SCsize-SCapprove) + " ruling, thus blocking its passing");
                                 
                             }
                         }else{
@@ -2599,7 +2618,7 @@ public static String[][] mapProgside = {
             }
         }else{
             for(Party par: allParties){
-                if(ra.nextInt(10)<5){
+                if(ra.nextInt(10)<5+ (10-allParties.size())){
                     candidates.add(par);
                 }
             }
