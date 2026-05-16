@@ -1062,6 +1062,7 @@ public class Main
         System.out.println("==============================");
         System.out.println("Landmark Policy: "+ maxPol.getName()+ " | "+ maxPol.getPosition()+" >> "+ goal);
         int yesVotes =0;
+        int prespartyyesvotes=0;
         for(Party par: allParties){
             if(par.getPercent()>0){
                 int divider = 100;
@@ -1090,7 +1091,9 @@ public class Main
                     votesToAdd = par.getPercent();
                 }
                 System.out.println(par.getColor()+ par.getName() + RESET+ par.ideoDisplay() + " - "+votesToAdd+" / "+ par.getPercent());
-                
+                if(par == President){
+                    prespartyyesvotes = votesToAdd;
+                }
                 yesVotes += votesToAdd;
             }
         }
@@ -1098,20 +1101,25 @@ public class Main
         if(yesVotes >50){
             boolean passedLegandEx = false;
             System.out.println("Succesful Vote!");
-            int bias = 40+ Math.abs(President.getIdeology()-50);
             
-            if(President!=rulingCoalition.getLeader()){
-                if(President.relationWith(rulingCoalition.getLeader())< 50){
-                    bias+=bias/2;
-                }else{
-                    bias-=bias/4;
-                }
-            }else{
-                bias =0;
+            int tersh = 100;
+            
+            if(President != rulingCoalition.getLeader()){
+                tersh -= (50-President.relationWith(rulingCoalition.getLeader()))/2;
             }
             
-            int presdif = 100- (Math.abs(President.getIdeology()-goal));
-            if(presdif < bias){
+            tersh -= ((prespartyyesvotes*100)/ President.getPercent())/2;
+            
+            
+            int goalDistFromPres = Math.abs(President.getIdeology()-goal);
+                int initposDistFromPres = Math.abs(President.getIdeology()-maxPol.getPosition());
+                
+            
+            int presdif = 100- (Math.abs(President.getIdeology()-goal)); 
+            presdif += (initposDistFromPres-goalDistFromPres)*2;
+            //System.out.println("presdif: " +presdif);
+            //System.out.println("tersh: " +tersh);
+            if(presdif < tersh){
                 if(yesVotes<75){
                     System.out.println("The President has vetoed the bill");
                     President.setApproval(President.getPopularity()- (President.getPopularity()/5));
@@ -1139,10 +1147,10 @@ public class Main
                 int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
                 int initposDistFromJus = Math.abs(jus.getIdeology()-maxPol.getPosition());
                 
-                chalfactor-= goalDistFromJus- initposDistFromJus;
+                chalfactor-= initposDistFromJus-goalDistFromJus;
                 
                 
-                chalfactor-= (jus.getCons()/20)*Math.abs(goal-maxPol.getPosition());
+                chalfactor-= (jus.getCons()/10)*Math.abs(goal-maxPol.getPosition());
             }
             if(lean.equalsIgnoreCase("Republic")){
                     if(passedLegandEx){
@@ -1154,12 +1162,12 @@ public class Main
                             int SCapprove = 0;
                             
                             for(SCJustice jus : supremeCourt){
-                                int poi = (50-jus.getCons())*2;
-                                int tresh = 50;
+                                int tresh = 0 + ra.nextInt((jus.getCons()/2)+1);
                                 
                                 int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
                 int initposDistFromJus = Math.abs(jus.getIdeology()-maxPol.getPosition());
-                                tresh += goalDistFromJus- initposDistFromJus;
+                                int poi = initposDistFromJus-goalDistFromJus;
+                                
                                 if(poi > tresh){
                                     SCapprove++;
                                     
