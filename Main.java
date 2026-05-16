@@ -1117,6 +1117,7 @@ public class Main
             
             int presdif = 100- (Math.abs(President.getIdeology()-goal)); 
             presdif += (initposDistFromPres-goalDistFromPres)*2;
+            tersh -= (50-Math.abs(President.getIdeology()-50))/2;
             //System.out.println("presdif: " +presdif);
             //System.out.println("tersh: " +tersh);
             if(presdif < tersh){
@@ -3991,12 +3992,12 @@ public static void nationalLean(){
     
     for(SCJustice jus: supremeCourt){
         if(jus.getIdeology()>35 && jus.getIdeology()<65){
-            republic += republic/20;
+            republic += republic/10;
         }else{
             if(jus.getIdeology()<=35){
-                reaction+= reaction/20;
+                reaction+= reaction/10;
             }else{
-                revolution += revolution/20;
+                revolution += revolution/10;
             }
         }
     }
