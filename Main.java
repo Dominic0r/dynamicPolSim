@@ -2824,7 +2824,7 @@ public static String[][] mapProgside = {
         }
         President = winner;
         President.incrementRecognition();
-        System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+ President.ideoDisplay()+"\n===============\n");
+        System.out.println("\n===============\nElected President: "+ President.getStandardB()+" "+"\n===============\n");
         President.getStandardB().setPresToTrue();
         President.getStandardB().incrementPrescount();
     }
@@ -3988,6 +3988,30 @@ public static void nationalLean(){
         revolution+=(revolution/10)* (((leftistseats-50)/10)+1);
     }
     republic += republic/2;
+    
+    for(SCJustice jus: supremeCourt){
+        if(jus.getIdeology()>35 && jus.getIdeology()<65){
+            republic += republic/20;
+        }else{
+            if(jus.getIdeology()<=35){
+                reaction+= reaction/20;
+            }else{
+                revolution += revolution/20;
+            }
+        }
+    }
+    
+    for(Policy pol : allPolicies){
+        if(pol.getPosition()>35 && pol.getPosition()<65){
+            republic += republic/20;
+        }else{
+            if(pol.getPosition()<=35){
+                reaction+= reaction/20;
+            }else{
+                revolution += revolution/20;
+            }
+        }
+    }
     
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
