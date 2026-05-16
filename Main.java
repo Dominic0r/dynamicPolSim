@@ -1108,7 +1108,7 @@ public class Main
                 tersh -= (50-President.relationWith(rulingCoalition.getLeader()))/2;
             }
             
-            tersh -= ((prespartyyesvotes*100)/ President.getPercent())/2;
+            tersh -= ((prespartyyesvotes*100)/ (President.getPercent()+1))/2;
             
             
             int goalDistFromPres = Math.abs(President.getIdeology()-goal);
@@ -1210,7 +1210,7 @@ public class Main
                                     par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
                                 }
                             }else{
-                                System.out.println("The Supreme Court has ruled the policy change unconstitutional in a "+ SCapprove+ " - "+(SCsize-SCapprove) + " ruling, thus blocking its passing");
+                                System.out.println("The Supreme Court has ruled the policy change unconstitutional in a "+ (SCsize-SCapprove)+ " - "+SCapprove + " ruling, thus blocking its passing");
                                 
                             }
                         }else{
