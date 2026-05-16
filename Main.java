@@ -1004,7 +1004,7 @@ public class Main
                     refDesire*=5;
                 }
         
-        if(refDesire>50){
+        if(ra.nextInt(50)<refDesire){
             choosePolicy();
         }
     }
