@@ -3722,13 +3722,13 @@ public static void checkNullLeadership(){
             Party maxpar=null;
             for(Party par: allParties){
                 int rdne = (ra.nextInt(par.getPercent()+1)-ra.nextInt(par.getPercent()+1));
-                int pts = par.proximityWith(ideology)+rdne + (int)(par.getPercent()*par.getRecognition());
+                int pts = (par.proximityWith(ideology)/2) + (par.getPercent()/4) + ra.nextInt(15);
                 if(par.getPercent()==0){
                     pts = 0;
                 }
                 if(pts> maxnum){
                     
-                    maxnum= (par.proximityWith(ideology)+rdne)+ (int)(par.getPercent()*par.getRecognition());
+                    maxnum= pts;
                     maxpar=par;
                 }
             }
@@ -3753,40 +3753,46 @@ public static void checkNullLeadership(){
             cityCenters.add(new int[]{wid,hei});
             allDists.add(new district(ra.nextInt(30)+60, wid, hei));
         }
+        List<double[]> landAnchors = new ArrayList<>();
+landAnchors.add(new double[]{width * 0.4, height * 0.5}); // Left-center blob
+landAnchors.add(new double[]{width * 0.6, height * 0.4}); // Right-upper blob
+landAnchors.add(new double[]{width * 0.5, height * 0.7}); // Southern peninsula blob
         
         for(int x=0; x<width;x++){
             for(int y = 0; y<height;y++){
-                int proxytocity=Integer.MAX_VALUE;
-                int maxsize = (width+height)/2;
-                for(int[] cit : cityCenters){
-                    int distwid = Math.abs(x-cit[0]);
-                    int disthei = Math.abs(y-cit[1]);
-                    
-                    int thisproxytocity =(((distwid+disthei)/2)*100)/ maxsize;
-                    
-                    if(thisproxytocity < proxytocity){
-                        proxytocity = thisproxytocity;
-                    }
-                }
-                int centerloc = ((width/2) + (height/2))/2;
+                double minDistanceFactor = Double.MAX_VALUE;
+        for (double[] anchor : landAnchors) {
+            // Scale x and y differences proportionally
+            double normX = (x - anchor[0]) / (width / 2.0);
+            double normY = (y - anchor[1]) / (height / 2.0);
+            double distFactor = (normX * normX) + (normY * normY);
+            
+            if (distFactor < minDistanceFactor) {
+                minDistanceFactor = distFactor;
+            }
+        }
+        
+        double roughness = (fixedRandom.nextDouble() * 0.45) - 0.225;
+        if (minDistanceFactor + roughness > 0.65) {
+            continue; 
+        }
                 
-                int centerwid = width/2;
-                int centerhei = height/2;
-                
-                int curloc = (x+y)/2;
-                
-                //int distfromcenter=(Math.abs(curloc - centerloc)*100)/maxsize;
-                int distfromcenterx =(Math.abs(x - centerwid)*100)/maxsize; 
-                int distfromcentery =(Math.abs(y - centerhei)*100)/maxsize; 
-                int maxdis = 10;
-                int finalideo = 100-((proxytocity*100)/maxsize);
-                if(finalideo<0){finalideo=0;}
-                
-                
-                if(((distfromcentery+distfromcenterx)/2)-(proxytocity*2)-fixedRandom.nextInt(maxsize/2)<maxdis){
-                    System.out.println(finalideo);
-                allDists.add(new district(finalideo+ (fixedRandom.nextInt(10)-fixedRandom.nextInt(10)), x,y));
-                }
+        double closestCityDist = Double.MAX_VALUE;
+        for (int[] cit : cityCenters) {
+            double dist = Math.sqrt(Math.pow(x - cit[0], 2) + Math.pow(y - cit[1], 2));
+            if (dist < closestCityDist) {
+                closestCityDist = dist;
+            }
+        }
+        
+        double falloff = 1.8; 
+        double urbanInfluence = Math.exp(-closestCityDist / (falloff- ra.nextDouble(falloff/10)));
+
+// Convert to your 0 - 100 scale
+// 100 = Urban/Left (on a city), scaling down rapidly to 0 = Rural/Right
+        int finalideo = (int) (urbanInfluence * 100);
+        
+        allDists.add(new district(finalideo, x, y));
                 
                 
                 
@@ -3796,7 +3802,7 @@ public static void checkNullLeadership(){
         
         
     }
-    public static int uniwid = 23, unihei=10;
+    public static int uniwid = 25, unihei=10;
     
     public static void distmap(){
         int width = uniwid;
