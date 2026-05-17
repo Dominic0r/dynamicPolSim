@@ -3704,6 +3704,12 @@ public static void checkNullLeadership(){
         int x, y; // coordinates
         public district(int ideology, int x, int y){
             this.ideology = ideology;
+            if(ideology <0){
+                ideology=0;
+            }
+            if(ideology >100){
+                ideology=100;
+            }
             this.x=x;
             this.y=y;
         }
@@ -3715,9 +3721,14 @@ public static void checkNullLeadership(){
             int maxnum=Integer.MIN_VALUE;
             Party maxpar=null;
             for(Party par: allParties){
-                int rdne = (ra.nextInt(10)-ra.nextInt(10));
-                if(par.proximityWith(ideology)+rdne + (par.getPercent()/2)> maxnum){
-                    maxnum = par.proximityWith(ideology)+rdne;
+                int rdne = (ra.nextInt(par.getPercent()+1)-ra.nextInt(par.getPercent()+1));
+                int pts = par.proximityWith(ideology)+rdne + (int)(par.getPercent()*par.getRecognition());
+                if(par.getPercent()==0){
+                    pts = 0;
+                }
+                if(pts> maxnum){
+                    
+                    maxnum= (par.proximityWith(ideology)+rdne)+ (int)(par.getPercent()*par.getRecognition());
                     maxpar=par;
                 }
             }
@@ -3745,25 +3756,39 @@ public static void checkNullLeadership(){
         
         for(int x=0; x<width;x++){
             for(int y = 0; y<height;y++){
-                int proxytocity=0;
+                int proxytocity=Integer.MAX_VALUE;
+                int maxsize = (width+height)/2;
                 for(int[] cit : cityCenters){
                     int distwid = Math.abs(x-cit[0]);
                     int disthei = Math.abs(y-cit[1]);
                     
-                    int thisproxytocity = ((width+height)/2)- (distwid+disthei)/2;
-                    if(thisproxytocity > proxytocity){
+                    int thisproxytocity =(((distwid+disthei)/2)*100)/ maxsize;
+                    
+                    if(thisproxytocity < proxytocity){
                         proxytocity = thisproxytocity;
                     }
                 }
                 int centerloc = ((width/2) + (height/2))/2;
                 
-                int distfromcenter=(Math.abs(width-(x/2)) + Math.abs(height-(y/2)))/2;
-                int maxdis = ((width/2) + (height/2))/2;
+                int centerwid = width/2;
+                int centerhei = height/2;
                 
-                if(distfromcenter+ (proxytocity/10)>maxdis+ (fixedRandom.nextInt(maxdis))){
+                int curloc = (x+y)/2;
                 
-                    allDists.add(new district(proxytocity, x,y));
+                //int distfromcenter=(Math.abs(curloc - centerloc)*100)/maxsize;
+                int distfromcenterx =(Math.abs(x - centerwid)*100)/maxsize; 
+                int distfromcentery =(Math.abs(y - centerhei)*100)/maxsize; 
+                int maxdis = 10;
+                int finalideo = 100-((proxytocity*100)/maxsize);
+                if(finalideo<0){finalideo=0;}
+                
+                
+                if(((distfromcentery+distfromcenterx)/2)-(proxytocity*2)-fixedRandom.nextInt(maxsize/2)<maxdis){
+                    System.out.println(finalideo);
+                allDists.add(new district(finalideo+ (fixedRandom.nextInt(10)-fixedRandom.nextInt(10)), x,y));
                 }
+                
+                
                 
                 
             }
@@ -3771,7 +3796,7 @@ public static void checkNullLeadership(){
         
         
     }
-    public static int uniwid = 30, unihei=15;
+    public static int uniwid = 23, unihei=10;
     
     public static void distmap(){
         int width = uniwid;
