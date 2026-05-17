@@ -3757,10 +3757,10 @@ public static void checkNullLeadership(){
                 }
                 int centerloc = ((width/2) + (height/2))/2;
                 
-                int distfromcenter=(Math.abs(width-x) + Math.abs(height-y))/2;
-                int maxdis = ((width/10) + (height/10))/2;
+                int distfromcenter=(Math.abs(width-(x/2)) + Math.abs(height-(y/2)))/2;
+                int maxdis = ((width/2) + (height/2))/2;
                 
-                if(distfromcenter>maxdis+ (fixedRandom.nextInt(maxdis))){
+                if(distfromcenter+ (proxytocity/10)>maxdis+ (fixedRandom.nextInt(maxdis))){
                 
                     allDists.add(new district(proxytocity, x,y));
                 }
