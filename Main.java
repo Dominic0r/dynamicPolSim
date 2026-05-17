@@ -550,49 +550,7 @@ public class Main
         }
     }
     
-    public static class Region{
-        String name;
-        int ideology;
-        Party winPar=null;
-        
-        public Region(String name, int ideology){
-            this.name=name;
-            this.ideology=ideology;
-        }
-        
-        public void displayWinner(){
-            Party maxpar=null;
-            int maxnum=Integer.MIN_VALUE;
-            int divider=1;
-            int curscore=0;
-            for(Party par: allParties){
-                if(par.getPercent()>0){
-                divider = (Math.abs(par.getIdeology()-ideology)/10)+1;
-                curscore = (par.getScore()/divider);
-                
-                if(curscore>maxnum){
-                    maxnum=curscore;
-                    maxpar = par;
-                }
-                }
-            }
-            
-            if(maxpar!=null){
-                System.out.print(name+ ": "+maxpar.getColor()+maxpar.getName()+RESET+maxpar.ideoDisplay() + " |");
-                winPar = maxpar;
-            }else{
-                System.out.println("nowinner");
-            }
-        }
-        
-        public String getName(){
-            return name;
-        }
-        
-        public Party getWinner(){
-            return winPar;
-        }
-    }
+    
     
     public static class Person{
         String name;
@@ -2225,17 +2183,6 @@ public static String[][] mapProgside = {
     
     public static int approvalRatingChange;
     
-    public static List<Region> allRegions = new ArrayList<>();
-    public static void addRegions(){
-        allRegions.add(new Region("Capital",55));
-        allRegions.add(new Region("Northern",75));
-        allRegions.add(new Region("Southern",25));
-        allRegions.add(new Region("Eastern",40));
-        allRegions.add(new Region("Western",65));
-    }
-    
-    
-    
     public static List<ideoGroup> allGroups = new ArrayList<>();
     public static List<ideoGroup> allTotalGroups = new ArrayList<>();
     public static void addGroups(){
@@ -3752,6 +3699,108 @@ public static void checkNullLeadership(){
         }
     }
     
+    public static class district{
+        int ideology;
+        int x, y; // coordinates
+        public district(int ideology, int x, int y){
+            this.ideology = ideology;
+            this.x=x;
+            this.y=y;
+        }
+        
+        int getX(){return x;}
+        int getY(){return y;}
+        
+        Party findNearestParty(){
+            int maxnum=Integer.MIN_VALUE;
+            Party maxpar=null;
+            for(Party par: allParties){
+                int rdne = (ra.nextInt(10)-ra.nextInt(10));
+                if(par.proximityWith(ideology)+rdne + (par.getPercent()/2)> maxnum){
+                    maxnum = par.proximityWith(ideology)+rdne;
+                    maxpar=par;
+                }
+            }
+            return maxpar;
+        }
+        
+        @Override
+        public String toString(){
+            return findNearestParty().getColor()+"o"+RESET;
+        }
+    }
+    public static List<district> allDists = new ArrayList<>();
+    
+    public static void mapGen(){
+        Random fixedRandom = new Random(19862026);
+        int width = uniwid, height = unihei;
+        int numCities = 5;
+        List<int[]> cityCenters = new ArrayList<>();
+        for (int i = 0; i < numCities; i++) {
+            int wid = fixedRandom.nextInt(width);
+            int hei = fixedRandom.nextInt(height);
+            cityCenters.add(new int[]{wid,hei});
+            allDists.add(new district(ra.nextInt(30)+60, wid, hei));
+        }
+        
+        for(int x=0; x<width;x++){
+            for(int y = 0; y<height;y++){
+                int proxytocity=0;
+                for(int[] cit : cityCenters){
+                    int distwid = Math.abs(x-cit[0]);
+                    int disthei = Math.abs(y-cit[1]);
+                    
+                    int thisproxytocity = ((width+height)/2)- (distwid+disthei)/2;
+                    if(thisproxytocity > proxytocity){
+                        proxytocity = thisproxytocity;
+                    }
+                }
+                int centerloc = ((width/2) + (height/2))/2;
+                
+                int distfromcenter=(Math.abs(width-x) + Math.abs(height-y))/2;
+                int maxdis = ((width/10) + (height/10))/2;
+                
+                if(distfromcenter>maxdis+ (fixedRandom.nextInt(maxdis))){
+                
+                    allDists.add(new district(proxytocity, x,y));
+                }
+                
+                
+            }
+        }
+        
+        
+    }
+    public static int uniwid = 30, unihei=15;
+    
+    public static void distmap(){
+        int width = uniwid;
+        int height = unihei;
+        String[][] map = new String[height][width];
+        for(int x = 0; x<width;x++){
+            for(int y = 0; y<height;y++){
+                for(district dis: allDists){
+                    if(x == dis.getX() && y==dis.getY()){
+                        map[y][x] = dis.toString();
+                        break;
+                    }else{
+                        map[y][x] = " ";
+                    }
+                }
+            }
+        }
+        for(int y=0; y<height;y++){
+            for(int x=0; x<width;x++){
+                System.out.print(map[y][x]);
+            }
+            
+                System.out.println();
+            
+        }
+        
+    }
+    
+    
     
     public static List<Archive> leaderArchive = new ArrayList<>();
     
@@ -3915,49 +3964,6 @@ public static void passageRate(){
     
 }
 
-public static void displayRegionResults(){
-    Region North=null, South=null, East=null, West=null, Capital=null;
-    for(Region reg: allRegions){
-        reg.displayWinner();
-        if(reg.getName().equalsIgnoreCase("Northern")){
-            North = reg;
-        }
-        if(reg.getName().equalsIgnoreCase("Southern")){
-            South = reg;
-        }
-        if(reg.getName().equalsIgnoreCase("Eastern")){
-            East = reg;
-        }
-        if(reg.getName().equalsIgnoreCase("Western")){
-            West = reg;
-        }
-        if(reg.getName().equalsIgnoreCase("Capital")){
-            Capital = reg;
-        }
-    }
-    
-    /*int rows = mapProgside.length; WIP MAP SYSTEM
-int cols = mapProgside[0].length;
-
-for (int i = 0; i < rows; i++) {
-    for (int c = 0; c < cols; c++) {
-        String tile = mapProgside[i][c].toUpperCase();
-        
-        // Determine the color/symbol based on the ID
-        String displayChar = switch (tile) {
-            case "N" -> North.getWinner().getColor() + "o" + RESET;
-            case "C" -> Capital.getWinner().getColor() + "o" + RESET;
-            case "S" -> South.getWinner().getColor() + "o" + RESET;
-            case "E" -> East.getWinner().getColor() + "o" + RESET;
-            case "W" -> West.getWinner().getColor() + "o" + RESET;
-            default  -> BLACK+ " "+ RESET;
-        };
-
-        System.out.print(displayChar + " ");
-    }
-    System.out.println(); // cleaner than System.out.print("\n")*/
-}
-    
     
     
 
@@ -4208,10 +4214,10 @@ public static void seeDominant(){
     
     
 	public static void main(String[] args) {
+	    mapGen();
 	    addGroups();
 	    addActiveGroups();
 	    addParties();
-	    addRegions();
 	    addPersons();
 	    addPolicies();
 	    checkForActives();
@@ -4249,7 +4255,7 @@ public static void seeDominant(){
     }
     
     visualizeParliament();
-    
+    distmap();
     electPresident();
     
     shouldChangePolicy();
