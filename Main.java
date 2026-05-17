@@ -2576,6 +2576,10 @@ public static String[][] mapProgside = {
                     points =0;
                 }
                 
+                if(par == President){
+                    points*=2;
+                }
+                
                 if(points >= mnum){
                     mnum = points;
                     largestPar = par;
@@ -2605,6 +2609,10 @@ public static String[][] mapProgside = {
                 points += par.getStandardB().getProminence()*2;
                 }else{
                     points =0;
+                }
+                
+                if(par == President){
+                    points*=2;
                 }
                     if(points >= mnum){
                         mnum = points;
@@ -3258,35 +3266,54 @@ public static void events(){
             rightShift();
                 break;
             case 4:
-                double totalRecog = 0;
-for(Party p : allParties) totalRecog += p.getRecognition();
-if(totalRecog > 0.5){
-                System.out.println("Populist Wave!");
-                for(Party par : allParties) {
-       
-        if (par.getRecognition() > 0.1) {
-            par.setRecog(par.getRecognition()/5); 
-            for(int i=0; i<par.getPercent()/5;i++){
-                par.addFatigue();
-            }
-        } else {
-            
-            
-        }
-        
-        
-    }
-   
-    for(Party member : rulingCoalition.getMemberList()) {
-        for(ideoGroup gro : allGroups) {
-            if(gro.proximityWith(member) > 70) {
-                gro.updateSatisfaction(-10);
-            }
-        }
-    }
-    
-        }
-        
+                if(lean.equalsIgnoreCase("Republic")){
+                    double totalRecog = 0;
+                    for(Party p : allParties) totalRecog += p.getRecognition();
+                    if(totalRecog > 0.5){
+                                    System.out.println("Populist Wave!");
+                                    for(Party par : allParties) {
+                           
+                            if (par.getRecognition() > 0.1) {
+                                par.setRecog(par.getRecognition()/5); 
+                                for(int i=0; i<par.getPercent()/5;i++){
+                                    par.addFatigue();
+                                }
+                            } else {
+                                
+                                
+                            }
+                            
+                            
+                        }
+                       
+                        for(Party member : rulingCoalition.getMemberList()) {
+                            for(ideoGroup gro : allGroups) {
+                                if(gro.proximityWith(member) > 70) {
+                                    gro.updateSatisfaction(-10);
+                                }
+                            }
+                        }
+                        
+                            }
+                }else{
+                    int numofparsinNA = 0;
+                    for(Party par: allParties){
+                        if(par.getPercent()>0){
+                            numofparsinNA++;
+                        }
+                    }
+                    int chan = ra.nextInt(10) - numofparsinNA;
+                    if(chan > 5){
+                        System.out.println("Democratic Revolution!");
+                        for(Party par: allParties){
+                        if(par.getPercent()>0){
+                            for(int i=0; i<par.getPercent()/5;i++){
+                                par.addFatigue();
+                            }
+                        }
+                    }
+                    }
+                }
             break;
             
             case 5:
