@@ -4286,7 +4286,7 @@ public static void seeDominant(){
     }
     
     visualizeParliament();
-    distmap();
+    //distmap();
     electPresident();
     
     shouldChangePolicy();
