@@ -102,13 +102,21 @@ public class Main
             Person maxper=null;
             for(Person per: memberPersons){
                 int points= per.getProminence();
+                
                 if(per.hasBeenPresidentBefore()){
                     if(per.noOfTimesBecamePresident() == 1){
                         points*=100;
                     }else if(per.noOfTimesBecamePresident() >1){
-                        points /=10;
+                        if(lean.equalsIgnoreCase("Republic")){
+                            points /=10;
+                        }
                     }
                 }
+                
+                if(!lean.equalsIgnoreCase("Republic")){
+                    points *=100;
+                }
+                
                 if(points> maxnum){
                     maxnum = points;
                     maxper = per;
@@ -642,10 +650,14 @@ public class Main
                 prominence+= ra.nextInt(15);
                 
                 if(this == currentParty.getStandardB() || this == currentParty.getChair() || this == currentParty.getForSpeak()){
-                    prominence += prominence/2;
+                    //prominence += prominence/2;
                 }
                 
-                
+                if(!lean.equalsIgnoreCase("Republic")){
+                    if(this == President.getStandardB()){
+                        prominence+=100;
+                    }
+                }
                 
                 prominence += (ambition/10)*5;
                 prominence*= charisma/20;
@@ -881,7 +893,7 @@ public class Main
             
             //System.out.println("DEBUG SC Real Size"+ supremeCourt.size());
             if(center> SCsize/2){
-                System.out.print("The Supreme Court remains \u001B[38;5;226munbiased"+RESET);
+                System.out.print("The Supreme Court leans towards \u001B[38;5;226mdemocracy"+RESET);
             }else if(left > SCsize/2){
                 System.out.print("The Supreme Court leans \u001B[38;5;88mleft"+RESET);
             }else if(right > SCsize/2){
