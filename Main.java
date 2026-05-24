@@ -23,6 +23,7 @@ public class Main
             this.ideology = ideology;
             this.satisfaction = 100;
             this.activeyear = activeyear;
+            
         }
         
         public String getSplinterName(){return splintername;}
@@ -70,6 +71,8 @@ public class Main
         String color;
         int delegates = 0;
         Map<Party, Integer> relations = new HashMap<>();
+        
+        ideoGroup largestGroup = null;
         
         Person standardBearer; // for president 
         Person chairman; // for prime minister
@@ -305,7 +308,11 @@ public class Main
         }
         
         public String ideoDisplay(){
-            return RESET+" ("+getDynamicColor(this.ideology)+")";
+            if(largestGroup!=null){
+            return RESET+" ("+getDynamicColor(this.ideology) + ", "+ largestGroup.getName() +")";
+            }else{
+                return RESET+" ("+getDynamicColor(this.ideology) +")";
+            }
         }
         
         public double getFatigue(){
@@ -420,7 +427,7 @@ public class Main
                     maxnum = entry.getValue();
                 }
             }
-            
+            largestGroup = maxGroup;
             int targetIdeo = maxGroup.getIdeology();
             int driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
             
@@ -2355,7 +2362,7 @@ public static String[][] mapProgside = {
                 }
             }
             
-            gro.updateSize(ra.nextInt(changeby+1));
+            gro.updateSize(ra.nextInt(((changeby+1)/ (((year-gro.getActiveYear())/10)+1))+1));
         }
     }
     
@@ -2365,7 +2372,7 @@ public static String[][] mapProgside = {
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 60+ ra.nextInt(30);
+        int tresh = 80+ ra.nextInt(20);
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -2657,7 +2664,7 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
             par.addVotes(votesFromThisGroup);
-            par.recordVotes(gro, votesFromThisGroup);
+            par.recordVotes(gro, votesFromThisGroup/5);
         }
     }
 
@@ -2757,7 +2764,7 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
             par.addVotes(votesFromThisGroup);
-            par.recordVotes(gro, votesFromThisGroup);
+            par.recordVotes(gro, votesFromThisGroup/5);
         }
     }
 
