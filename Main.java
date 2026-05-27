@@ -2372,7 +2372,7 @@ public static String[][] mapProgside = {
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 80+ ra.nextInt(20);
+        int tresh = 95;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
