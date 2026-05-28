@@ -512,6 +512,22 @@ public class Main
                 }
             }
             
+            if(standardBearer!=null){
+                if(this.ideology > standardBearer.getIdeology()){
+                    this.ideology--;
+                }else{
+                    this.ideology++;
+                }
+            }
+            
+            if(chairman!=null){
+                if(this.ideology > chairman.getIdeology()){
+                    this.ideology--;
+                }else{
+                    this.ideology++;
+                }
+            }
+            
             if(this.ideology> 100){
                 this.ideology = 100;
             }
@@ -608,6 +624,7 @@ public class Main
         
         public boolean hasBeenPresidentBefore(){return hasbeenPresident;}
         public int noOfTimesBecamePresident(){return prescount;}
+        public int getIdeology(){return ideology;}
         
         public void incrementPrescount(){
             prescount++;
@@ -2228,7 +2245,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 24, 60, 1832));
         allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 50, 70, 1832));
         allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 30, 75, 1832));
-        allTotalGroups.add(new ideoGroup("Anti-Conciliators", "Sustained Revolution Movement", 30, 80, 1832));
+        allTotalGroups.add(new ideoGroup("Revolutionaries", "Sustained Revolution Movement", 30, 80, 1832));
         
         //Mid 19th Century
         allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 5, 16, 1860));
@@ -2250,7 +2267,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
         allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 65, 1918));
         allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 18, 38, 1918));
-        allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 38, 1923));
+        allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 90, 1923));
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 16, 53, 1927));
         
         // Mid 20th Century
