@@ -3648,15 +3648,15 @@ public static void updateBasedOnLean(){
     for(Party par: allParties){
         distance=0;
         if(lean.equalsIgnoreCase("Reaction")){
-            if(par.getIdeology()>35){
-                distance = (par.getIdeology()-35);
+            if(par.getIdeology()>40){
+                distance = (par.getIdeology()-40);
                 par.setApproval(par.getPopularity()/10);
             }else{
                 par.decreaseFatigue();
             }
         }else if(lean.equalsIgnoreCase("Revolution")){
-            if(par.getIdeology()<65){
-                distance = (65-par.getIdeology());
+            if(par.getIdeology()<60){
+                distance = (60-par.getIdeology());
                 par.setApproval(par.getPopularity()/10);
             }else{
                 par.decreaseFatigue();
