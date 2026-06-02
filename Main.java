@@ -688,8 +688,7 @@ public class Main
                 if(ra.nextInt(100)<corruption){
                     prominence/= (corruption/10)+1;
                 }
-                
-                prominence -= (prominence/20)* ((year-startyear)/5);
+                prominence *= (year-startyear)/5;
             }
             
             
