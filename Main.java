@@ -3291,6 +3291,11 @@ public static void events(){
                         if(par.getPercent()>0){
                             for(int i=0; i<par.getPercent()/5;i++){
                                 par.addFatigue();
+                                par.addFatigue();
+                                par.addFatigue();
+                                par.addFatigue();
+                                par.addFatigue();
+                                par.addFatigue();
                             }
                         }
                     }
@@ -4346,7 +4351,6 @@ seeDominant();
 //DEBUGDisplayAllActive();
 
 		    String upu = sc.nextLine();
-		    
 		    updateTick();
 		    year+=interval;
 		    
