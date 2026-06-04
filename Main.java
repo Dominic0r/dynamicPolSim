@@ -3290,7 +3290,7 @@ public static void events(){
                     if(chan > 5){
                         System.out.println("Democratic Revolution!");
                         for(Party par: allParties){
-                        if(par.getPercent()>0){
+                        if(par.getPercent()>0 && (par.getIdeology()> 65 || par.getIdeology()<35)){
                             for(int i=0; i<par.getPercent()/5;i++){
                                 par.addFatigue();
                                 par.addFatigue();
