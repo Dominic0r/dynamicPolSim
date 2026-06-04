@@ -602,7 +602,7 @@ public class Main
         public Person(String name, int startYear, int endYear, int ideology, int loyalty, int ambition, int charisma, int corruption, int pragmatism){
             this.name=name;
             this.startYear=startYear;
-            this.endYear=endYear-10;
+            this.endYear=endYear- ((endYear-startYear)/2);
             this.ideology=ideology;
             this.loyalty= loyalty;
             this.ambition=ambition;
@@ -1144,13 +1144,15 @@ public class Main
                 chalfactor-= initposDistFromJus-goalDistFromJus;
                 
                 
-                chalfactor-= (jus.getCons()/10)*Math.abs(goal-maxPol.getPosition());
+                //chalfactor+= ((jus.getCons()/10)*Math.abs(goal-maxPol.getPosition()))/2;
             }
             if(lean.equalsIgnoreCase("Republic")){
                     if(passedLegandEx){
-                        if(chalfactor< moveBy){
+                        if(chalfactor> 0){
                             //System.out.println("DEBUG chalfactor: "+ chalfactor);
+                            
                             System.out.println("A legal challenge against the bill has been presented");
+                            
                             String yeavotes ="[", novotes="[";
                             
                             int SCapprove = 0;
@@ -4121,12 +4123,40 @@ public static void nationalLean(){
     System.out.print("The Nation leans towards");
     if(reaction> republic +revolution){
         System.out.println("\u001B[38;5;18m Reaction \u001B[0m");
+        if(!lean.equalsIgnoreCase("Reaction")){
+            for(Party par: allParties){
+                if(par.getIdeology()>45){
+                    par.addFatigue();
+                    par.addFatigue();
+                    par.addFatigue();
+                }
+            }
+        }
         lean = "Reaction";
     }else if(republic>= reaction+revolution){
         System.out.println("\u001B[38;5;226m Republic \u001B[0m");
+        if(!lean.equalsIgnoreCase("Republic")){
+            for(Party par: allParties){
+                if(par.getIdeology()>65 && par.getIdeology()<35){
+                    par.addFatigue();
+                    par.addFatigue();
+                    par.addFatigue();
+                }
+            }
+        }
         lean = "Republic";
     }else if(revolution> reaction+republic){
         System.out.println("\u001B[38;5;88m Revolution \u001B[0m");
+        if(!lean.equalsIgnoreCase("Revolution")){
+            for(Party par: allParties){
+                if(par.getIdeology()<55){
+                    par.addFatigue();
+                    par.addFatigue();
+                    par.addFatigue();
+                }
+            }
+        }
+        
         lean = "Revolution";
     }else{
         System.out.println("\u001B[38;5;226m Republic \u001B[0m");
