@@ -53,8 +53,11 @@ public class Main
                         curparscore += (curparscore*par.getRecognition())/2;
                         curparscore -= (curparscore*par.getFatigue())/2;
                         curparscore += par.getPercent()/20;
+                        //System.out.println("curparscore "+ curparscore);
                         
+                        //System.out.println("favscore "+ favscore);
                         if(curparscore-favscore>10){
+                            
                             maxnum = par.proximityWith(this.ideology);
                             maxPar = par;
                         }
@@ -3762,6 +3765,7 @@ public static void checkNullLeadership(){
         checkSCCCdown();
         checkVacancies();
         SCCheck();
+        allFavPar();
         
         for(Party par: allParties){
             if(rulingCoalition.getMemberList().contains(par)){
