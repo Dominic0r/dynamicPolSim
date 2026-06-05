@@ -132,7 +132,9 @@ public class Main
             this.isActive = isActive;
             this.color = color;
             failcount = 0;
-            popularity = 100;
+            popularity = ra.nextInt(100);
+            addFatigue();
+            addFatigue();
         }
         
         public void determineLeadership(){
@@ -2553,7 +2555,7 @@ public static String[][] mapProgside = {
             int maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
-                int curscore = par.getScore() + ra.nextInt(par.getScore()/10 + 1) - ra.nextInt(par.getScore()/10 + 1);
+                int curscore = par.getScore() / (ra.nextInt(3)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -3188,6 +3190,7 @@ public static String[][] mapProgside = {
             if (!alreadyRepresented&& !gro.hasGroupSplintered()) {
                 String newName = gro.getSplinterName();
                 allParties.add(new Party(newName, gro.getIdeology(), true, assignColor(gro.getIdeology())));
+                
                 System.out.println("!!! NEW PARTY FORMED: " + newName + " !!!");
                 gro.toggleSplinter();
                 
