@@ -14,6 +14,8 @@ public class Main
         int satisfaction;
         boolean hasSplintered = false;
         
+        Party favParty = null;
+        
         int activeyear = 0;
         
         public ideoGroup(String name, String splintername, int size, int ideology, int activeyear){
@@ -32,6 +34,23 @@ public class Main
         public int getIdeology(){return ideology;}
         public int getSatisfaction(){return satisfaction;}
         public int getActiveYear(){return activeyear;}
+        
+        public void findFavParty(){
+            Party maxPar = null;
+            int maxnum = Integer.MIN_VALUE;
+            for(Party par: allParties){
+                if(par.proximityWith(this.ideology)> maxnum){
+                    maxnum = par.proximityWith(this.ideology);
+                    maxPar = par;
+                }
+            }
+            
+            if(maxPar!=null){
+                favParty = maxPar;
+            }
+        }
+        
+        public Party getFavPar(){return favParty;}
         
         public boolean hasGroupSplintered(){return hasSplintered;}
         public void toggleSplinter(){
@@ -57,6 +76,8 @@ public class Main
         }
         
     }
+    
+    
     
     public static class Party{
         String name;
@@ -453,7 +474,6 @@ public class Main
             totalweight+=3;
             
             int avgideo = 0;
-            int coaideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
                 double totalWeightedIdeology = 0;
                 int totalSeats = 0;
@@ -467,9 +487,8 @@ public class Main
                 if (totalSeats > 0) {
                     avgideo =(int) (totalWeightedIdeology / totalSeats);
                 }
-                coaideo = (int) totalWeightedIdeology;
             }
-                allIdeoTargets += (coaideo)*3;
+                allIdeoTargets += (avgideo)*3;
                 totalweight+=3;
             
             
@@ -2447,6 +2466,9 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
             
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            if(par == gro.getFavPar()){
+                votesFromThisGroup += votesFromThisGroup/5;
+            }
             
             if(par.getChair()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
@@ -2644,7 +2666,7 @@ public static String[][] mapProgside = {
             par.resetScore();
         }
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        tresh = 70+ra.nextInt(20);
+        tresh = 95;
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -2687,6 +2709,10 @@ public static String[][] mapProgside = {
 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            if(par == gro.getFavPar()){
+                votesFromThisGroup += votesFromThisGroup/5;
+            }
+            
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
@@ -2745,7 +2771,7 @@ public static String[][] mapProgside = {
         }
         acceptables.clear();
         
-        tresh = 65+ra.nextInt(25);
+        tresh = 85;
         
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
@@ -2787,6 +2813,9 @@ public static String[][] mapProgside = {
 
             votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            if(par == gro.getFavPar()){
+                votesFromThisGroup += votesFromThisGroup/5;
+            }
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }
@@ -4266,6 +4295,12 @@ public static void seeDominant(){
     public static void DEBUGDisplayAllActive(){
         for(Person per: activePersons){
             System.out.println(per);
+        }
+    }
+    
+    public static void allFavPar(){
+        for(ideoGroup gro: allGroups){
+            gro.findFavParty();
         }
     }
     
