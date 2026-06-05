@@ -1203,7 +1203,7 @@ public class Main
                                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                             
                                 for(Party par: rulingCoalition.getMemberList()){
-                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/10));
                                 }
                             }else{
                                 System.out.println("The Supreme Court has ruled the policy change unconstitutional in a "+ (SCsize-SCapprove)+ " - "+SCapprove + " ruling, thus blocking its passing");
@@ -1213,7 +1213,7 @@ public class Main
                             maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                             
                                 for(Party par: rulingCoalition.getMemberList()){
-                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/10));
                                 }
                         }
                         
@@ -1222,13 +1222,13 @@ public class Main
                 maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                 
                     for(Party par: rulingCoalition.getMemberList()){
-                        par.setApproval(par.getPopularity()+ (par.getPopularity()/4));
+                        par.setApproval(par.getPopularity()+ (par.getPopularity()/10));
                     }
             }
         }else{
             System.out.println("Vote Failed!");
             for(Party par: rulingCoalition.getMemberList()){
-                par.setApproval(par.getPopularity()- (par.getPopularity()/4));
+                par.setApproval(par.getPopularity()- (par.getPopularity()/10));
                 for(int i=0; i<5;i++){
                     par.addFatigue();
                 }
