@@ -36,12 +36,32 @@ public class Main
         public int getActiveYear(){return activeyear;}
         
         public void findFavParty(){
-            Party maxPar = null;
+            Party maxPar = favParty;
             int maxnum = Integer.MIN_VALUE;
+            int tresh =10;
+            
             for(Party par: allParties){
                 if(par.proximityWith(this.ideology)> maxnum){
-                    maxnum = par.proximityWith(this.ideology);
-                    maxPar = par;
+                    if(favParty!=null && par!=favParty){
+                        int favscore = favParty.proximityWith(this.ideology);
+                        favscore += (favscore*favParty.getRecognition())/2;
+                        favscore -= (favscore*favParty.getFatigue())/2;
+                        favscore += favParty.getPercent()/20;
+                        
+                        
+                        int curparscore = par.proximityWith(this.ideology);
+                        curparscore += (curparscore*par.getRecognition())/2;
+                        curparscore -= (curparscore*par.getFatigue())/2;
+                        curparscore += par.getPercent()/20;
+                        
+                        if(curparscore-favscore>10){
+                            maxnum = par.proximityWith(this.ideology);
+                            maxPar = par;
+                        }
+                    }else{
+                        maxnum = par.proximityWith(this.ideology);
+                        maxPar = par;
+                    }
                 }
             }
             
