@@ -713,7 +713,7 @@ public class Main
                 }
                 
                 prominence += (ambition/10)*5;
-                prominence*= charisma/20;
+                prominence+= (prominence/10)*(charisma/10);
                 if(ra.nextInt(100)<corruption){
                     prominence/= (corruption/10)+1;
                 }
@@ -1258,7 +1258,7 @@ public class Main
             System.out.println("Vote Failed!");
             for(Party par: rulingCoalition.getMemberList()){
                 par.setApproval(par.getPopularity()- (par.getPopularity()/10));
-                for(int i=0; i<5;i++){
+                for(int i=0; i<3;i++){
                     par.addFatigue();
                 }
             }
@@ -2322,6 +2322,7 @@ public static String[][] mapProgside = {
     public static void addActiveGroups(){
         for(ideoGroup gro:allTotalGroups){
             if(gro.getActiveYear()< year&& !allGroups.contains(gro)){
+                //System.out.println("DEBUG GROUP ACTIVATED: "+ gro.getName());
                 allGroups.add(gro);
             }
         }
