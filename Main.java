@@ -2419,16 +2419,16 @@ public static String[][] mapProgside = {
             changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
             if(lean.equalsIgnoreCase("Republic")){
                 if(gro.getIdeology()>65 || gro.getIdeology()<35){
-                changeby-=changeby/4;
+                changeby-=(changeby/10)* (Math.abs(gro.getIdeology()-50)/10);
                 }
             }else{
                 if(lean.equalsIgnoreCase("Reaction")){
                     if(gro.getIdeology()>35){
-                        changeby-=changeby/4;
+                        changeby-=(changeby/10)* (Math.abs(gro.getIdeology()-35)/10);
                     }
                 }else{
                     if(gro.getIdeology()<65){
-                        changeby-=changeby/4;
+                        changeby-=(changeby/10)* (Math.abs(gro.getIdeology()-65)/10);
                     }
                 }
             }
@@ -2443,7 +2443,7 @@ public static String[][] mapProgside = {
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 95;
+        int tresh = 85;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -2483,11 +2483,12 @@ public static String[][] mapProgside = {
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
-
-            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue());
+            
+            double fatigueFactor = Math.min(par.getFatigue(), 0.9);
+            votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
             //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             
-            votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()*2));
+            votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
             
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
@@ -2495,7 +2496,7 @@ public static String[][] mapProgside = {
             }
             
             if(par.getChair()!=null){
-            votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
+            //votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
             }
             
             
@@ -2522,14 +2523,7 @@ public static String[][] mapProgside = {
         for(Party par: allParties){
             par.setPercent(0);
             totalVotes += par.getScore();
-            if(par.getPercent()>30){
-                par.incrementRecognition();
-                par.addFatigue();
-            }
-            for(int i=0; i<par.getPercent()/10;i++){
-                par.incrementRecognition();
-                par.addFatigue();
-            }
+            
             
         }
         // proportional
@@ -2559,7 +2553,7 @@ public static String[][] mapProgside = {
             int maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
-                int curscore = par.getScore()/ (ra.nextInt(3)+1);
+                int curscore = par.getScore() + ra.nextInt(par.getScore()/10 + 1) - ra.nextInt(par.getScore()/10 + 1);
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -2588,6 +2582,7 @@ public static String[][] mapProgside = {
             maxpar.setPercent(maxpar.getPercent()+1);
             }
         }
+        
         
         
     }
@@ -3729,6 +3724,12 @@ public static void updateBasedOnLean(){
             }else{
                 par.decreaseFatigue();
             }
+        }else if(lean.equalsIgnoreCase("Republic")){
+            if(par.getIdeology()>65 || par.getIdeology()<35){
+                distance = Math.abs(par.getIdeology()-50);
+            }
+            
+            
         }
         for(int i=0; i<distance;i++){
             par.addFatigue();
