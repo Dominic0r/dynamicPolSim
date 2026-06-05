@@ -415,6 +415,11 @@ public class Main
         
         
         public void ideoDrift(){
+            int allIdeoTargets = 0;
+            int totalweight = 0;
+            
+            int finaltargetIdeo = 0; // = allIdeoTargets/totalweight
+            
             if(score == 0) return;
             double weightedIdeologySum = 0;
             ideoGroup maxGroup = null;
@@ -429,15 +434,10 @@ public class Main
             }
             largestGroup = maxGroup;
             int targetIdeo = maxGroup.getIdeology();
-            int driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-            
-            if(ra.nextInt(10)<5){
-                if(this.ideology < targetIdeo) this.ideology+= driftspeed;
-                if(this.ideology> targetIdeo) this.ideology-= driftspeed;
-            }
+            allIdeoTargets += targetIdeo*5;
+            totalweight+=5;
             
             
-            this.ideology += ra.nextInt(1)-ra.nextInt(1);
             
             int minsat = 1000;
             ideoGroup minGroup = null;
@@ -449,15 +449,11 @@ public class Main
             }
             
             targetIdeo = minGroup.getIdeology();
-            driftspeed = (this.ideology >25 && this.ideology <75)? 2:1;
-            
-            if(ra.nextInt(10)<5){
-                if(this.ideology < targetIdeo) this.ideology+= driftspeed;
-                if(this.ideology> targetIdeo) this.ideology-= driftspeed;
-            }
-            
+            allIdeoTargets += targetIdeo*3;
+            totalweight+=3;
             
             int avgideo = 0;
+            int coaideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
                 double totalWeightedIdeology = 0;
                 int totalSeats = 0;
@@ -471,16 +467,10 @@ public class Main
                 if (totalSeats > 0) {
                     avgideo =(int) (totalWeightedIdeology / totalSeats);
                 }
+                coaideo = (int) totalWeightedIdeology;
             }
-            if(ra.nextInt(10)<5){
-                if(this.ideology < avgideo) this.ideology+= driftspeed/2;
-                if(this.ideology> avgideo) this.ideology-= driftspeed/2;
-            }
-            
-            if(ra.nextInt(10)<5){
-                if(this.ideology>75) this.ideology++;
-                if(this.ideology<25) this.ideology--;
-            }
+                allIdeoTargets += (coaideo)*3;
+                totalweight+=3;
             
             
             Party maxpar=null;
@@ -498,34 +488,54 @@ public class Main
                     minpar=par;
                 }
             }
-            if(ra.nextInt(10)<5){
+            
+            
                 if(this.ideology > maxpar.getIdeology()){
-                this.ideology--;
+                //this.ideology--;
+                
+                allIdeoTargets += (this.ideology-1)*1;
+                totalweight+=1;
+                
                 }else{
-                    this.ideology++;
+                    allIdeoTargets += (this.ideology+1)*1;
+                    totalweight+=1;
                 }
                 
                 if(this.ideology > minpar.getIdeology()){
-                    this.ideology++;
+                    allIdeoTargets += (this.ideology+1)*1;
+                    totalweight+=1;
                 }else{
-                    this.ideology--;
+                    allIdeoTargets += (this.ideology-1)*1;
+                    totalweight+=1;
                 }
-            }
+            
             
             if(standardBearer!=null){
                 if(this.ideology > standardBearer.getIdeology()){
-                    this.ideology--;
+                    allIdeoTargets += (this.ideology-1)*2;
+                    totalweight+=2;
                 }else{
-                    this.ideology++;
+                    allIdeoTargets += (this.ideology+1)*2;
+                    totalweight+=2;
                 }
             }
             
             if(chairman!=null){
                 if(this.ideology > chairman.getIdeology()){
-                    this.ideology--;
+                    allIdeoTargets += (this.ideology-1)*2;
+                    totalweight+=2;
                 }else{
-                    this.ideology++;
+                    allIdeoTargets += (this.ideology+1)*2;
+                    totalweight+=2;
                 }
+            }
+            
+            finaltargetIdeo = allIdeoTargets/totalweight;
+            
+            if(this.ideology> finaltargetIdeo){
+                this.ideology -= ra.nextInt(2)+1;
+            }else{
+                this.ideology += ra.nextInt(2)+1;
             }
             
             if(this.ideology> 100){
@@ -2488,7 +2498,6 @@ public static String[][] mapProgside = {
         
         
         
-        //int threshhold = 5+ (allParties.size()/2);
         int threshhold = 5;
         
         List<Party> partiesOverTresh = new ArrayList<>();
