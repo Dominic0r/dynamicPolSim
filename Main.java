@@ -135,10 +135,7 @@ public class Main
             this.isActive = isActive;
             this.color = color;
             failcount = 0;
-            popularity = 10;
-            addFatigue();
-            addFatigue();
-            addFatigue();
+            popularity = 20;
             momentum = ra.nextInt(10);
         }
         
