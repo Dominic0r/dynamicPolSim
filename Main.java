@@ -156,6 +156,10 @@ public class Main
             }
         }
         
+        public void addMomentum(int toAdd){
+            momentum+= toAdd;
+        }
+        
         public void determineLeadership(){
             List<Person> memberPersons = new ArrayList();
             for(Person per: activePersons){
@@ -532,8 +536,8 @@ public class Main
                     avgideo =(int) (totalWeightedIdeology / totalSeats);
                 }
             }
-                allIdeoTargets += (avgideo)*3;
-                totalweight+=3;
+                allIdeoTargets += (avgideo)*2;
+                totalweight+=2;
             
             
             Party maxpar=null;
@@ -601,6 +605,11 @@ public class Main
                 allIdeoTargets+= (this.ideology-5)*1;
                 totalweight+= 1;
             }
+            
+            int consmult = 10-(this.chairman.getPragmatism()/10);
+            
+            allIdeoTargets+= this.ideology *consmult;
+            totalweight+=consmult;
             
             finaltargetIdeo = allIdeoTargets/totalweight;
             
@@ -693,6 +702,8 @@ public class Main
             this.pragmatism = pragmatism;
             
         }
+        
+        public int getPragmatism(){return pragmatism;}
         public int proximityWith(Party par){
             return 100-Math.abs(par.getIdeology()-ideology);
         }
@@ -2340,7 +2351,7 @@ public static String[][] mapProgside = {
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 15, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
-        //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
+        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
         //Early 20th Century
@@ -3367,11 +3378,19 @@ public static void events(){
                 break;
             case 2:
                 System.out.println("Labor Strikes!");
-            leftShift();
+            for(Party par: allParties){
+                if(par.getIdeology()>65){
+                    par.addMomentum(5);
+                }
+            }
                 break;
             case 3:
                 System.out.println("Immigration Crisis!");
-            rightShift();
+            for(Party par: allParties){
+                if(par.getIdeology()<35){
+                    par.addMomentum(5);
+                }
+            }
                 break;
             case 4:
                 if(lean.equalsIgnoreCase("Republic")){
@@ -3440,6 +3459,7 @@ public static void events(){
                             gro.updateSatisfaction(-50);
                         }
                     }
+                    targetpar.addMomentum(-5);
             break;
             case 6:
                 targetpar = allParties.get(ra.nextInt(allParties.size())); 
@@ -3569,7 +3589,7 @@ public static void genSatis(){
     if(allParties.size()<4){
         int numOfPars = allParties.size();
         for(ideoGroup gro: allGroups){
-            int toRem = (ra.nextInt(10)*(4-numOfPars))*-1;
+            int toRem = (ra.nextInt(10)*(numOfPars-2));
             gro.updateSatisfaction(toRem);
         }
         
