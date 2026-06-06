@@ -21,7 +21,7 @@ public class Main
         public ideoGroup(String name, String splintername, int size, int ideology, int activeyear){
             this.name = name;
             this.splintername = splintername;
-            this.size = size;
+            this.size = size*10;
             this.ideology = ideology;
             this.satisfaction = 100;
             this.activeyear = activeyear;
@@ -30,7 +30,7 @@ public class Main
         
         public String getSplinterName(){return splintername;}
         public String getName(){return name;}
-        public int getSize(){return size*10;}
+        public int getSize(){return size;}
         public int getIdeology(){return ideology;}
         public int getSatisfaction(){return satisfaction;}
         public int getActiveYear(){return activeyear;}
@@ -3820,7 +3820,7 @@ public static void allMomentumUpdate(){
     }
 }
     public static void updateTick(){
-        //events();
+        events();
         addActiveGroups();
         checkFails();
         updateGroupSize();
