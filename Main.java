@@ -593,6 +593,15 @@ public class Main
                 }
             }
             
+            if(this.ideology>65){
+                allIdeoTargets+= (this.ideology+5)*1;
+                totalweight+= 1;
+            }
+            if(this.ideology<35){
+                allIdeoTargets+= (this.ideology-5)*1;
+                totalweight+= 1;
+            }
+            
             finaltargetIdeo = allIdeoTargets/totalweight;
             
             if(this.ideology> finaltargetIdeo){
@@ -2311,48 +2320,52 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Rural Peasantry", "Conservative Peoples Party ", 25, 25, 1832));
         allTotalGroups.add(new ideoGroup("Conservative Clerical Class", "National Purity Party", 5, 8, 1832));
         allTotalGroups.add(new ideoGroup("Landowning Farmers", "National Independent Congress", 5, 18, 1832));
-        allTotalGroups.add(new ideoGroup("Urban Middle Class", "Peoples Democratic Party", 15, 30, 1832));
+        allTotalGroups.add(new ideoGroup("Urban Middle Class", "Peoples Democratic Party", 20, 30, 1832));
         allTotalGroups.add(new ideoGroup("Reformist Aristocrats", "Democratic Reform Party", 20, 35, 1832));
         allTotalGroups.add(new ideoGroup("Liberal Intelligentsia", "Liberal Peoples Party", 18, 40, 1832));
-        allTotalGroups.add(new ideoGroup("New Middle Class", "Democratic Action Movement", 25, 45, 1832));
-        allTotalGroups.add(new ideoGroup("Religious Centrists", "National Center Party", 15, 50, 1832));
-        allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 24, 60, 1832));
-        allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 50, 70, 1832));
-        allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 30, 75, 1832));
-        allTotalGroups.add(new ideoGroup("Revolutionaries", "Sustained Revolution Movement", 30, 80, 1832));
+        allTotalGroups.add(new ideoGroup("New Middle Class", "Democratic Action Movement", 30, 45, 1832));
+        allTotalGroups.add(new ideoGroup("Religious Centrists", "National Center Party", 20, 50, 1832));
+        allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 30, 55, 1832));
+        allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 35, 65, 1832));
+        allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 20, 75, 1832));
+        allTotalGroups.add(new ideoGroup("Revolutionaries", "Sustained Revolution Movement", 15, 80, 1832));
         
         //Mid 19th Century
-        allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 5, 16, 1860));
+        allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 10, 16, 1860));
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
         allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 17, 1874));
         allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
-        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 10, 50, 1880));
+        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 15, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
         allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
         //Early 20th Century
-        allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
-        allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 15, 42, 1905));
-        allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 65, 1909));
+        //allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
+        allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 20, 42, 1905));
+        allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 55, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
-        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 55, 1918));
+        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 60, 1918));
         allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 20, 38, 1918));
         allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 90, 1923));
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
         // Mid 20th Century
-        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
+        //allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
+        allTotalGroups.add(new ideoGroup("Suburban Middle Class", "Citizens Action Movement", 30, 40, 1950));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
         allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 20, 58, 1961));
-        allTotalGroups.add(new ideoGroup("Religious Socialists", "Holy Movement of Workers", 10, 68, 1965));
+        allTotalGroups.add(new ideoGroup("Religious Socialists", "Peoples Salvation Movement", 10, 68, 1965));
         
         // Late 20th Century
+        
         allTotalGroups.add(new ideoGroup("Neoliberals", "Liberal Democratic Party", 25, 40, 1970));
+        allTotalGroups.add(new ideoGroup("New Age Spiritualists", "National Awakening Party", 10, 30, 1974));
         allTotalGroups.add(new ideoGroup("Revolutionary Conservatives", "New National Conservative Movement", 13, 35, 1976));
+        allTotalGroups.add(new ideoGroup("Urban Professional Class", "Democracy and Stability", 20, 38, 1979));
         allTotalGroups.add(new ideoGroup("Neo-Fascists", "Nationalist Peoples List", 10, 10, 1980));
         allTotalGroups.add(new ideoGroup("Neoconservatives", "Republican Democratic Party", 20, 39, 1988));
         allTotalGroups.add(new ideoGroup("Environemntalists", "National Green Movement", 15, 50, 1990));
