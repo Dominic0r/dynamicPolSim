@@ -2323,43 +2323,43 @@ public static String[][] mapProgside = {
         
         //Mid 19th Century
         allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 5, 16, 1860));
-        allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 30, 65, 1865));
+        allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
         allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 17, 1874));
-        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 20, 65, 1876));
+        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 10, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
-        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 20, 70, 1889));
+        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
         //Early 20th Century
-        allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 20, 70, 1902));
+        allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
         allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 15, 42, 1905));
-        allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 60, 1909));
+        allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 65, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
-        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 65, 1918));
-        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 18, 38, 1918));
+        allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 55, 1918));
+        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 20, 38, 1918));
         allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 90, 1923));
-        allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 16, 53, 1927));
+        allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
         // Mid 20th Century
-        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 13, 90, 1949));
+        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
-        allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 23, 58, 1961));
-        allTotalGroups.add(new ideoGroup("Religious Socialists", "Holy Movement of Workers", 13, 68, 1965));
+        allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 20, 58, 1961));
+        allTotalGroups.add(new ideoGroup("Religious Socialists", "Holy Movement of Workers", 10, 68, 1965));
         
         // Late 20th Century
-        allTotalGroups.add(new ideoGroup("Neoliberals", "Liberal Democratic Party", 16, 40, 1970));
+        allTotalGroups.add(new ideoGroup("Neoliberals", "Liberal Democratic Party", 25, 40, 1970));
         allTotalGroups.add(new ideoGroup("Revolutionary Conservatives", "New National Conservative Movement", 13, 35, 1976));
         allTotalGroups.add(new ideoGroup("Neo-Fascists", "Nationalist Peoples List", 10, 10, 1980));
-        allTotalGroups.add(new ideoGroup("Neoconservatives", "Republican Democratic Party", 16, 39, 1988));
+        allTotalGroups.add(new ideoGroup("Neoconservatives", "Republican Democratic Party", 20, 39, 1988));
         allTotalGroups.add(new ideoGroup("Environemntalists", "National Green Movement", 15, 50, 1990));
         
         //21st Century
-        allTotalGroups.add(new ideoGroup("Right Wing Populists", "Patriotic Liberty Party", 16, 30, 2008));
-        allTotalGroups.add(new ideoGroup("Left Wing Populists", "Democratic Revolutionary Movement", 16, 80, 2010));
+        allTotalGroups.add(new ideoGroup("Right Wing Populists", "Patriotic Liberty Party", 25, 30, 2008));
+        allTotalGroups.add(new ideoGroup("Left Wing Populists", "Democratic Revolutionary Movement", 25, 80, 2010));
         
     }
     
@@ -2493,7 +2493,7 @@ public static String[][] mapProgside = {
         }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -2505,14 +2505,14 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
             
-            double fatigueFactor = Math.min(par.getFatigue(), 0.90);
-            votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
+            //double fatigueFactor = Math.min(par.getFatigue(), 0.90);
+            //votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
             //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             //votesFromThisGroup -= (votesFromThisGroup*par.getFatigue())/2;
             
-            votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
+            //votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
             
-            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            //votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/10;
             }else{
@@ -2740,7 +2740,7 @@ public static String[][] mapProgside = {
         }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -2752,7 +2752,7 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+            /*votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/5;
@@ -2760,7 +2760,15 @@ public static String[][] mapProgside = {
             
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
+            }*/
+            if(par == gro.getFavPar()){
+                votesFromThisGroup += votesFromThisGroup/10;
+            }else{
+                votesFromThisGroup -= votesFromThisGroup/10;
             }
+            
+            votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
@@ -2844,7 +2852,7 @@ public static String[][] mapProgside = {
         }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0));
+            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -2856,14 +2864,23 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
-            votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
+            /*votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/5;
             }
             if(par.getStandardB()!=null){
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
+            }*/
+            
+            if(par == gro.getFavPar()){
+                votesFromThisGroup += votesFromThisGroup/10;
+            }else{
+                votesFromThisGroup -= votesFromThisGroup/10;
             }
+            
+            votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
+            
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
