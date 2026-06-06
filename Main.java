@@ -526,8 +526,8 @@ public class Main
             }
             
             targetIdeo = minGroup.getIdeology();
-            allIdeoTargets += targetIdeo*2;
-            totalweight+=2;
+            allIdeoTargets += targetIdeo*1;
+            totalweight+=1;
             
             int avgideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
@@ -563,54 +563,36 @@ public class Main
                     minpar=par;
                 }
             }
+            allIdeoTargets += maxpar.getIdeology()*1;
+            totalweight+=1;
             
-            
-                if(this.ideology > maxpar.getIdeology()){
-                //this.ideology--;
-                
-                allIdeoTargets += (this.ideology-1)*1;
-                totalweight+=1;
-                
-                }else{
-                    allIdeoTargets += (this.ideology+1)*1;
-                    totalweight+=1;
-                }
                 
                 if(this.ideology > minpar.getIdeology()){
-                    allIdeoTargets += (this.ideology+1)*1;
+                    allIdeoTargets += (this.ideology+5)*1;
                     totalweight+=1;
                 }else{
-                    allIdeoTargets += (this.ideology-1)*1;
+                    allIdeoTargets += (this.ideology-5)*1;
                     totalweight+=1;
                 }
             
             
             if(standardBearer!=null){
-                if(this.ideology > standardBearer.getIdeology()){
-                    allIdeoTargets += (this.ideology-1)*2;
-                    totalweight+=2;
-                }else{
-                    allIdeoTargets += (this.ideology+1)*2;
-                    totalweight+=2;
-                }
+                allIdeoTargets+= standardBearer.getIdeology()*2;
+                totalweight+=2;
+                
             }
             
             if(chairman!=null){
-                if(this.ideology > chairman.getIdeology()){
-                    allIdeoTargets += (this.ideology-1)*2;
-                    totalweight+=2;
-                }else{
-                    allIdeoTargets += (this.ideology+1)*2;
-                    totalweight+=2;
-                }
+                allIdeoTargets+= chairman.getIdeology()*2;
+                totalweight+=2;
             }
             
             if(this.ideology>65){
-                allIdeoTargets+= (this.ideology+5)*1;
+                allIdeoTargets+= (this.ideology+10)*1;
                 totalweight+= 1;
             }
             if(this.ideology<35){
-                allIdeoTargets+= (this.ideology-5)*1;
+                allIdeoTargets+= (this.ideology-10)*1;
                 totalweight+= 1;
             }
             
@@ -2755,7 +2737,7 @@ public static String[][] mapProgside = {
             par.resetScore();
         }
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        tresh = 95;
+        tresh = 90;
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -2868,7 +2850,7 @@ public static String[][] mapProgside = {
         }
         acceptables.clear();
         
-        tresh = 85;
+        tresh = 75;
         
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
@@ -3599,7 +3581,7 @@ public static void genSatis(){
     if(allParties.size()<4){
         int numOfPars = allParties.size();
         for(ideoGroup gro: allGroups){
-            int toRem = (ra.nextInt(10)*(numOfPars-2));
+            int toRem = (ra.nextInt(10)*(numOfPars-4));
             gro.updateSatisfaction(toRem);
         }
         
