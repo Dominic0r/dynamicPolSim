@@ -138,7 +138,8 @@ public class Main
             popularity = 10;
             addFatigue();
             addFatigue();
-            momentum = ra.nextInt(20);
+            addFatigue();
+            momentum = ra.nextInt(10);
         }
         
         public int getMomentum(){ return momentum;}
@@ -516,8 +517,8 @@ public class Main
             }
             
             targetIdeo = minGroup.getIdeology();
-            allIdeoTargets += targetIdeo*3;
-            totalweight+=3;
+            allIdeoTargets += targetIdeo*2;
+            totalweight+=2;
             
             int avgideo = 0;
             if(rulingCoalition !=null && rulingCoalition.getMemberList().contains(this)){
@@ -558,8 +559,8 @@ public class Main
                 if(this.ideology > maxpar.getIdeology()){
                 //this.ideology--;
                 
-                allIdeoTargets += (this.ideology-1)*1;
-                totalweight+=1;
+                allIdeoTargets -= (this.ideology-1)*1;
+                totalweight-=1;
                 
                 }else{
                     allIdeoTargets += (this.ideology+1)*1;
@@ -570,8 +571,8 @@ public class Main
                     allIdeoTargets += (this.ideology+1)*1;
                     totalweight+=1;
                 }else{
-                    allIdeoTargets += (this.ideology-1)*1;
-                    totalweight+=1;
+                    allIdeoTargets -= (this.ideology-1)*1;
+                    totalweight-=1;
                 }
             
             
@@ -2466,7 +2467,7 @@ public static String[][] mapProgside = {
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 85;
+        int tresh = 75+ra.nextInt(20);
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -2507,7 +2508,7 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
             
-            double fatigueFactor = Math.min(par.getFatigue(), 0.95);
+            double fatigueFactor = Math.min(par.getFatigue(), 0.90);
             votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
             //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
             //votesFromThisGroup -= (votesFromThisGroup*par.getFatigue())/2;
@@ -2516,9 +2517,9 @@ public static String[][] mapProgside = {
             
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
-                votesFromThisGroup += votesFromThisGroup/4;
+                votesFromThisGroup += votesFromThisGroup/10;
             }else{
-                votesFromThisGroup -= votesFromThisGroup/4;
+                votesFromThisGroup -= votesFromThisGroup/10;
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
@@ -2566,7 +2567,7 @@ public static String[][] mapProgside = {
         
         
         
-        int threshhold = 5;
+        int threshhold = 5 + allParties.size()/2;
         
         List<Party> partiesOverTresh = new ArrayList<>();
         
