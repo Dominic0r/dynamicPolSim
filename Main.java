@@ -30,7 +30,7 @@ public class Main
         
         public String getSplinterName(){return splintername;}
         public String getName(){return name;}
-        public int getSize(){return size;}
+        public int getSize(){return size*10;}
         public int getIdeology(){return ideology;}
         public int getSatisfaction(){return satisfaction;}
         public int getActiveYear(){return activeyear;}
@@ -556,8 +556,8 @@ public class Main
                 if(this.ideology > maxpar.getIdeology()){
                 //this.ideology--;
                 
-                allIdeoTargets -= (this.ideology-1)*1;
-                totalweight-=1;
+                allIdeoTargets += (this.ideology-1)*1;
+                totalweight+=1;
                 
                 }else{
                     allIdeoTargets += (this.ideology+1)*1;
@@ -568,8 +568,8 @@ public class Main
                     allIdeoTargets += (this.ideology+1)*1;
                     totalweight+=1;
                 }else{
-                    allIdeoTargets -= (this.ideology-1)*1;
-                    totalweight-=1;
+                    allIdeoTargets += (this.ideology-1)*1;
+                    totalweight+=1;
                 }
             
             
@@ -2467,7 +2467,7 @@ public static String[][] mapProgside = {
                 }
             }
             
-            gro.updateSize(ra.nextInt(((changeby+1)/ (((year-gro.getActiveYear())/10)+1))+1));
+            gro.updateSize(ra.nextInt(((changeby+1)/ (((year-gro.getActiveYear())/20)+1))+1));
         }
     }
     
@@ -2514,9 +2514,13 @@ public static String[][] mapProgside = {
     }
 
     if (hasvoted) {
+        //System.out.println("Group: "+ gro.getName());
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
-            int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
+            
+            double tempvfg = (gro.getSize() * shareOfGroup);
+            int votesFromThisGroup = (int) tempvfg;
+            //System.out.println("tempvfg: "+ tempvfg);
             
             //double fatigueFactor = Math.min(par.getFatigue(), 0.90);
             //votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
@@ -2526,18 +2530,24 @@ public static String[][] mapProgside = {
             //votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
             
             //votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            //System.out.println("Before getfavpar: "+ votesFromThisGroup);
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/10;
             }else{
                 votesFromThisGroup -= votesFromThisGroup/10;
             }
-            
+            //System.out.println("Before momentum: "+ votesFromThisGroup);
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
             
             if(par.getChair()!=null){
             //votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
             }
             
+            if(votesFromThisGroup <1){
+                votesFromThisGroup = 1;
+            }
+            
+            //System.out.println("Party: "+ par.getName()+ " | votesFromThisGroup: "+ votesFromThisGroup);
             
             
             par.addVotes(votesFromThisGroup+1);
@@ -3229,7 +3239,7 @@ public static String[][] mapProgside = {
     public static void checkForNewParties() {
     for (ideoGroup gro : allGroups) {
         
-        if (gro.getSatisfaction() < 100/allParties.size()) {
+        if (gro.getSatisfaction() < 100/(allParties.size()*2)) {
             
             
             boolean alreadyRepresented = false;
