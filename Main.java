@@ -2327,20 +2327,20 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Religious Centrists", "National Center Party", 20, 50, 1832));
         allTotalGroups.add(new ideoGroup("Republican Core Supporters", "New Republican Movement", 30, 55, 1832));
         allTotalGroups.add(new ideoGroup("Urban Working Class", "Workers Democratic Party", 35, 65, 1832));
-        allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 20, 75, 1832));
+        //allTotalGroups.add(new ideoGroup("Radicalized Citizens", "National Radical Alliance", 20, 75, 1832));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Sustained Revolution Movement", 15, 80, 1832));
         
         //Mid 19th Century
         allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 10, 16, 1860));
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
-        allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
+        //allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 17, 1874));
         allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 15, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
-        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
+        //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Revolution Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
         //Early 20th Century
@@ -3810,7 +3810,7 @@ public static void allMomentumUpdate(){
     }
 }
     public static void updateTick(){
-        events();
+        //events();
         addActiveGroups();
         checkFails();
         updateGroupSize();
