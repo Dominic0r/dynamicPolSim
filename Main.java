@@ -132,7 +132,7 @@ public class Main
             this.isActive = isActive;
             this.color = color;
             failcount = 0;
-            popularity = ra.nextInt(100);
+            popularity = 10;
             addFatigue();
             addFatigue();
         }
@@ -2495,6 +2495,8 @@ public static String[][] mapProgside = {
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/5;
+            }else{
+                votesFromThisGroup -= votesFromThisGroup/5;
             }
             
             if(par.getChair()!=null){
