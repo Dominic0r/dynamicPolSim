@@ -116,6 +116,9 @@ public class Main
         int delegates = 0;
         Map<Party, Integer> relations = new HashMap<>();
         
+        int momentum = 0;
+        boolean momentumGoingUp = true;
+        
         ideoGroup largestGroup = null;
         
         Person standardBearer; // for president 
@@ -135,6 +138,24 @@ public class Main
             popularity = 10;
             addFatigue();
             addFatigue();
+            momentum = ra.nextInt(20);
+        }
+        
+        public int getMomentum(){ return momentum;}
+        public void updateMomentum(){
+            if(momentumGoingUp){
+                momentum++;
+                if(ra.nextInt(5)+15 < momentum){
+                    momentumGoingUp=false;
+                    
+                }
+            }else{
+                momentum--;
+                if(ra.nextInt(5) > momentum){
+                    momentumGoingUp=false;
+                    
+                }
+            }
         }
         
         public void determineLeadership(){
@@ -2486,18 +2507,21 @@ public static String[][] mapProgside = {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
             
-            double fatigueFactor = Math.min(par.getFatigue(), 0.9);
+            double fatigueFactor = Math.min(par.getFatigue(), 0.95);
             votesFromThisGroup -= (votesFromThisGroup * fatigueFactor);
             //votesFromThisGroup = IdeoCheck(votesFromThisGroup, par);
+            //votesFromThisGroup -= (votesFromThisGroup*par.getFatigue())/2;
             
             votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
             
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
-                votesFromThisGroup += votesFromThisGroup/5;
+                votesFromThisGroup += votesFromThisGroup/4;
             }else{
-                votesFromThisGroup -= votesFromThisGroup/5;
+                votesFromThisGroup -= votesFromThisGroup/4;
             }
+            
+            votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
             
             if(par.getChair()!=null){
             //votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
@@ -2518,7 +2542,7 @@ public static String[][] mapProgside = {
         satischange -= ra.nextInt(10);
     }
     
-    satischange += ra.nextInt(3) - ra.nextInt(3);
+    //satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange);
 }
         
@@ -3751,6 +3775,12 @@ public static void checkNullLeadership(){
         }
     }
 }
+
+public static void allMomentumUpdate(){
+    for(Party par: allParties){
+        par.updateMomentum();
+    }
+}
     public static void updateTick(){
         events();
         addActiveGroups();
@@ -3772,6 +3802,7 @@ public static void checkNullLeadership(){
         checkVacancies();
         SCCheck();
         allFavPar();
+        allMomentumUpdate();
         
         for(Party par: allParties){
             if(rulingCoalition.getMemberList().contains(par)){
