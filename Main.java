@@ -168,6 +168,14 @@ public class Main
                 }
             }
             
+            if(memberPersons.size()==0){
+                momentum=0;
+                popularity=1;
+                for(int i=0; i<10; i++){
+                    addFatigue();
+                }
+            }
+            
             
             
             int maxnum = Integer.MIN_VALUE;
@@ -606,10 +614,12 @@ public class Main
                 totalweight+= 1;
             }
             
+            if(this.chairman!= null){
             int consmult = 10-(this.chairman.getPragmatism()/10);
             
             allIdeoTargets+= this.ideology *consmult;
             totalweight+=consmult;
+            }
             
             finaltargetIdeo = allIdeoTargets/totalweight;
             
@@ -730,7 +740,7 @@ public class Main
             int maxnum = Integer.MIN_VALUE;
             
             for(Party par: allParties){
-                int points = ((proximityWith(par)/4)*3);
+                int points = proximityWith(par);
                 if(par == currentParty){
                     points += points/2;
                     points *= (loyalty/20)+1;
