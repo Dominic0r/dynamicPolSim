@@ -3371,6 +3371,7 @@ public static void events(){
             case 2:
                 System.out.println("Labor Strikes!");
             for(Party par: allParties){
+                leftShift();
                 if(par.getIdeology()>65){
                     par.addMomentum(5);
                 }
@@ -3378,6 +3379,7 @@ public static void events(){
                 break;
             case 3:
                 System.out.println("Immigration Crisis!");
+                rightShift();
             for(Party par: allParties){
                 if(par.getIdeology()<35){
                     par.addMomentum(5);
@@ -3527,31 +3529,24 @@ public static void radicalizeVoters() {
     }
 }
 
-public static void shiftVoters(int magnitude) {
+public static void shiftVoters(int base) {
     Map<ideoGroup, Integer> changes = new HashMap<>();
     
     for (ideoGroup gro : allGroups) {
-        int defectors = gro.getSize() / 100;
-        
-        changes.put(gro, changes.getOrDefault(gro, 0) - defectors);
-        
-        ideoGroup target = findClosestGroup(gro.getIdeology() + magnitude);
-        
-        if (target != null) {
-            changes.put(target, changes.getOrDefault(target, 0) + defectors);
+        if(gro.getIdeology() > base-20 && gro.getIdeology()< base+20){
+            gro.updateSize(gro.getSize()/4);
+        }else{
+            gro.updateSize((gro.getSize()/4)*-1);
         }
     }
 
-    for (Map.Entry<ideoGroup, Integer> entry : changes.entrySet()) {
-        entry.getKey().updateSize(entry.getValue());
-    }
 }
 
 public static void leftShift(){
-    shiftVoters(10);
+    shiftVoters(75);
 }
 public static void rightShift(){
-    shiftVoters(-10);
+    shiftVoters(25);
 }
 
 public static void centerShift(){
