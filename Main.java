@@ -952,13 +952,13 @@ public class Main
         public static void fillVacancies(){
             int ideology=0;
             int preswei = 3;
-            int presideo = President.getIdeology()*preswei;
+            int presideo = President.getStandardB().getIdeology()*preswei;
             
             int pmwei = 1;
-            int pmideo = rulingCoalition.getLeader().getIdeology()*pmwei;
+            int pmideo = rulingCoalition.getLeader().getChair().getIdeology()*pmwei;
             
             int speakerwei = 2;
-            int speakerideo = speaker.getIdeology()*speakerwei;
+            int speakerideo = speaker.getForSpeak().getIdeology()*speakerwei;
             
             int finalideo = (presideo+pmideo+speakerideo)/(preswei+pmwei+speakerwei);
             supremeCourt.add(new SCJustice(finalideo));
@@ -1189,13 +1189,13 @@ public class Main
             tersh -= ((prespartyyesvotes*100)/ (President.getPercent()+1))/2;
             
             
-            int goalDistFromPres = Math.abs(President.getIdeology()-goal);
-                int initposDistFromPres = Math.abs(President.getIdeology()-maxPol.getPosition());
+            int goalDistFromPres = Math.abs(President.getStandardB().getIdeology()-goal);
+                int initposDistFromPres = Math.abs(President.getStandardB().getIdeology()-maxPol.getPosition());
                 
             
-            int presdif = 100- (Math.abs(President.getIdeology()-goal)); 
+            int presdif = 100- (Math.abs(President.getStandardB().getIdeology()-goal)); 
             presdif += (initposDistFromPres-goalDistFromPres)*2;
-            tersh -= (50-Math.abs(President.getIdeology()-50))/2;
+            tersh -= (50-Math.abs(President.getStandardB().getIdeology()-50))/2;
             //System.out.println("presdif: " +presdif);
             //System.out.println("tersh: " +tersh);
             if(presdif < tersh){
@@ -1220,20 +1220,26 @@ public class Main
                 
                 passedLegandEx = true;
             }
-            int chalfactor = ra.nextInt(50);
+            int chalfactor = 0;
+            int chaltresh = supremeCourt.size()/4;
             for(SCJustice jus : supremeCourt){
                 
                 int goalDistFromJus = Math.abs(jus.getIdeology()-goal);
                 int initposDistFromJus = Math.abs(jus.getIdeology()-maxPol.getPosition());
+                int curpoi = initposDistFromJus-goalDistFromJus;
                 
-                chalfactor-= initposDistFromJus-goalDistFromJus;
+                
+                if(curpoi > 5){
+                    //System.out.println("curpoi:"+ curpoi);
+                    chalfactor++;
+                }
                 
                 
                 //chalfactor+= ((jus.getCons()/10)*Math.abs(goal-maxPol.getPosition()))/2;
             }
             if(lean.equalsIgnoreCase("Republic")){
                     if(passedLegandEx){
-                        if(chalfactor> 0){
+                        if(chalfactor> chaltresh){
                             //System.out.println("DEBUG chalfactor: "+ chalfactor);
                             
                             System.out.println("A legal challenge against the bill has been presented");
