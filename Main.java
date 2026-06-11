@@ -141,18 +141,67 @@ public class Main
         
         public int getMomentum(){ return momentum;}
         public void updateMomentum(){
-            if(momentumGoingUp){
-                momentum++;
-                if(ra.nextInt(5)+15 < momentum){
-                    momentumGoingUp=false;
-                    
+            
+            if(lean.equalsIgnoreCase("Republic")){
+                if(momentumGoingUp){
+                    momentum++;
+                    if(ra.nextInt(5)+15 < momentum){
+                        momentumGoingUp=false;
+                        
+                    }
+                }else{
+                    momentum--;
+                    if(ra.nextInt(5) > momentum){
+                        momentumGoingUp=false;
+                        
+                    }
                 }
+                
+                
+            }else if(lean.equalsIgnoreCase("Reaction")){
+                if(this.ideology<40){
+                    if(momentumGoingUp){
+                        momentum++;
+                        if(ra.nextInt(5)+15 < momentum){
+                            momentumGoingUp=false;
+                            
+                        }
+                    }else{
+                        momentum--;
+                        if(ra.nextInt(5) > momentum){
+                            momentumGoingUp=false;
+                        
+                        }
+                    }
+                }else{
+                    momentumGoingUp = false;
+                    momentum--;
+                }
+                
+                
             }else{
-                momentum--;
-                if(ra.nextInt(5) > momentum){
-                    momentumGoingUp=false;
-                    
+                if(this.ideology>60){
+                    if(momentumGoingUp){
+                        momentum++;
+                        if(ra.nextInt(5)+15 < momentum){
+                            momentumGoingUp=false;
+                            
+                        }
+                    }else{
+                        momentum--;
+                        if(ra.nextInt(5) > momentum){
+                            momentumGoingUp=false;
+                        
+                        }
+                    }
+                }else{
+                    momentumGoingUp = false;
+                    momentum--;
                 }
+            }
+            
+            if(momentum<0){
+                momentum=0;
             }
         }
         
@@ -952,14 +1001,27 @@ public class Main
         public static void fillVacancies(){
             int ideology=0;
             int preswei = 3;
-            int presideo = President.getStandardB().getIdeology()*preswei;
+            int presideo=0;
+            if(President.getStandardB() != null){
+            presideo = President.getStandardB().getIdeology()*preswei;
+            }else{
+                presideo = President.getIdeology()*preswei;
+            }
             
             int pmwei = 1;
-            int pmideo = rulingCoalition.getLeader().getChair().getIdeology()*pmwei;
-            
+            int pmideo=0;
+            if(rulingCoalition.getLeader().getChair() !=null){
+            pmideo = rulingCoalition.getLeader().getChair().getIdeology()*pmwei;
+            }else{
+                pmideo = rulingCoalition.getLeader().getIdeology()*pmwei;
+            }
             int speakerwei = 2;
-            int speakerideo = speaker.getForSpeak().getIdeology()*speakerwei;
-            
+            int speakerideo=0;
+            if(speaker.getForSpeak() !=null){
+            speakerideo = speaker.getForSpeak().getIdeology()*speakerwei;
+            }else{
+            speakerideo = speaker.getIdeology()*speakerwei;
+            }
             int finalideo = (presideo+pmideo+speakerideo)/(preswei+pmwei+speakerwei);
             supremeCourt.add(new SCJustice(finalideo));
             
