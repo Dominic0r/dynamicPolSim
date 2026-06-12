@@ -140,6 +140,19 @@ public class Main
         }
         
         public int getMomentum(){ return momentum;}
+        
+        public void setMomentum(boolean newMom){
+            momentumGoingUp = newMom;
+        }
+        
+        public void directChangeMomentum(int toAdd){
+            momentum+= toAdd;
+            
+            if(momentum<0){
+                momentum=0;
+            }
+        }
+        
         public void updateMomentum(){
             
             if(lean.equalsIgnoreCase("Republic")){
@@ -2731,7 +2744,7 @@ public static String[][] mapProgside = {
                 }
                 
                 if(par == President){
-                    points*=2;
+                    points*=10;
                 }
                 
                 if(points >= mnum){
@@ -2766,7 +2779,7 @@ public static String[][] mapProgside = {
                 }
                 
                 if(par == President){
-                    points*=2;
+                    points*=10;
                 }
                     if(points >= mnum){
                         mnum = points;
@@ -3513,6 +3526,9 @@ public static void events(){
             case 5:
                     Party targetpar = allParties.get(ra.nextInt(allParties.size()));
                     System.out.println("Political Scandal in "+ targetpar.getName()+ "!");
+                    targetpar.setMomentum(false);
+                    targetpar.directChangeMomentum(-5);
+                    
                     for(int i=0; i<targetpar.getPercent()/2;i++){
                         targetpar.addFatigue();
                     }
