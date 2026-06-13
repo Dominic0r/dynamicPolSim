@@ -2613,7 +2613,7 @@ public static String[][] mapProgside = {
 
         if (currentProx > tresh) {
             //double appeal = currentProx * (1 + (par.getRecognition()) - (par.getFatigue()));
-            double appeal = currentProx;
+            double appeal = currentProx* (1+par.getRecognition());
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
