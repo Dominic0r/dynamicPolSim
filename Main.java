@@ -2702,7 +2702,7 @@ public static String[][] mapProgside = {
             for(Party par: sortedPartyShare.keySet()){
                 System.out.print(par.getName()+": "+ String.format("%.2f", sortedPartyShare.get(par))+ "% | ");
             }
-            if(moribund==0){
+            if(moribund<0.01){
             System.out.println("");
             }else{
                 System.out.println("Others: " +String.format("%.2f", moribund)+ "% |");
