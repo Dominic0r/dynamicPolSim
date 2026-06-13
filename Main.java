@@ -2605,6 +2605,8 @@ public static String[][] mapProgside = {
 
     // Groups determine what parties best align with their ideology
     for (Party par : allParties) {
+        
+        
         int currentProx = gro.proximityWith(par);
         
        
@@ -2627,9 +2629,7 @@ public static String[][] mapProgside = {
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
             if(largestGroups.contains(gro)){
-                eachPartyShareUnsorted.put(par, new BigDecimal(Double.toString(shareOfGroup*100))
-                    .setScale(2, RoundingMode.HALF_UP)
-                    .doubleValue());
+                eachPartyShareUnsorted.put(par, shareOfGroup*100);
             }
             
             if(largestGroups.contains(gro)){
@@ -2700,7 +2700,7 @@ public static String[][] mapProgside = {
             moribund = 100- moribund;
             System.out.print(gro.getName()+": ");
             for(Party par: sortedPartyShare.keySet()){
-                System.out.print(par.getName()+": "+ sortedPartyShare.get(par)+ "% | ");
+                System.out.print(par.getName()+": "+ String.format("%.2f", sortedPartyShare.get(par))+ "% | ");
             }
             if(moribund==0){
             System.out.println("");
