@@ -1,6 +1,7 @@
  import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.math.*;
 public class Main 
 {
     public static Scanner sc = new Scanner(System.in);
@@ -2531,6 +2532,8 @@ public static String[][] mapProgside = {
     
     }
     
+    
+    
     public static void updateGroupSize(){
         int changeby = 0;
         for(ideoGroup gro: allGroups){
@@ -2555,7 +2558,27 @@ public static String[][] mapProgside = {
         }
     }
     
+    public static List<ideoGroup> largestGroups = new ArrayList<>();
+    
+    public static void detLargestGroups(){
+        largestGroups.clear();
+        for(int i=0; i<5;i++){
+            int maxnum = Integer.MIN_VALUE;
+            ideoGroup maxGroup = null;
+            for(ideoGroup gro: allGroups){
+                if(gro.getSize()> maxnum && !largestGroups.contains(gro)){
+                    maxnum = gro.getSize();
+                    maxGroup = gro;
+                }
+            }
+            
+            largestGroups.add(maxGroup);
+        }
+    }
+    
     public static void election(){
+        
+        detLargestGroups();
         for(Party par: allParties){
             par.resetElectionData();
         }
@@ -2585,12 +2608,10 @@ public static String[][] mapProgside = {
         int currentProx = gro.proximityWith(par);
         
        
-        if (currentProx > maxProximity) {
-            maxProximity = currentProx;
-        }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
+            //double appeal = currentProx * (1 + (par.getRecognition()) - (par.getFatigue()));
+            double appeal = currentProx;
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -2598,10 +2619,22 @@ public static String[][] mapProgside = {
     }
 
     if (hasvoted) {
-        //System.out.println("Group: "+ gro.getName());
+        
+        Map<Party, Double> eachPartyShareUnsorted = new HashMap<>();
+        if(largestGroups.contains(gro)){
+            //System.out.println("Group: "+ gro.getName());
+        }
         for (Party par : partyAppeals.keySet()) {
             double shareOfGroup = partyAppeals.get(par) / totalAppealScore;
+            if(largestGroups.contains(gro)){
+                eachPartyShareUnsorted.put(par, new BigDecimal(Double.toString(shareOfGroup*100))
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue());
+            }
             
+            if(largestGroups.contains(gro)){
+                //System.out.print(par.getName()+ ": "+ String.format("%.2f", shareOfGroup*100)+ "% | ");
+            }
             double tempvfg = (gro.getSize() * shareOfGroup);
             int votesFromThisGroup = (int) tempvfg;
             //System.out.println("tempvfg: "+ tempvfg);
@@ -2637,6 +2670,47 @@ public static String[][] mapProgside = {
             par.addVotes(votesFromThisGroup+1);
             par.recordVotes(gro, votesFromThisGroup+1);
         }
+        if(largestGroups.contains(gro)){
+        
+            // sort eachPartyShareUnsorted
+            Map<Party, Double> sortedPartyShare = new LinkedHashMap<>();
+            int maxint = eachPartyShareUnsorted.size();
+            double moribund = 0;
+            
+            for(int i=0; i<maxint;i++){
+                if(i<3){
+                double maxpercent = Integer.MIN_VALUE;
+                Party maxpar = null;
+                
+                for(Party par: eachPartyShareUnsorted.keySet()){
+                    if(eachPartyShareUnsorted.get(par)> maxpercent && !sortedPartyShare.containsKey(par)){
+                        maxpar = par;
+                        maxpercent = eachPartyShareUnsorted.get(par);
+                    }
+                }
+                
+                sortedPartyShare.put(maxpar,maxpercent);
+                }
+            }
+            
+            for(Party par: sortedPartyShare.keySet()){
+                moribund += sortedPartyShare.get(par);
+            }
+            
+            moribund = 100- moribund;
+            System.out.print(gro.getName()+": ");
+            for(Party par: sortedPartyShare.keySet()){
+                System.out.print(par.getName()+": "+ sortedPartyShare.get(par)+ "% | ");
+            }
+            if(moribund==0){
+            System.out.println("");
+            }else{
+                System.out.println("Others: " +String.format("%.2f", moribund)+ "% |");
+            }
+            
+        }
+        
+        
     }
 
     // satisfaction calculation
