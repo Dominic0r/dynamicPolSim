@@ -2601,7 +2601,7 @@ public static String[][] mapProgside = {
     boolean hasvoted = false;
     int maxProximity = 0;
     double totalAppealScore = 0;
-    Map<Party, Double> partyAppeals = new HashMap<>();
+    Map<Party, Double> partyAppeals = new LinkedHashMap<>();
 
     // Groups determine what parties best align with their ideology
     for (Party par : allParties) {
