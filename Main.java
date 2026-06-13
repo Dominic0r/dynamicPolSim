@@ -2698,14 +2698,14 @@ public static String[][] mapProgside = {
             }
             
             moribund = 100- moribund;
-            System.out.print(gro.getName()+": ");
+            //System.out.print(gro.getName()+": ");
             for(Party par: sortedPartyShare.keySet()){
-                System.out.print(par.getName()+": "+ String.format("%.2f", sortedPartyShare.get(par))+ "% | ");
+                //System.out.print(par.getName()+": "+ String.format("%.2f", sortedPartyShare.get(par))+ "% | ");
             }
             if(moribund<0.01){
-            System.out.println("");
+            //System.out.println("");
             }else{
-                System.out.println("Others: " +String.format("%.2f", moribund)+ "% |");
+                //System.out.println("Others: " +String.format("%.2f", moribund)+ "% |");
             }
             
         }
@@ -2756,7 +2756,7 @@ public static String[][] mapProgside = {
         }
         
         //seat distribution
-        for(int i=0; i<50;i++){ // simulation of first past the post
+        for(int i=0; i<80;i++){ // simulation of first past the post
             int maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
@@ -2771,7 +2771,7 @@ public static String[][] mapProgside = {
         }
         
         //dhondt
-        for(int i=0; i<50;i++){
+        for(int i=0; i<20;i++){
             
             int maxnum=-1;
             Party maxpar=null;
