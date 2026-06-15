@@ -275,6 +275,8 @@ public class Main
             if(standardBearer == null){
                 standardBearer = new Person(genName(), year, year+ra.nextInt(20)+5, ideology + (ra.nextInt(5)+ ra.nextInt(5)), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100));
                 activePersons.add(standardBearer);
+                memberPersons.add(standardBearer);
+                standardBearer.currentParty = this;
             }
             
             maxnum = Integer.MIN_VALUE;
@@ -294,6 +296,8 @@ public class Main
             if(chairman == null){
                 chairman = new Person(genName(), year, year+ra.nextInt(20)+5, ideology + (ra.nextInt(5)+ ra.nextInt(5)), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100));
                 activePersons.add(chairman);
+                memberPersons.add(chairman);
+                chairman.currentParty = this;
             }
             
             maxnum = Integer.MIN_VALUE;
@@ -309,6 +313,8 @@ public class Main
             if(forSpeaker == null){
                 forSpeaker = new Person(genName(), year, year+ra.nextInt(20)+5, ideology + (ra.nextInt(5)+ ra.nextInt(5)), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100));
                 activePersons.add(forSpeaker);
+                memberPersons.add(forSpeaker);
+                forSpeaker.currentParty = this;
             }
         }
         
@@ -482,8 +488,8 @@ public class Main
             fatigue +=0.005;
         }
         public void decreaseFatigue(){
-            if(fatigue>0){
-            fatigue -= 0.005;
+            if(fatigue>0.01){
+            fatigue -= 0.01;
             }
         }
         
