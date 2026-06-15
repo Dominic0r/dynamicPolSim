@@ -481,14 +481,14 @@ public class Main
         }
         
         public double getFatigue(){
-            if(fatigue> 0.95){
-                return 0.95;
+            if(fatigue> 0.99){
+                return 0.99;
             }
             return fatigue;
         }
         
         public void addFatigue(){
-            fatigue +=0.005;
+            fatigue +=0.01;
         }
         public void decreaseFatigue(){
             if(fatigue>0.01){
@@ -2565,9 +2565,9 @@ public static String[][] mapProgside = {
     public static void updateGroupSize(){
         int changeby = 0;
         for(ideoGroup gro: allGroups){
-            changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
+            changeby = (Math.abs(gro.getIdeology()-50)>30)? 5:8;
             if(lean.equalsIgnoreCase("Republic")){
-                if(gro.getIdeology()>65 || gro.getIdeology()<35){
+                if(gro.getIdeology()>80 || gro.getIdeology()<20){
                 changeby-=(changeby/20)* (Math.abs(gro.getIdeology()-50)/10);
                 }
             }else{
@@ -4153,7 +4153,7 @@ public static void updateBasedOnLean(){
                 par.decreaseFatigue();
             }
         }else if(lean.equalsIgnoreCase("Republic")){
-            if(par.getIdeology()>65 || par.getIdeology()<35){
+            if(par.getIdeology()>80 || par.getIdeology()<20){
                 distance = (Math.abs(par.getIdeology()-50))/10;
             }else{
                 par.decreaseFatigue();
