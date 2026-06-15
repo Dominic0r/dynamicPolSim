@@ -1155,6 +1155,8 @@ public class Main
         
     }
     
+    public static int govterms = 1;
+    
     public static void displayPolicies(){
         int counter = 0;
         int perrow=2;
@@ -3452,6 +3454,23 @@ return fname+" "+ lname;
                     down++;
                     
                 }
+                
+                int numOfSameParties = 0;
+                if(rulingCoalition!=null){
+                    for(Party par: rulingCoalition.getMemberList()){
+                        for(Party pra: gov.getMemberList()){
+                            if(par == pra){
+                                numOfSameParties++;
+                            }
+                        }
+                    }
+                }
+                
+                if(numOfSameParties>= gov.getMemberList().size()/2){
+                    govterms++;
+                }else{
+                    govterms=1;
+                }
                 rulingCoalition = gov;
                 }
                 totGovSeats=0;
@@ -3502,7 +3521,7 @@ return fname+" "+ lname;
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-                for(int i=0;i< rulingCoalition.getSize()/5;i++){
+                for(int i=0;i< (rulingCoalition.getSize()/5)+govterms;i++){
                     par.addFatigue();
                 }
                 
