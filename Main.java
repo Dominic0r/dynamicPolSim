@@ -2632,10 +2632,10 @@ public static String[][] mapProgside = {
 
         if (currentProx > tresh) {
             double appeal = currentProx * (1 + (par.getRecognition()));
-            System.out.println(gro.getName()+" before fatigue: "+ appeal);
-            System.out.println("Fatigue: "+ par.getFatigue());
+            //System.out.println(gro.getName()+" before fatigue: "+ appeal);
+            //System.out.println("Fatigue: "+ par.getFatigue());
             appeal -= (appeal*par.getFatigue());
-            System.out.println(gro.getName()+" after fatigue: "+ appeal);
+            //System.out.println(gro.getName()+" after fatigue: "+ appeal);
             //double appeal = currentProx* (1+par.getRecognition());
                 partyAppeals.put(par, appeal);
                 totalAppealScore += appeal;
@@ -2690,7 +2690,7 @@ public static String[][] mapProgside = {
                 votesFromThisGroup = 1;
             }
             
-            System.out.println("Party: "+ par.getName()+ " | votesFromThisGroup: "+ votesFromThisGroup);
+            //System.out.println("Party: "+ par.getName()+ " | votesFromThisGroup: "+ votesFromThisGroup);
             
             
             par.addVotes(votesFromThisGroup+1);
@@ -2864,14 +2864,14 @@ public static String[][] mapProgside = {
             }
         }
         
-        for(Party par: allParties){
+        /*for(Party par: allParties){
             System.out.println(par.getName()+ ": "+ par.getScore());
             
             for(ideoGroup gro: par.demographics.keySet()){
                 System.out.print(gro.getName()+ ": "+ par.demographics.get(gro)+ " | ");
             }
             System.out.println("");
-        }
+        }*/
         
         
     }
