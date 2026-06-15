@@ -2451,8 +2451,8 @@ public static String[][] mapProgside = {
         //allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
-        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 50, 1880));
-        allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
+        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 45, 1880));
+        //allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
         //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
@@ -2462,7 +2462,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 55, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
         allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 60, 1918));
-        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 20, 38, 1918));
+        allTotalGroups.add(new ideoGroup("Republican Conservatives", "Conservative Republican Party", 30, 38, 1918));
         allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 90, 1923));
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
@@ -3502,7 +3502,7 @@ return fname+" "+ lname;
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-                for(int i=0;i< rulingCoalition.getSize()/10;i++){
+                for(int i=0;i< rulingCoalition.getSize()/5;i++){
                     par.addFatigue();
                 }
                 
