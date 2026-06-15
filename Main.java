@@ -481,6 +481,9 @@ public class Main
         }
         
         public double getFatigue(){
+            if(fatigue> 0.95){
+                return 0.95;
+            }
             return fatigue;
         }
         
@@ -2606,7 +2609,7 @@ public static String[][] mapProgside = {
         detLargestGroups();
         for(Party par: allParties){
             par.resetElectionData();
-            System.out.println(par.getName()+" Fatigue: "+ par.getFatigue());
+           // System.out.println(par.getName()+" Fatigue: "+ par.getFatigue());
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
@@ -2639,6 +2642,7 @@ public static String[][] mapProgside = {
 
         if (currentProx > tresh) {
             double appeal = currentProx * (1 + (par.getRecognition()));
+            
             //System.out.println(gro.getName()+" before fatigue: "+ appeal);
             //System.out.println(par.getName()+" Fatigue: "+ par.getFatigue());
             appeal -= (appeal*par.getFatigue());
@@ -3113,7 +3117,8 @@ return fname+" "+ lname;
         }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
+            double appeal = currentProx * (1 + (par.getRecognition()));
+            appeal -= (appeal*par.getFatigue());
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -3226,7 +3231,8 @@ return fname+" "+ lname;
         }
 
         if (currentProx > tresh) {
-            double appeal = currentProx * (1 + (par.getRecognition() / 10.0) - (par.getFatigue()/10.0));
+            double appeal = currentProx * (1 + (par.getRecognition()));
+            appeal -= (appeal*par.getFatigue());
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
