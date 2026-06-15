@@ -2606,6 +2606,7 @@ public static String[][] mapProgside = {
         detLargestGroups();
         for(Party par: allParties){
             par.resetElectionData();
+            System.out.println(par.getName()+" Fatigue: "+ par.getFatigue());
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
@@ -2639,7 +2640,7 @@ public static String[][] mapProgside = {
         if (currentProx > tresh) {
             double appeal = currentProx * (1 + (par.getRecognition()));
             //System.out.println(gro.getName()+" before fatigue: "+ appeal);
-            //System.out.println("Fatigue: "+ par.getFatigue());
+            //System.out.println(par.getName()+" Fatigue: "+ par.getFatigue());
             appeal -= (appeal*par.getFatigue());
             //System.out.println(gro.getName()+" after fatigue: "+ appeal);
             //double appeal = currentProx* (1+par.getRecognition());
@@ -3495,7 +3496,7 @@ return fname+" "+ lname;
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-                for(int i=0;i< par.getPercent()/10;i++){
+                for(int i=0;i< rulingCoalition.getSize()/10;i++){
                     par.addFatigue();
                 }
                 
@@ -4147,7 +4148,7 @@ public static void updateBasedOnLean(){
             }
         }else if(lean.equalsIgnoreCase("Republic")){
             if(par.getIdeology()>65 || par.getIdeology()<35){
-                distance = Math.abs(par.getIdeology()-50);
+                distance = (Math.abs(par.getIdeology()-50))/10;
             }else{
                 par.decreaseFatigue();
             }
