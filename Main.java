@@ -16,6 +16,8 @@ public class Main
         boolean hasSplintered = false;
         
         Party favParty = null;
+        int favParStreak = 0;
+        
         
         int activeyear = 0;
         
@@ -70,9 +72,19 @@ public class Main
             }
             
             if(maxPar!=null){
+                
+                if(maxPar == favParty){
+                    favParStreak++;
+                }else{
+                    favParStreak=1;
+                }
+                
                 favParty = maxPar;
+                
             }
         }
+        
+        public int getStreak(){return favParStreak;}
         
         public Party getFavPar(){return favParty;}
         
@@ -460,11 +472,11 @@ public class Main
         }
         
         public void addFatigue(){
-            fatigue +=0.01;
+            fatigue +=0.005;
         }
         public void decreaseFatigue(){
             if(fatigue>0){
-            fatigue -= 0.01;
+            fatigue -= 0.005;
             }
         }
         
@@ -1278,13 +1290,13 @@ public class Main
                 if(yesVotes<75){
                     System.out.println("The President has vetoed the bill");
                     President.setApproval(President.getPopularity()- (President.getPopularity()/5));
-                    for(int i=0; i<5;i++){
+                    for(int i=0; i<3;i++){
                         President.addFatigue();
                     }
                 }else{
                     System.out.println("The President has vetoed the bill, but the veto is overruled by a supermajority");
                         
-                        for(int i=0; i<5;i++){
+                        for(int i=0; i<3;i++){
                             President.addFatigue();
                         }
                         passedLegandEx = true;
@@ -1396,7 +1408,7 @@ public class Main
             System.out.println("Vote Failed!");
             for(Party par: rulingCoalition.getMemberList()){
                 par.setApproval(par.getPopularity()- (par.getPopularity()/10));
-                for(int i=0; i<3;i++){
+                for(int i=0; i<2;i++){
                     par.addFatigue();
                 }
             }
@@ -2612,8 +2624,9 @@ public static String[][] mapProgside = {
        
 
         if (currentProx > tresh) {
-            //double appeal = currentProx * (1 + (par.getRecognition()) - (par.getFatigue()));
-            double appeal = currentProx* (1+par.getRecognition());
+            double appeal = currentProx * (1 + (par.getRecognition()));
+            appeal -= (appeal*par.getFatigue())/10;
+            //double appeal = currentProx* (1+par.getRecognition());
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -2649,12 +2662,14 @@ public static String[][] mapProgside = {
             //votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             //System.out.println("Before getfavpar: "+ votesFromThisGroup);
             if(par == gro.getFavPar()){
-                votesFromThisGroup += votesFromThisGroup/10;
+                votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
             }else{
-                votesFromThisGroup -= votesFromThisGroup/10;
+                votesFromThisGroup -= (votesFromThisGroup/20)* gro.getStreak();
             }
             //System.out.println("Before momentum: "+ votesFromThisGroup);
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
+            
+            
             
             if(par.getChair()!=null){
             //votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
@@ -2719,6 +2734,8 @@ public static String[][] mapProgside = {
     if (!hasvoted) {
         // penalty for having no one to vote for
         satischange -= ra.nextInt(10);
+    }else{
+        satischange += ra.nextInt(10);
     }
     
     //satischange += ra.nextInt(3) - ra.nextInt(3);
@@ -2760,7 +2777,7 @@ public static String[][] mapProgside = {
             int maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
-                int curscore = par.getScore() / (ra.nextInt(3)+1);
+                int curscore = par.getScore() / (ra.nextInt(5)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -2943,9 +2960,9 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }*/
             if(par == gro.getFavPar()){
-                votesFromThisGroup += votesFromThisGroup/10;
+                votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
             }else{
-                votesFromThisGroup -= votesFromThisGroup/10;
+                votesFromThisGroup -= (votesFromThisGroup/20)* gro.getStreak();
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
@@ -2959,9 +2976,10 @@ public static String[][] mapProgside = {
     
     if (!hasvoted) {
         satischange -= ra.nextInt(10);
+    }else{
+        satischange+= ra.nextInt(6);
     }
     
-    satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/3);
 }
         
@@ -3055,9 +3073,9 @@ public static String[][] mapProgside = {
             }*/
             
             if(par == gro.getFavPar()){
-                votesFromThisGroup += votesFromThisGroup/10;
+                votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
             }else{
-                votesFromThisGroup -= votesFromThisGroup/10;
+                votesFromThisGroup -= (votesFromThisGroup/20)* gro.getStreak();
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
@@ -3071,9 +3089,9 @@ public static String[][] mapProgside = {
     
     if (!hasvoted) {
         satischange -= ra.nextInt(10);
+    }else{
+        satischange+= ra.nextInt(6);
     }
-    
-    satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/2);
 }
             winvotes = 0;
@@ -3304,16 +3322,15 @@ public static String[][] mapProgside = {
                 par.decreaseFatigue();
             }else{
                 
-                for(int i=0; i<totGovSeats/20;i++){
                     par.addFatigue();
-                }
+                
                 
             }
             if(par == rulingCoalition.getLeader()){
                 
                 
                 if(par.getPercent()> 50){
-                    for(int i=0; i< par.getPercent()/10;i++){
+                    for(int i=0; i< (par.getPercent()-50)/20;i++){
                         par.addFatigue();
                     }
                 }
@@ -3587,9 +3604,6 @@ public static void events(){
                                 par.addFatigue();
                                 par.addFatigue();
                                 par.addFatigue();
-                                par.addFatigue();
-                                par.addFatigue();
-                                par.addFatigue();
                             }
                         }
                     }
@@ -3734,7 +3748,7 @@ public static void genSatis(){
     if(allParties.size()<4){
         int numOfPars = allParties.size();
         for(ideoGroup gro: allGroups){
-            int toRem = (ra.nextInt(10)*(numOfPars-4));
+            int toRem = (ra.nextInt(10)*(numOfPars-2));
             gro.updateSatisfaction(toRem);
         }
         
