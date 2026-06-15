@@ -24,7 +24,7 @@ public class Main
         public ideoGroup(String name, String splintername, int size, int ideology, int activeyear){
             this.name = name;
             this.splintername = splintername;
-            this.size = size*10;
+            this.size = size*100;
             this.ideology = ideology;
             this.satisfaction = 100;
             this.activeyear = activeyear;
@@ -2428,21 +2428,21 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Sustained Revolution Movement", 15, 80, 1832));
         
         //Mid 19th Century
-        allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 10, 16, 1860));
+        allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 20, 16, 1860));
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
         //allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
-        allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 17, 1874));
-        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
+        allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 15, 1874));
+        //allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
-        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 15, 50, 1880));
+        allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 50, 1880));
         allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
-        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
+        //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         
         //Early 20th Century
         //allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
-        allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 20, 42, 1905));
+        allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 25, 42, 1905));
         allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 55, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
         allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 60, 1918));
@@ -2552,7 +2552,7 @@ public static String[][] mapProgside = {
             changeby = (Math.abs(gro.getIdeology()-50)>20)? 5:8;
             if(lean.equalsIgnoreCase("Republic")){
                 if(gro.getIdeology()>65 || gro.getIdeology()<35){
-                changeby-=(changeby/10)* (Math.abs(gro.getIdeology()-50)/10);
+                changeby-=(changeby/20)* (Math.abs(gro.getIdeology()-50)/10);
                 }
             }else{
                 if(lean.equalsIgnoreCase("Reaction")){
@@ -2596,7 +2596,7 @@ public static String[][] mapProgside = {
         }
         
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        int tresh = 75+ra.nextInt(20);
+        int tresh = 85;
         for(ideoGroup gro: allGroups){
             for(Party par: allParties){
                 if(gro.proximityWith(par)> tresh){
@@ -2625,7 +2625,7 @@ public static String[][] mapProgside = {
 
         if (currentProx > tresh) {
             double appeal = currentProx * (1 + (par.getRecognition()));
-            appeal -= (appeal*par.getFatigue())/10;
+            appeal -= (appeal*par.getFatigue())/2;
             //double appeal = currentProx* (1+par.getRecognition());
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
@@ -2664,7 +2664,7 @@ public static String[][] mapProgside = {
             if(par == gro.getFavPar()){
                 votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
             }else{
-                votesFromThisGroup -= (votesFromThisGroup/20)* gro.getStreak();
+                votesFromThisGroup -= (votesFromThisGroup/40)* gro.getStreak();
             }
             //System.out.println("Before momentum: "+ votesFromThisGroup);
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
@@ -2772,12 +2772,58 @@ public static String[][] mapProgside = {
             }
         }
         
-        //seat distribution
-        for(int i=0; i<80;i++){ // simulation of first past the post
-            int maxnum =-1;
+        //seat distribution 
+        
+        //first past the post get the top 3 parties 
+        Party first, second, third; 
+        first = second = third = null;
+        int maxnum = Integer.MIN_VALUE;
+        
+        for(Party par: allParties){
+            if(par.getScore()> maxnum){
+                maxnum= par.getScore();
+                first = par;
+            }
+        }
+        
+        maxnum = Integer.MIN_VALUE;
+        
+        for(Party par: allParties){
+            if(par.getScore()> maxnum && par != first){
+                maxnum= par.getScore();
+                second = par;
+            }
+        }
+        
+        maxnum = Integer.MIN_VALUE;
+        
+        for(Party par: allParties){
+            if(par.getScore()> maxnum && par!= first && par!=second){
+                maxnum= par.getScore();
+                third = par;
+            }
+        }
+        
+        first.setPercent(20);
+        
+        if(second!=null){
+            second.setPercent(15);
+        }else{
+            first.setPercent(first.getPercent()+15);
+        }
+        
+        if(third!=null){
+            third.setPercent(5);
+        }else{
+            first.setPercent(first.getPercent()+5);
+        }
+        
+        
+        for(int i=0; i<20;i++){ // simulation of first past the post
+            maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
-                int curscore = par.getScore() / (ra.nextInt(5)+1);
+                int curscore = par.getScore() / (ra.nextInt(3)+1);
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -2788,9 +2834,9 @@ public static String[][] mapProgside = {
         }
         
         //dhondt
-        for(int i=0; i<20;i++){
+        for(int i=0; i<40;i++){
             
-            int maxnum=-1;
+            maxnum=-1;
             Party maxpar=null;
             for(Party par: partiesOverTresh){
                     int parscore = ((par.getScore()*50)/(par.getPercent()+1))+1;
@@ -2807,6 +2853,14 @@ public static String[][] mapProgside = {
             }
         }
         
+        /*for(Party par: allParties){
+            System.out.println(par.getName()+ ": "+ par.getScore());
+            
+            for(ideoGroup gro: par.demographics.keySet()){
+                System.out.print(gro.getName()+ ": "+ par.demographics.get(gro)+ " | ");
+            }
+            System.out.println("");
+        }*/
         
         
     }
@@ -3321,8 +3375,9 @@ public static String[][] mapProgside = {
             if(!rulingCoalition.containsParty(par)){
                 par.decreaseFatigue();
             }else{
-                
+                for(int i=0;i< rulingCoalition.getSize()/20;i++){
                     par.addFatigue();
+                }
                 
                 
             }
