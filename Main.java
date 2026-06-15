@@ -3748,7 +3748,7 @@ public static void genSatis(){
     if(allParties.size()<4){
         int numOfPars = allParties.size();
         for(ideoGroup gro: allGroups){
-            int toRem = (ra.nextInt(10)*(numOfPars-2));
+            int toRem = (ra.nextInt(10)*(numOfPars-4));
             gro.updateSatisfaction(toRem);
         }
         
