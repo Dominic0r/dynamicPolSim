@@ -734,6 +734,17 @@ public class Main
             members.clear();
         }
         
+        public int getIdeology(){
+            int avideo = 0;
+            int todivby = 0;
+            for(Party par: members){
+                avideo += par.getIdeology()*par.getPercent();
+                todivby+= par.getPercent();
+            }
+            
+            return avideo /= todivby;
+        }
+        
         public boolean invitation(Party other){
             if(leader.proximityWith(other)> 50){
                 return true;
@@ -1199,7 +1210,9 @@ public class Main
         
         for(Policy pol: allPolicies){
             int points=0;
-            points += 100-rulingCoalition.getLeader().proximityWith(pol.getPosition());
+            //points += 100-rulingCoalition.getLeader().proximityWith(pol.getPosition());
+            
+            points += Math.abs(rulingCoalition.getIdeology()-pol.getPosition());
             points += ra.nextInt(50);
             
             
@@ -1214,18 +1227,18 @@ public class Main
             confidence/=2;
         }
         int moveBy = 3*confidence;
-        if(rulingCoalition.getLeader().proximityWith(maxPol.getPosition())>90){
+        if(100-Math.abs(rulingCoalition.getIdeology()-maxPol.getPosition())>90){
             moveBy=0;
         }
         int goal =0;
-        if(rulingCoalition.getLeader().getIdeology()> maxPol.getPosition()){
-            if(rulingCoalition.getLeader().getIdeology()< 50){
+        if(rulingCoalition.getIdeology()> maxPol.getPosition()){
+            if(rulingCoalition.getIdeology()< 50){
                 moveBy=0;
             }
             goal = maxPol.getPosition()+moveBy;
             
         }else{
-            if(rulingCoalition.getLeader().getIdeology()> 50){
+            if(rulingCoalition.getIdeology()> 50){
                 moveBy=0;
             }
             goal = maxPol.getPosition()-moveBy;
@@ -3830,20 +3843,7 @@ public static void events(){
                     }
                     targetpar.addMomentum(-5);
             break;
-            case 6:
-                targetpar = allParties.get(ra.nextInt(allParties.size())); 
-                int supSeats = 0;
-                int tresh = 75;
-                for(Party par : allParties){
-                    supSeats+= (par.getPercent()*par.proximityWith(targetpar))/100;
-                    
-                }
-                
-                if(supSeats<50){
-                    System.out.println("Landmark bill by "+ targetpar.getName());
-                    targetpar.incrementRecognition();
-                }
-                break;
+            
             default:
             
         }
