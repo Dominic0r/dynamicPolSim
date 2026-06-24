@@ -3911,7 +3911,7 @@ public static void shiftVoters(int base) {
         if(gro.getIdeology() > base-20 && gro.getIdeology()< base+20){
             gro.updateSize(gro.getSize()/25);
         }else{
-            gro.updateSize((gro.getSize()/25)*-1);
+            gro.updateSize((gro.getSize()/50)*-1);
         }
     }
 
