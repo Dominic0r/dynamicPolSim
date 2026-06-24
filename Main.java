@@ -3090,7 +3090,7 @@ return fname+" "+ lname;
             par.resetScore();
         }
         Map<ideoGroup, Integer> acceptables = new HashMap<>();
-        tresh = 90;
+        tresh = 85;
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
                 if(gro.proximityWith(par)> tresh){
@@ -3205,7 +3205,7 @@ return fname+" "+ lname;
         }
         acceptables.clear();
         
-        tresh = 75;
+        //tresh = 75;
         
         for(ideoGroup gro: allGroups){
             for(Party par: candidates){
@@ -3372,7 +3372,7 @@ return fname+" "+ lname;
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt((Party p)-> 
                 
-    ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) + (p.getPercent()/5) // Higher relations, closer ideology preferred
+    ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) - (p.getPercent()/5) // Higher relations, closer ideology preferred
                 ).reversed());
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -3522,6 +3522,8 @@ return fname+" "+ lname;
                 par.decreaseFatigue();
             }else{
                 for(int i=0;i< (rulingCoalition.getSize()/5)+govterms;i++){
+                    par.addFatigue();
+                    par.addFatigue();
                     par.addFatigue();
                 }
                 
@@ -4679,8 +4681,16 @@ public static void nationalLean(){
         
         lean = "Revolution";
     }else{
-        System.out.println("\u001B[38;5;226m Republic \u001B[0m");
-        lean = "Republic";
+        if(lean.equalsIgnoreCase("Republic")){
+            System.out.println("\u001B[38;5;226m Republic \u001B[0m");
+        }else if(lean.equalsIgnoreCase("Reaction")){
+            System.out.println("\u001B[38;5;18m Reaction \u001B[0m");
+        }else{
+            System.out.println("\u001B[38;5;88m Revolution \u001B[0m");
+        }
+        
+        
+        
     }
     String spectrum ="";
     int reactpercent=0, republicpercent=0, revpercent=0;
