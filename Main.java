@@ -340,7 +340,14 @@ public class Main
         public int getIdeology(){return ideology;}
         public boolean isPartyActive(){return isActive;}
         public int getScore(){return score;}
-        public int getPopularity(){return popularity;}
+        public int getPopularity(){
+            
+            if(popularity> 100){
+                return 100;
+            }
+            return popularity;
+            
+        }
         public int getPercent(){return percent;}
         
         public int proximityWith(int num){
@@ -887,6 +894,10 @@ public class Main
         }
         
         public int getProminence(){
+            
+            if(prominence>100){
+                return 100;
+            }
             return prominence;
         }
         
@@ -1423,7 +1434,7 @@ public class Main
                             maxPol.updatePos(moveBy * ((rulingCoalition.getLeader().getIdeology()> maxPol.getPosition())? 1:-1));
                             
                                 for(Party par: rulingCoalition.getMemberList()){
-                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/10));
+                                    par.setApproval(par.getPopularity()+ (par.getPopularity()/20));
                                 }
                         }
                         
@@ -1439,7 +1450,7 @@ public class Main
             System.out.println("Vote Failed!");
             for(Party par: rulingCoalition.getMemberList()){
                 par.setApproval(par.getPopularity()- (par.getPopularity()/10));
-                for(int i=0; i<2;i++){
+                for(int i=0; i<5;i++){
                     par.addFatigue();
                 }
             }
@@ -2696,7 +2707,7 @@ public static String[][] mapProgside = {
             
             //votesFromThisGroup += (votesFromThisGroup*(par.getRecognition()));
             
-            //votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            
             //System.out.println("Before getfavpar: "+ votesFromThisGroup);
             if(par == gro.getFavPar()){
                 votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
@@ -2707,9 +2718,9 @@ public static String[][] mapProgside = {
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
             
             
-            
+            votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
             if(par.getChair()!=null){
-            //votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/100;
+            votesFromThisGroup += (votesFromThisGroup*par.getChair().getProminence())/400;
             }
             
             if(votesFromThisGroup <1){
@@ -3146,14 +3157,15 @@ return fname+" "+ lname;
             int votesFromThisGroup = (int) (gro.getSize() * shareOfGroup);
 
             /*votesFromThisGroup -= (votesFromThisGroup * par.getFatigue()) / 100;
-            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
+            
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/5;
-            }
+            }*/
             
             if(par.getStandardB()!=null){
-            votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
-            }*/
+            votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/400;
+            }
+            
             if(par == gro.getFavPar()){
                 votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
             }else{
@@ -3161,7 +3173,7 @@ return fname+" "+ lname;
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
-            
+            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/400;
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
@@ -3263,10 +3275,10 @@ return fname+" "+ lname;
             votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/100;
             if(par == gro.getFavPar()){
                 votesFromThisGroup += votesFromThisGroup/5;
-            }
-            if(par.getStandardB()!=null){
-            votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/200;
             }*/
+            if(par.getStandardB()!=null){
+            votesFromThisGroup += (votesFromThisGroup*par.getStandardB().getProminence())/400;
+            }
             
             if(par == gro.getFavPar()){
                 votesFromThisGroup += (votesFromThisGroup/20)* gro.getStreak();
@@ -3275,7 +3287,7 @@ return fname+" "+ lname;
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
-            
+            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/400;
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
