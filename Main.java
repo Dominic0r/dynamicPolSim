@@ -2474,7 +2474,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
         //allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 15, 1874));
-        //allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
+        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
         
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 45, 1880));
@@ -2493,7 +2493,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
         // Mid 20th Century
-        //allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
+        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
         allTotalGroups.add(new ideoGroup("Suburban Middle Class", "Citizens Action Movement", 30, 40, 1950));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
         allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 20, 58, 1961));
@@ -3173,7 +3173,7 @@ return fname+" "+ lname;
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
-            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/400;
+            votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
@@ -4173,14 +4173,14 @@ public static void updateBasedOnLean(){
         distance=0;
         if(lean.equalsIgnoreCase("Reaction")){
             if(par.getIdeology()>40){
-                distance = (par.getIdeology()-40);
+                distance = (par.getIdeology()-0);
                 par.setApproval(par.getPopularity()/10);
             }else{
                 par.decreaseFatigue();
             }
         }else if(lean.equalsIgnoreCase("Revolution")){
             if(par.getIdeology()<60){
-                distance = (60-par.getIdeology());
+                distance = (100-par.getIdeology());
                 par.setApproval(par.getPopularity()/10);
             }else{
                 par.decreaseFatigue();
