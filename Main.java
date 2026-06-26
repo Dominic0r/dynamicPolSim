@@ -2478,9 +2478,11 @@ public static String[][] mapProgside = {
         
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 45, 1880));
+        allTotalGroups.add(new ideoGroup("Nationalists", "National Patriotic Party", 30, 25, 1885));
         //allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
         allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
+        allTotalGroups.add(new ideoGroup("Neo-Reactionaries", "National Restoration Party", 10, 15, 1898));
         
         //Early 20th Century
         allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
@@ -2786,7 +2788,7 @@ public static String[][] mapProgside = {
         satischange += ra.nextInt(10);
     }
     
-    //satischange += ra.nextInt(3) - ra.nextInt(3);
+    satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange);
 }
         
@@ -3186,7 +3188,7 @@ return fname+" "+ lname;
     }else{
         satischange+= ra.nextInt(6);
     }
-    
+    satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/3);
 }
         
@@ -3300,6 +3302,7 @@ return fname+" "+ lname;
     }else{
         satischange+= ra.nextInt(6);
     }
+    satischange += ra.nextInt(3) - ra.nextInt(3);
     gro.updateSatisfaction(satischange/2);
 }
             winvotes = 0;
@@ -3923,7 +3926,7 @@ public static void shiftVoters(int base) {
         if(gro.getIdeology() > base-20 && gro.getIdeology()< base+20){
             gro.updateSize(gro.getSize()/25);
         }else{
-            gro.updateSize((gro.getSize()/50)*-1);
+            gro.updateSize(gro.getSize()/50*-1);
         }
     }
 
@@ -3963,7 +3966,7 @@ public static void genSatis(){
     if(allParties.size()<4){
         int numOfPars = allParties.size();
         for(ideoGroup gro: allGroups){
-            int toRem = (ra.nextInt(10)*(numOfPars-4));
+            int toRem = (ra.nextInt(10)*(numOfPars-10));
             gro.updateSatisfaction(toRem);
         }
         
