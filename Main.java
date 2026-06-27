@@ -3176,6 +3176,9 @@ return fname+" "+ lname;
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
             votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
+            if(votesFromThisGroup<1){
+                votesFromThisGroup = 1;
+            }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
@@ -3289,7 +3292,10 @@ return fname+" "+ lname;
             }
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
-            votesFromThisGroup = (votesFromThisGroup*par.getPopularity())/400;
+            votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
+            if(votesFromThisGroup<1){
+                votesFromThisGroup = 1;
+            }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
         }
