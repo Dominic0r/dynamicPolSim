@@ -248,6 +248,7 @@ public class Main
             
             int maxnum = Integer.MIN_VALUE;
             Person maxper=null;
+            //System.out.println(this.name+ " Standard Bearer Election: ");
             for(Person per: memberPersons){
                 int points= per.getProminence();
                 
@@ -265,6 +266,16 @@ public class Main
                     points *=100;
                 }
                 
+                if(points == maxnum){
+                    if(ra.nextBoolean()){
+                        points += 10;
+                    }
+                }
+                
+                //System.out.println(per.getName()+ ": "+ points+ " votes");
+                
+                
+                
                 if(points> maxnum){
                     maxnum = points;
                     maxper = per;
@@ -272,6 +283,8 @@ public class Main
             }
             // public Person(String name, int startYear, int endYear, int ideology, int loyalty, int ambition, int charisma, int corruption, int pragmatism){
             standardBearer = maxper;
+            
+            //System.out.println(standardBearer.getName()+ " wins");
             if(standardBearer == null){
                 standardBearer = new Person(genName(), year, year+ra.nextInt(20)+5, ideology + (ra.nextInt(5)+ ra.nextInt(5)), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100), ra.nextInt(100));
                 activePersons.add(standardBearer);
@@ -882,7 +895,14 @@ public class Main
                 if(ra.nextInt(100)<corruption){
                     prominence/= (corruption/10)+1;
                 }
-                prominence *= (year-startyear)/5;
+                prominence *= ((year-startyear)/5)+1;
+            }else{
+                prominence += (ambition/10)*5;
+                prominence+= (prominence/10)*(charisma/10);
+                if(ra.nextInt(100)<corruption){
+                    prominence/= (corruption/10)+1;
+                }
+                prominence *= ((year-startyear)/5)+1;
             }
             
             
@@ -895,9 +915,7 @@ public class Main
         
         public int getProminence(){
             
-            if(prominence>100){
-                return 100;
-            }
+           
             return prominence;
         }
         
@@ -3029,6 +3047,7 @@ return fname+" "+ lname;
         
         if(year !=1852){
             // governemnt primaries
+      //      System.out.println("Governemnt Primaries: ");
         if(rulingCoalition.getMemberList().size()==1){
             candidates.add(rulingCoalition.getLeader());
         }else{
@@ -3045,25 +3064,28 @@ return fname+" "+ lname;
                     points*=10;
                 }
                 
+              //  System.out.println(par.getName()+": "+ points+ " votes");
+                
                 if(points >= mnum){
                     mnum = points;
                     largestPar = par;
                 }
             }
-            
+            //System.out.println("Winner: "+ largestPar.getName()+ " ("+mnum+")");
             candidates.add(largestPar);
             
             for(Party par : rulingCoalition.getMemberList()){
                 if(par!= largestPar){
                     if(par.relationWith(largestPar) < 30){
                         candidates.add(par);
+                       // System.out.println(par.getName()+ " runs a renegade candidate");
                     }
                 }
             }
         }
         
         //opposition primaries
-        
+        //System.out.println("\nOpposition Primaries: ");
         mnum = Integer.MIN_VALUE;
         
             for(Party par: allParties){
@@ -3079,13 +3101,14 @@ return fname+" "+ lname;
                 if(par == President){
                     points*=10;
                 }
+               // System.out.println(par.getName()+": "+ points+ " votes");
                     if(points >= mnum){
                         mnum = points;
                         largestPar = par;
                     }
                 }
             }
-            
+           // System.out.println("Winner: "+ largestPar.getName()+ " ("+mnum+")");
             candidates.add(largestPar);
             
             for(Party par : allParties){
@@ -3093,6 +3116,7 @@ return fname+" "+ lname;
                     if(par!= largestPar){
                         if(par.relationWith(largestPar) < 30){
                             candidates.add(par);
+                            //System.out.println(par.getName()+ " runs a renegade candidate");
                         }
                     }
                 }
