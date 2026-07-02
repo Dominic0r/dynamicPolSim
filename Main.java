@@ -1295,11 +1295,11 @@ public class Main
                 if(rulingCoalition.getMemberList().contains(par)){
                    
                 }else{
-                    divider+=50;
+                    divider+=100;
                 }
                 
                 if(par == LOTO){
-                    divider+=50;
+                    divider+=100;
                 }
                 
                 
@@ -1312,11 +1312,51 @@ public class Main
                     divider*=10;
                 }
                 
+                int whipPoints = 0; // higher means less agreement with the party line 
+                
+                if(par.proximityWith(goal) < 90){
+                    whipPoints += Math.abs(par.getIdeology()-goal)/5; // 1-20
+                }
+                
+                if(par.getIdeology()> 50){
+                    if(goal < maxPol.getPosition()-(par.getChair().getPragmatism()/10)){
+                        whipPoints += 10;
+                    }
+                    
+                    if(goal < par.getIdeology()){
+                        whipPoints +=5;
+                    }
+                }else{
+                    if(goal > maxPol.getPosition()+(par.getChair().getPragmatism()/10)){
+                        whipPoints+=10;
+                    }
+                    
+                    if(goal > par.getIdeology()){
+                        whipPoints +=5;
+                    }
+                }
+                
+                if(rulingCoalition.getMemberList().contains(par)){
+                    whipPoints -= 5;
+                }
+                
+                int chaireffect = par.getChair().getProminence();
+                
+                if(whipPoints>15){
+                    divider += 100* (chaireffect/50);
+                }else{
+                    divider -= 100* (chaireffect/50);
+                }
+                
+                if(divider<0){
+                    divider = 0;
+                }
                 int votesToAdd = (par.getPercent()*par.proximityWith(goal))/(divider+1);
                 if(votesToAdd > par.getPercent()){
                     votesToAdd = par.getPercent();
                 }
                 System.out.println(par.getColor()+ par.getName() + RESET+ par.ideoDisplay() + " - "+votesToAdd+" / "+ par.getPercent());
+                //System.out.println("DEBUG divider: "+ divider + "\nDEBUG whipPoints"+ whipPoints);
                 if(par == President){
                     prespartyyesvotes = votesToAdd;
                 }
@@ -1343,6 +1383,11 @@ public class Main
             
             int presdif = 100- (Math.abs(President.getStandardB().getIdeology()-goal)); 
             presdif += (initposDistFromPres-goalDistFromPres)*2;
+            
+            if(President.getIdeology()< 70 || President.getIdeology()>30){
+                presdif *= 2;
+            }
+            
             tersh -= (50-Math.abs(President.getStandardB().getIdeology()-50))/2;
             //System.out.println("presdif: " +presdif);
             //System.out.println("tersh: " +tersh);
