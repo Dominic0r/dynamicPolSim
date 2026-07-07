@@ -1384,7 +1384,7 @@ public class Main
             int presdif = 100- (Math.abs(President.getStandardB().getIdeology()-goal)); 
             presdif += (initposDistFromPres-goalDistFromPres)*2;
             
-            if(President.getIdeology()< 70 || President.getIdeology()>30){
+            if(President.getIdeology()< 60 || President.getIdeology()>40){
                 presdif *= 2;
             }
             
@@ -3791,9 +3791,9 @@ public static String detIdeo(Party par){
 
 public static void checkFails(){
     List<Party> toRemove = new ArrayList<>();
-    int losetresh = allParties.size();
+    int losetresh = 0;
     for(Party par: allParties){
-        if(par.getPercent()<losetresh){
+        if(par.getPercent()<=losetresh){
             par.incrementFail();
         }else{
             par.resetFail();
