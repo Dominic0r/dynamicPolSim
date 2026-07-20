@@ -3467,7 +3467,12 @@ return fname+" "+ lname;
         
             Coalition gov = new Coalition(winner);
             int totalSeats = winner.getPercent();
-            if(totalSeats>50){
+            int seattresh = 50;
+            if(President!=null){
+                seattresh += 100-President.relationWith(winner);
+            }
+            //System.out.println(seattresh);
+            if(totalSeats>seattresh){
                 got50 = true;
                 rulingCoalition = gov;
             }else{
@@ -3479,7 +3484,7 @@ return fname+" "+ lname;
                 ).reversed());
                 int down = 0;
                 for(Party par: potentialPartners){
-                    if(totalSeats>=50){ got50 = true; break;}
+                    if(totalSeats>=seattresh){ got50 = true; break;}
                     int tresh = 50+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/4;
                     tresh += Math.abs(winner.getIdeology()-50)/4;
