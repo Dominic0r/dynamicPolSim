@@ -2916,27 +2916,51 @@ public static String[][] mapProgside = {
                 third = par;
             }
         }
+        int firstAdd = (lean.equalsIgnoreCase("Republic"))? 20: 40;
+        int secondAdd = (lean.equalsIgnoreCase("Republic"))? 15 : 0;
+        int thirdAdd = (lean.equalsIgnoreCase("Republic"))? 5:0;
         
-        first.setPercent(20);
+        
+        
+        first.setPercent(firstAdd);
         
         if(second!=null){
-            second.setPercent(15);
+            second.setPercent(secondAdd);
         }else{
-            first.setPercent(first.getPercent()+15);
+            first.setPercent(first.getPercent()+secondAdd);
         }
         
         if(third!=null){
-            third.setPercent(5);
+            third.setPercent(thirdAdd);
         }else{
-            first.setPercent(first.getPercent()+5);
+            first.setPercent(first.getPercent()+thirdAdd);
         }
         
+        int fptpseats = (lean.equalsIgnoreCase("Republic"))? 20: 60;
+        int propseats = (lean.equalsIgnoreCase("Republic"))? 40 :0;
         
-        for(int i=0; i<20;i++){ // simulation of first past the post
+        
+        for(int i=0; i<fptpseats;i++){ // simulation of first past the post
             maxnum =-1;
             Party maxpar = null;
             for(Party par: allParties){
                 int curscore = par.getScore() / (ra.nextInt(3)+1);
+                if(!lean.equalsIgnoreCase("Republic")){
+                    if(lean.equalsIgnoreCase("Revolution")){
+                        if(par.getIdeology()<50){
+                            curscore /= 10;
+                        }else if(par.getIdeology()<70){
+                            curscore/=2;
+                        }
+                        
+                    }else{
+                        if(par.getIdeology()>50){
+                            curscore /= 10;
+                        }else if(par.getIdeology()>30){
+                            curscore/=2;
+                        }
+                    }
+                }
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -2947,7 +2971,7 @@ public static String[][] mapProgside = {
         }
         
         //dhondt
-        for(int i=0; i<40;i++){
+        for(int i=0; i<propseats;i++){
             
             maxnum=-1;
             Party maxpar=null;
@@ -3469,7 +3493,7 @@ return fname+" "+ lname;
             int totalSeats = winner.getPercent();
             int seattresh = 50;
             if(President!=null){
-                seattresh += 100-President.relationWith(winner);
+                seattresh += (100-President.relationWith(winner))/2;
             }
             //System.out.println(seattresh);
             if(totalSeats>seattresh){
@@ -4963,7 +4987,7 @@ public static void seeDominant(){
 		
 		for(int i=0; i<electionsToSimulate;i++){
 		    System.out.println(year+ "=========================");
-		    
+            electPresident();
 		    election();
 		    electLeadParty();
 		    
@@ -4988,7 +5012,7 @@ public static void seeDominant(){
     
     visualizeParliament();
     //distmap();
-    electPresident();
+    
     
     shouldChangePolicy();
     displayPolicies();
