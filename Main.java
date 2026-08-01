@@ -2543,12 +2543,12 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 45, 1880));
         allTotalGroups.add(new ideoGroup("Nationalists", "National Patriotic Party", 30, 25, 1885));
         //allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
-        allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
+        //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         allTotalGroups.add(new ideoGroup("Neo-Reactionaries", "National Restoration Party", 10, 15, 1898));
         
         //Early 20th Century
-        allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
+        //allTotalGroups.add(new ideoGroup("Democratic Socialists", "Democratic Socialist Party", 15, 70, 1902));
         allTotalGroups.add(new ideoGroup("Industrial Developmentalists", "National Prosperity Party", 25, 42, 1905));
         allTotalGroups.add(new ideoGroup("Progressive Populists", "Progressive Peoples Party", 25, 55, 1909));
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
@@ -2558,7 +2558,7 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
         // Mid 20th Century
-        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
+        //allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
         allTotalGroups.add(new ideoGroup("Suburban Middle Class", "Citizens Action Movement", 30, 40, 1950));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
         allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 20, 58, 1961));
@@ -2936,8 +2936,8 @@ public static String[][] mapProgside = {
             first.setPercent(first.getPercent()+thirdAdd);
         }
         
-        int fptpseats = (lean.equalsIgnoreCase("Republic"))? 20: 60;
-        int propseats = (lean.equalsIgnoreCase("Republic"))? 40 :0;
+        int fptpseats =20;
+        int propseats = 40;
         
         
         for(int i=0; i<fptpseats;i++){ // simulation of first past the post
@@ -2948,17 +2948,20 @@ public static String[][] mapProgside = {
                 if(!lean.equalsIgnoreCase("Republic")){
                     if(lean.equalsIgnoreCase("Revolution")){
                         if(par.getIdeology()<50){
-                            curscore /= 10;
+                            curscore /= 4;
                         }else if(par.getIdeology()<70){
                             curscore/=2;
                         }
                         
                     }else{
                         if(par.getIdeology()>50){
-                            curscore /= 10;
+                            curscore /= 4;
                         }else if(par.getIdeology()>30){
                             curscore/=2;
                         }
+                    }
+                    if(par == President){
+                        curscore += curscore/2;
                     }
                 }
                 if(curscore > maxnum){
@@ -3493,7 +3496,7 @@ return fname+" "+ lname;
             int totalSeats = winner.getPercent();
             int seattresh = 50;
             if(President!=null){
-                seattresh += (100-President.relationWith(winner))/2;
+                //seattresh += (100-President.relationWith(winner))/2;
             }
             //System.out.println(seattresh);
             if(totalSeats>seattresh){
@@ -4983,7 +4986,7 @@ public static void seeDominant(){
         initSetup();
 		
 		int interval  =4;
-		int electionsToSimulate = 44;
+		int electionsToSimulate = 46;
 		
 		for(int i=0; i<electionsToSimulate;i++){
 		    System.out.println(year+ "=========================");
