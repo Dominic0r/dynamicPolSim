@@ -3455,6 +3455,17 @@ return fname+" "+ lname;
     
     
     public static Party President = null;
+    
+    public static int ideoOfGroup(List<Party> parList){
+        if(parList.isEmpty()) return 0;
+        int avgIdeo =0, totwei = 0;
+        for(Party par: parList){
+            avgIdeo += par.getIdeology()*par.getPercent();
+            totwei += par.getPercent();
+        }
+        avgIdeo = avgIdeo/Math.max(totwei,1);
+        return avgIdeo;
+    }
     public static void electLeadParty(){
         
         int tries = 0;
@@ -3489,7 +3500,7 @@ return fname+" "+ lname;
                 potentialPartners.remove(winner);
                 potentialPartners.sort(Comparator.comparingInt((Party p)-> 
                 
-    ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) - (p.getPercent()/5) // Higher relations, closer ideology preferred
+    ((winner.relationWith(p) * 2) - (100-winner.proximityWith(p))) - (p.getPercent()/5) 
                 ).reversed());
                 int down = 0;
                 for(Party par: potentialPartners){
@@ -3497,8 +3508,9 @@ return fname+" "+ lname;
                     int tresh = 50+(par.getPercent()/2);
                     tresh += Math.abs(par.getIdeology()-50)/4;
                     tresh += Math.abs(winner.getIdeology()-50)/4;
-                    tresh -= down*3;
+                    //tresh -= down*3;
                     tresh += par.getPercent()/5;
+                    tresh += (par.getIdeology()-ideoOfGroup(gov.getMemberList()))/4;
                     if(winner.relationWith(par)< 50){
                         tresh += (50-winner.relationWith(par))*5;
                     }
