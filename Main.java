@@ -2893,7 +2893,7 @@ public static String[][] mapProgside = {
         int maxnum = Integer.MIN_VALUE;
         
         for(Party par: allParties){
-            if(par.getScore()+ ((par == President && !lean.equalsIgnoreCase("Republic"))? par.getScore(): 0)> maxnum){
+            if(par.getScore()* ((par == President && !lean.equalsIgnoreCase("Republic"))? 10: 1)> maxnum){
                 maxnum= par.getScore();
                 first = par;
             }
@@ -2919,8 +2919,6 @@ public static String[][] mapProgside = {
         int firstAdd = (lean.equalsIgnoreCase("Republic"))? 20: 40;
         int secondAdd = (lean.equalsIgnoreCase("Republic"))? 15 : 0;
         int thirdAdd = (lean.equalsIgnoreCase("Republic"))? 5:0;
-        
-        
         
         first.setPercent(firstAdd);
         
@@ -3225,6 +3223,8 @@ return fname+" "+ lname;
         if (currentProx > tresh) {
             double appeal = currentProx * (1 + (par.getRecognition()));
             appeal -= (appeal*par.getFatigue());
+            
+            
             partyAppeals.put(par, appeal);
             totalAppealScore += appeal;
             hasvoted = true; 
@@ -3254,6 +3254,7 @@ return fname+" "+ lname;
             
             votesFromThisGroup += (votesFromThisGroup/20)* par.getMomentum();
             votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
+            
             if(votesFromThisGroup<1){
                 votesFromThisGroup = 1;
             }
