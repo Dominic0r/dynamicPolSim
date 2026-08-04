@@ -2893,7 +2893,7 @@ public static String[][] mapProgside = {
         int maxnum = Integer.MIN_VALUE;
         
         for(Party par: allParties){
-            if(par.getScore()> maxnum){
+            if(par.getScore()+ ((par == President && !lean.equalsIgnoreCase("Republic"))? par.getScore(): 0)> maxnum){
                 maxnum= par.getScore();
                 first = par;
             }
@@ -2945,25 +2945,7 @@ public static String[][] mapProgside = {
             Party maxpar = null;
             for(Party par: allParties){
                 int curscore = par.getScore() / (ra.nextInt(3)+1);
-                if(!lean.equalsIgnoreCase("Republic")){
-                    if(lean.equalsIgnoreCase("Revolution")){
-                        if(par.getIdeology()<50){
-                            curscore /= 4;
-                        }else if(par.getIdeology()<70){
-                            curscore/=2;
-                        }
-                        
-                    }else{
-                        if(par.getIdeology()>50){
-                            curscore /= 4;
-                        }else if(par.getIdeology()>30){
-                            curscore/=2;
-                        }
-                    }
-                    if(par == President){
-                        curscore += curscore/2;
-                    }
-                }
+                
                 if(curscore > maxnum){
                     maxnum = curscore;
                     maxpar = par;
@@ -3479,7 +3461,7 @@ return fname+" "+ lname;
         boolean got50 = false;
         List<Party> potLeaders = new ArrayList<>(allParties);
         potLeaders.sort(Comparator.comparingInt(p -> 
-                100-p.getPercent()
+                100-(((p.getPercent())/2)+ (President.relationWith(p)/2))
                 ));
                 
             int partiesInParliament = 0;
