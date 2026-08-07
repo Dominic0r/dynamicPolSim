@@ -2916,9 +2916,9 @@ public static String[][] mapProgside = {
                 third = par;
             }
         }
-        int firstAdd = (lean.equalsIgnoreCase("Republic"))? 20: 40;
-        int secondAdd = (lean.equalsIgnoreCase("Republic"))? 15 : 0;
-        int thirdAdd = (lean.equalsIgnoreCase("Republic"))? 5:0;
+        int firstAdd = 20;
+        int secondAdd =15;
+        int thirdAdd = 5;
         
         first.setPercent(firstAdd);
         
@@ -3473,7 +3473,7 @@ return fname+" "+ lname;
         boolean got50 = false;
         List<Party> potLeaders = new ArrayList<>(allParties);
         potLeaders.sort(Comparator.comparingInt(p -> 
-                100-(((p.getPercent())/2)+ (President.relationWith(p)/2))
+                100-(((p.getPercent())/4)+ (President.relationWith(p)/2))
                 ));
                 
             int partiesInParliament = 0;
