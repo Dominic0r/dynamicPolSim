@@ -2535,14 +2535,14 @@ public static String[][] mapProgside = {
         //Mid 19th Century
         allTotalGroups.add(new ideoGroup("Industrialists", "National Democratic Conservative Party", 20, 16, 1860));
         allTotalGroups.add(new ideoGroup("Unionists", "National Alliance of Unions", 20, 65, 1865));
-        allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 63, 1868));
+        allTotalGroups.add(new ideoGroup("Socialist Intelligentsia", "Democratic Social Reform Party", 10, 93, 1868));
         allTotalGroups.add(new ideoGroup("Militarists", "National Order Party", 7, 15, 1874));
-        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 65, 1876));
+        allTotalGroups.add(new ideoGroup("Socialist Peasants", "Working Farmers Party", 15, 85, 1876));
         
         // Late 19th Century
         allTotalGroups.add(new ideoGroup("Technocratic Intelligentsia", "National Development Party", 20, 45, 1880));
         allTotalGroups.add(new ideoGroup("Nationalists", "National Patriotic Party", 30, 25, 1885));
-        //allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 80, 1884));
+        allTotalGroups.add(new ideoGroup("Revolutionaries", "Socialist Revolutionary Party", 10, 95, 1884));
         //allTotalGroups.add(new ideoGroup("Reformist Socialists", "Democratic Social Reform Party", 15, 70, 1889));
         allTotalGroups.add(new ideoGroup("Progressive Middle Class", "Democratic Unity Party", 25, 60, 1894));
         allTotalGroups.add(new ideoGroup("Neo-Reactionaries", "National Restoration Party", 10, 15, 1898));
@@ -2554,11 +2554,11 @@ public static String[][] mapProgside = {
         allTotalGroups.add(new ideoGroup("Fascists", "Peoples National Revolutionary Party", 15, 3, 1915));
         allTotalGroups.add(new ideoGroup("Social Democrats", "Social Democratic Party", 20, 60, 1918));
         allTotalGroups.add(new ideoGroup("Republican Conservatives", "National Constitutional Party", 30, 38, 1918));
-        allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 90, 1923));
+        allTotalGroups.add(new ideoGroup("Marxist Leninists", "Communist Revolutionary Party", 8, 95, 1923));
         allTotalGroups.add(new ideoGroup("Liberal Unionists", "Alliance of Republican Unions", 20, 53, 1927));
         
         // Mid 20th Century
-        //allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 90, 1949));
+        allTotalGroups.add(new ideoGroup("Maoists", "Communist Peoples Struggle Party", 5, 97, 1949));
         allTotalGroups.add(new ideoGroup("Suburban Middle Class", "Citizens Action Movement", 30, 40, 1950));
         allTotalGroups.add(new ideoGroup("Religious Fundamentalists", "National Awakening Party", 20, 9, 1952));
         allTotalGroups.add(new ideoGroup("New Leftists", "New Social Democrats", 20, 58, 1961));
