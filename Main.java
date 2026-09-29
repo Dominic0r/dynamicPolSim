@@ -3297,6 +3297,7 @@ return fname+" "+ lname;
             ordinal++;
         }
         int others = totvotes-majorvotes;
+        int candi1Bonus = 0, candi2Bonus = 0;
         System.out.print("Others ["+((others*100)/(totvotes+1))+"%] | ");
         if(!(winvotes>totvotes/2)){
             candidates.sort(Comparator.comparingInt(Party::getScore).reversed());
@@ -3305,6 +3306,11 @@ return fname+" "+ lname;
             for(Party par: candidates){
                 if(par != candidates.get(0) && par != candidates.get(1)){
                     toDelete.add(par);
+                    if(par.proximityWith(candidates.get(0))>= par.proximityWith(candidates.get(1))){
+                        candi1Bonus+=(par.proximityWith(candidates.get(0))*((par.getScore()*100)/totvotes))/100;
+                    }else{
+                        candi2Bonus+=(par.proximityWith(candidates.get(1))*((par.getScore()*100)/totvotes))/100;
+                    }
                 }
             }
             candidates.removeAll(toDelete);
@@ -3374,6 +3380,11 @@ return fname+" "+ lname;
             votesFromThisGroup += (votesFromThisGroup*par.getPopularity())/400;
             if(votesFromThisGroup<1){
                 votesFromThisGroup = 1;
+            }
+            if(par == candidates.get(0)){
+            votesFromThisGroup+= (votesFromThisGroup*candi1Bonus)/100;
+            }else{
+            votesFromThisGroup+= (votesFromThisGroup*candi2Bonus)/100;
             }
             par.addVotes(votesFromThisGroup);
             par.recordVotes(gro, votesFromThisGroup/5);
