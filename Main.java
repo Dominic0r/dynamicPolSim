@@ -138,8 +138,8 @@ public class Main
         Person chairman; // for prime minister
         Person forSpeaker; 
         
-        
-        
+        Party splinterFrom;
+        int splintercount =0;
         double fatigue = 0;
         
         public Party(String name, int ideology, boolean isActive, String color){
@@ -150,7 +150,14 @@ public class Main
             failcount = 0;
             popularity = 20;
             momentum = ra.nextInt(10);
+            splinterFrom = null;
         }
+        
+        public void setSplintFrom(Party targetPar){
+            splinterFrom = targetPar;
+        }
+        
+        public Party getSplinterFrom(){ return splinterFrom;}
         
         public int getMomentum(){ return momentum;}
         
@@ -452,6 +459,11 @@ public class Main
                         }
                         if(this.getPercent()>30){
                             relations.put(par, relations.get(par)-(par.getPercent()/3));
+                        }
+                        
+                        if(par.getSplinterFrom() == this || this.getSplinterFrom() == par){
+                            relations.put(par,relations.get(par)-((this.proximityWith(par)) - (splintercount*5)) );
+                            this.splintercount++;
                         }
                     }
                 }
@@ -3772,7 +3784,19 @@ return fname+" "+ lname;
             
             if (!alreadyRepresented&& !gro.hasGroupSplintered()) {
                 String newName = gro.getSplinterName();
-                allParties.add(new Party(newName, gro.getIdeology(), true, assignColor(gro.getIdeology())));
+                Party newFormed = new Party(newName, gro.getIdeology(), true, assignColor(gro.getIdeology()));
+                allParties.add(newFormed);
+                int proxipoints = -1000;
+                Party splinterfrom = null;
+                for(Party par: allParties){
+                    if(newFormed.proximityWith(par)>= proxipoints){
+                        proxipoints = newFormed.proximityWith(par);
+                        splinterfrom = par;
+                    }
+                }
+                if(splinterfrom != null){
+                    newFormed.setSplintFrom(splinterfrom);
+                }
                 
                 System.out.println("!!! NEW PARTY FORMED: " + newName + " !!!");
                 gro.toggleSplinter();
