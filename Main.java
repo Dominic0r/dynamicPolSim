@@ -462,7 +462,7 @@ public class Main
                         }
                         
                         if(par.getSplinterFrom() == this || this.getSplinterFrom() == par){
-                            relations.put(par,relations.get(par)-((this.proximityWith(par)) - (splintercount*5)) );
+                            relations.put(par,relations.get(par)-(100 - (splintercount*5)) );
                             this.splintercount++;
                         }
                     }
